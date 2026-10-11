@@ -6,6 +6,10 @@ This plan turns `docs/spec.md` into 52 stories in build order. Each story has ac
 
 Each story code is a letter and a number: the letter is the epic, the number is the position inside that epic. F Foundation, A Sign-in and application, P Profiles and visibility, O Onboarding and levels, W Working groups, T Activities and tasks, G Targets, D Admin tools and audit, L Launch readiness. The number is not the build order; see the milestone table and the Order column in Notion.
 
+## Development environment
+
+The maintainer develops against the hosted staging Supabase project (no Docker locally). Database tests and end-to-end tests run in CI against a local Supabase started in the GitHub runner, so every story that adds tests relies on the CI jobs from F-03 and F-04. A local Docker setup remains optional for anyone who wants it (see `docs/runbook.md`). The repository is public: no real personal data, real contact lists, keys or personal paths are ever committed; fixtures are synthetic.
+
 ## How to work a story
 
 1. Start a fresh Claude Code session in the repository root. Work on one story only.
@@ -112,7 +116,7 @@ Size M · Test · Spec 10
 **Prompt**
 
 ```text
-Set up the three test layers described in spec section 10. (1) Vitest for tests/unit with coverage and an 80% line threshold on lib/domain. (2) A database test helper under supabase/tests or tests/db using Vitest against local Supabase: helpers to create a user at a given level (new, fresh, experienced, admin) and a client authenticated as that user, so later stories can assert what each role can read and write. (3) Playwright with a global setup that seeds fixtures through the admin API, a helper to sign in as a fixture user, and an axe helper that fails on serious violations. Add one small example test per layer so each command runs green. Wire the commands into package.json scripts and the CI workflow from F-03.
+Set up the three test layers described in spec section 10. (1) Vitest for tests/unit with coverage and an 80% line threshold on lib/domain. (2) A database test helper under supabase/tests or tests/db using Vitest against local Supabase: helpers to create a user at a given level (new, fresh, experienced, admin) and a client authenticated as that user, so later stories can assert what each role can read and write. (3) Playwright with a global setup that seeds fixtures through the admin API, a helper to sign in as a fixture user, and an axe helper that fails on serious violations. Add one small example test per layer so each command runs green in CI. The database and end-to-end tests need local Supabase, which only CI runs for the maintainer (no Docker); locally they are optional, so make `test:db` and `test:e2e` print a clear message and skip, rather than fail, when no local database is reachable. Wire the commands into package.json scripts and the CI workflow from F-03.
 ```
 
 ### F-05 Translation setup and Italian legal screens routing
@@ -159,12 +163,12 @@ Size M · Chore · Spec 9, 10
 - Environment variables declared in `.env.schema` (as Tell The World does with varlock) and validated at build/start; `.env*` ignored by git.
 - ESLint rule or boundary check prevents client components importing `server-only` modules.
 - A small in-memory rate-limit helper in `lib/` with unit tests (documented as per-instance).
-- `SECURITY.md` with a reporting contact placeholder.
+- `SECURITY.md` pointing to GitHub private vulnerability reporting (the repository is public, so no personal email address).
 
 **Prompt**
 
 ```text
-Add the security baseline: HTTP security headers (with a CSP that works with Next.js and Supabase, nonce-based if practical), env variable schema and validation modelled on Tell The World's .env.schema and varlock usage, an ESLint no-restricted-imports (or equivalent) rule so client components cannot import server-only modules, a generic in-memory sliding-window rate limiter (lib/rate-limit.ts) with unit tests and a comment that it is per serverless instance, and SECURITY.md. Add an E2E test asserting the headers. Do not add Supabase clients or auth; those come in A-02.
+Add the security baseline: HTTP security headers (with a CSP that works with Next.js and Supabase, nonce-based if practical), env variable schema and validation modelled on Tell The World's .env.schema and varlock usage, an ESLint no-restricted-imports (or equivalent) rule so client components cannot import server-only modules, a generic in-memory sliding-window rate limiter (lib/rate-limit.ts) with unit tests and a comment that it is per serverless instance, and SECURITY.md that points to GitHub private vulnerability reporting instead of any personal email address (the repository is public). Add an E2E test asserting the headers. Do not add Supabase clients or auth; those come in A-02.
 ```
 
 ### F-08 Documentation baseline and ADRs

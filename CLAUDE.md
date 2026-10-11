@@ -33,7 +33,11 @@ bun run db:reset       # reapply migrations and seed
 bun run db:types       # regenerate lib/database.types.ts
 ```
 
-F-01 created `dev`, `lint`, `typecheck`, `format`, `build` and `check`. `test:unit`, `test:db` and `test:e2e` are placeholders that print a message until F-02 and F-04 replace them; `db:*` scripts arrive in F-02. Do not invent scripts that are not in package.json.
+F-01 created `dev`, `lint`, `typecheck`, `format`, `build` and `check`. `test:unit`, `test:db` and `test:e2e` are placeholders that print a message until F-02 and F-04 replace them; `db:*` scripts exist (F-02) but need Docker; see Environments. Do not invent scripts that are not in package.json.
+
+## Environments
+
+The maintainer has no Docker, so there is no local database on their machine. Day-to-day development runs against the hosted **staging** Supabase project (URL and keys in `.env.local`, never committed). Staging holds only synthetic data. **Database tests and end-to-end tests run in CI**, where GitHub's runners start a local Supabase from `supabase/`. Do not run test suites that create or delete users against staging or production. If you do have Docker, `bun run db:start` gives you the same local stack as CI.
 
 ## Folder layout
 
@@ -66,6 +70,7 @@ docs/                 spec.md, development-plan.md, adr/, architecture/, runbook
 11. **Config over constants:** level thresholds, welcome document link and retention periods come from the `config` table.
 12. **Accessibility:** WCAG 2.2 AA, keyboard operable, black text on PauseAI orange (orange text on white fails contrast).
 13. **Secrets:** never commit `.env*`; declare variables in `.env.schema`.
+14. **Public repository.** This repo is public. Never commit real personal data (volunteer details, real target lists, real contact details), real CSV exports, keys, connection strings, personal file paths or personal email addresses. Fixtures and seeds are synthetic and obviously fake. Commit author email is the GitHub noreply address. Use GitHub private vulnerability reporting, not a personal email, for security reports.
 
 ## Git
 

@@ -2,9 +2,17 @@
 
 Operational how-tos for the PauseAI IT platform. Sections marked "to be written" are filled in by later stories (F-08 skeleton, F-09 deploy, L-02 backups).
 
-## Local database (Supabase)
+## Development environment
 
-Local development and database tests run against a local Supabase stack in containers. It needs a container runtime.
+Day-to-day development runs against the hosted **staging** Supabase project; database and end-to-end tests run in CI. A local database is optional.
+
+1. Create the staging project (next section) and push migrations to it.
+2. Copy the staging API URL and publishable key from the project settings into `.env.local` (never commit it; the variable list arrives with F-07).
+3. Keep staging to synthetic data and never run test suites that create or delete users against it or against production. Those suites run in CI against a local Supabase started in the GitHub runner.
+
+## Local database (Supabase, optional)
+
+A local Supabase stack in containers gives you the same environment CI uses, with a local inbox for sign-in emails. It needs a container runtime and is not required to contribute.
 
 ### One-time setup on Windows
 

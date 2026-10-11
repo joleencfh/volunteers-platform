@@ -2,6 +2,18 @@
 
 Operational how-tos for the PauseAI IT platform. Sections marked "to be written" are filled in by later stories (F-08 skeleton, F-09 deploy, L-02 backups).
 
+## Running the tests
+
+| Command             | What it runs                                                               | Needs                                                                                                       |
+| ------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `bun run test:unit` | Vitest unit tests with coverage (80% threshold on `lib/domain`)            | Nothing                                                                                                     |
+| `bun run test:db`   | Database and row-level-security tests (`tests/db`)                         | Local Supabase; skips with a message if none is reachable, fails in CI                                      |
+| `bun run test:e2e`  | Playwright end-to-end tests (`tests/e2e`) including an accessibility check | Chromium (`bunx playwright install chromium`); tests that need fixture users skip without Supabase settings |
+
+CI runs all three on every pull request with a local Supabase in the runner, so you do not need Docker. To write an RLS test, copy `tests/db/example-rls.test.ts`: it builds a small schema in a transaction that is always rolled back, then uses `actAs()` to check an allowed and a denied case per role. End-to-end tests sign fixture users in with `loginAs()` (`tests/e2e/helpers/auth.ts`); fixture users are defined in `tests/fixtures/users.ts`, and the password is generated per run.
+
+If you do have local Supabase running, `bun scripts/supabase-env.ts >> .env.local` writes the settings the tests need.
+
 ## Development environment
 
 Day-to-day development runs against the hosted **staging** Supabase project; database and end-to-end tests run in CI. A local database is optional.
@@ -70,7 +82,7 @@ Two hosted Supabase projects keep production data away from tests and previews. 
 
 ## GitHub settings you apply once
 
-These settings live in GitHub, not in the repository. **Status (2026-10-11):** items 1, 2 and 4 are applied: the ruleset "Protect main" (squash merges only, five required checks, no force pushes or deletion), Dependabot alerts and security updates, secret scanning with push protection, and private vulnerability reporting. Item 3 (Actions defaults) is still to do. To inspect or change the ruleset: Settings → Rules → Rulesets, or `gh api repos/joleencfh/volunteers-platform/rulesets`. Apply them after the first CI run on a pull request (the check names only appear in the settings once they have run once). They are free for public repositories.
+These settings live in GitHub, not in the repository. **Status (2026-10-11):** items 1, 2 and 4 are applied: the ruleset "Protect main" (squash merges only, five required checks, no force pushes or deletion), Dependabot alerts and security updates, secret scanning with push protection, and private vulnerability reporting. Item 3 (Actions defaults) was already in place: read-only workflow permissions, and Actions cannot approve pull requests. To inspect or change the ruleset: Settings → Rules → Rulesets, or `gh api repos/joleencfh/volunteers-platform/rulesets`. Apply them after the first CI run on a pull request (the check names only appear in the settings once they have run once). They are free for public repositories.
 
 1. **Protect `main`:** Settings → Rules → Rulesets → New branch ruleset, target `main`:
    - require a pull request before merging (required approvals: 0 while you are the only maintainer, since you cannot approve your own pull request; raise it when others join);

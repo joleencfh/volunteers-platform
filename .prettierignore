@@ -1,0 +1,7 @@
+.next
+node_modules
+bun.lock
+coverage
+supabase/migrations
+docs/spec.md
+.impeccable

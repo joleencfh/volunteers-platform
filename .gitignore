@@ -46,3 +46,39 @@ next-env.d.ts
 
 # design tooling cache
 .impeccable/
+
+# --- Public repository safety net: personal data, secrets, backups ---
+
+# real data and exports must never be committed; synthetic fixtures live in tests/fixtures
+/private/
+/exports/
+/backups/
+*.csv
+!tests/fixtures/**/*.csv
+*.xlsx
+*.dump
+*.sql.gz
+*.sqlite
+
+# keys and credentials
+*.key
+*.p12
+*.pfx
+*.crt
+service-account*.json
+.supabase/
+
+# test and tool output
+/playwright-report/
+/test-results/
+/blob-report/
+*.log
+
+# local editor, OS and assistant settings
+.idea/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+Desktop.ini
+.claude/settings.local.json
+.claude/worktrees/

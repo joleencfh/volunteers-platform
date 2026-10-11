@@ -1,0 +1,3 @@
+-- Local development seed data. Runs on `bun run db:reset`.
+-- Keep it free of real personal data; use obviously fake values.
+-- Fixture users for tests are created through the admin API in tests/ (added in F-04).

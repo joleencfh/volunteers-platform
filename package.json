@@ -11,9 +11,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:unit": "echo \"No unit tests yet (added in F-04)\"",
-    "test:db": "echo \"No database tests yet (added in F-02 and F-04)\"",
+    "test:db": "bun scripts/rls-guard.selftest.ts",
     "test:e2e": "echo \"No end-to-end tests yet (added in F-04)\"",
-    "check": "bun run lint && bun run typecheck && bun run format:check && bun run test:unit && bun run test:db && bun run build"
+    "check": "bun run lint && bun run typecheck && bun run format:check && bun run test:unit && bun run test:db && bun run build",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local > lib/database.types.ts",
+    "check:rls": "bun scripts/check-rls.ts"
   },
   "dependencies": {
     "next": "16.4.0",
@@ -21,6 +26,7 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -28,7 +34,9 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "eslint-config-prettier": "^10.1.8",
+    "postgres": "^3.4.9",
     "prettier": "^3.9.10",
+    "supabase": "^2.120.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

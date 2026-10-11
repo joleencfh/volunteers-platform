@@ -70,7 +70,7 @@ Two hosted Supabase projects keep production data away from tests and previews. 
 
 ## GitHub settings you apply once
 
-These settings live in GitHub, not in the repository. Apply them after the first CI run on a pull request (the check names only appear in the settings once they have run once). They are free for public repositories.
+These settings live in GitHub, not in the repository. **Status (2026-10-11):** items 1, 2 and 4 are applied: the ruleset "Protect main" (squash merges only, five required checks, no force pushes or deletion), Dependabot alerts and security updates, secret scanning with push protection, and private vulnerability reporting. Item 3 (Actions defaults) is still to do. To inspect or change the ruleset: Settings → Rules → Rulesets, or `gh api repos/joleencfh/volunteers-platform/rulesets`. Apply them after the first CI run on a pull request (the check names only appear in the settings once they have run once). They are free for public repositories.
 
 1. **Protect `main`:** Settings → Rules → Rulesets → New branch ruleset, target `main`:
    - require a pull request before merging (required approvals: 0 while you are the only maintainer, since you cannot approve your own pull request; raise it when others join);

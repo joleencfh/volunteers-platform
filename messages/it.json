@@ -2,6 +2,16 @@
   "app": {
     "description": "Piattaforma per i volontari di PauseAI Italia"
   },
+  "shell": {
+    "skipToContent": "Vai al contenuto",
+    "mainNavigation": "Navigazione principale",
+    "footerName": "PauseAI Italia",
+    "privacy": "Informativa sulla privacy"
+  },
+  "common": {
+    "close": "Chiudi",
+    "dismiss": "Chiudi la notifica"
+  },
   "apply": {
     "title": "Candidati come volontario"
   },

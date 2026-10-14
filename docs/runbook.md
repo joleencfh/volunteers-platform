@@ -68,6 +68,18 @@ Two hosted Supabase projects keep production data away from tests and previews. 
 
 6. Never commit keys, passwords or connection strings. Never use the service-role key in browser code.
 
+## GitHub settings you apply once
+
+These settings live in GitHub, not in the repository. **Status (2026-10-11):** items 1, 2 and 4 are applied: the ruleset "Protect main" (squash merges only, five required checks, no force pushes or deletion), Dependabot alerts and security updates, secret scanning with push protection, and private vulnerability reporting. Item 3 (Actions defaults) is still to do. To inspect or change the ruleset: Settings → Rules → Rulesets, or `gh api repos/joleencfh/volunteers-platform/rulesets`. Apply them after the first CI run on a pull request (the check names only appear in the settings once they have run once). They are free for public repositories.
+
+1. **Protect `main`:** Settings → Rules → Rulesets → New branch ruleset, target `main`:
+   - require a pull request before merging (required approvals: 0 while you are the only maintainer, since you cannot approve your own pull request; raise it when others join);
+   - require status checks to pass, and require the branch to be up to date: `secret-scan`, `checks`, `database`, `e2e`, `audit`;
+   - block force pushes and branch deletion.
+2. **Security features:** Settings → Code security: enable Dependabot alerts and security updates, secret scanning with push protection, and private vulnerability reporting (this is where `SECURITY.md` points).
+3. **Actions:** Settings → Actions → General: set workflow permissions to read-only by default and require approval for pull requests from first-time contributors.
+4. **Merge strategy:** allow squash merging only, so each pull request is one commit on `main`.
+
 ## Restore a backup
 
 To be written in L-02.

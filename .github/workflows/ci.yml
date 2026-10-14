@@ -38,7 +38,7 @@ jobs:
           tar -xzf "gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" gitleaks
 
       - name: Scan git history
-        run: ./gitleaks git . --log-opts="--all" --redact -v --no-banner
+        run: ./gitleaks git . --config .gitleaks.toml --log-opts="--all" --redact -v --no-banner
 
   # Static checks, unit tests with coverage, and the production build. No database needed.
   checks:
@@ -86,6 +86,27 @@ jobs:
 
       - name: Apply migrations and seed
         run: bun run db:reset
+
+      # The committed generated types must match what the migrations produce. Skipped while the
+      # file is still the placeholder (until the first tables exist). To fix a failure: run
+      # `bun run db:types:staging` after pushing migrations to staging, or take the file from the
+      # artifact attached to this run.
+      - name: Generated types are current
+        run: |
+          bunx supabase gen types typescript --local --schema public > "$RUNNER_TEMP/database.types.ts"
+          if grep -q "Placeholder until the first tables exist" lib/database.types.ts; then
+            echo "::notice::lib/database.types.ts is still the placeholder, drift check skipped"
+          else
+            diff -u lib/database.types.ts "$RUNNER_TEMP/database.types.ts"
+          fi
+
+      - name: Upload generated types
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: database-types
+          path: ${{ runner.temp }}/database.types.ts
+          retention-days: 7
 
       # Fails if any table in schema public lacks row-level security
       - name: RLS guard
@@ -142,6 +163,42 @@ jobs:
       - name: Stop local Supabase
         if: always()
         run: bunx supabase stop --no-backup
+
+  # Repository rules that are easy to forget: applied migrations are immutable, and a new
+  # migration should come with an ADR when it records a lasting decision.
+  guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+
+      # Never edit or delete a migration that is already on the base branch. Override with the
+      # label allow-migration-edit when the migration was never applied anywhere.
+      - name: Applied migrations are not edited
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'allow-migration-edit') }}
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          changed=$(git diff --name-status "$BASE...HEAD" -- supabase/migrations | awk '$1 != "A"')
+          if [ -n "$changed" ]; then
+            echo "::error::Migrations already on the base branch were modified or removed:"
+            echo "$changed"
+            echo "Create a new migration instead, or add the label allow-migration-edit if it was never applied."
+            exit 1
+          fi
+
+      - name: New migrations come with an ADR (reminder)
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          added=$(git diff --name-status "$BASE...HEAD" -- supabase/migrations | awk '$1 == "A"')
+          adr=$(git diff --name-only "$BASE...HEAD" -- docs/adr)
+          if [ -n "$added" ] && [ -z "$adr" ]; then
+            echo "::warning::This pull request adds a migration but no ADR. If it records a lasting decision, add one in docs/adr."
+          fi
 
   # Known vulnerabilities in production dependencies (high and critical only, to avoid noise)
   audit:

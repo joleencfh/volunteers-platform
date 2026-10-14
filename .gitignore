@@ -82,3 +82,6 @@ Thumbs.db
 Desktop.ini
 .claude/settings.local.json
 .claude/worktrees/
+
+# Claude Code Stop hook cache
+.claude/.last-check

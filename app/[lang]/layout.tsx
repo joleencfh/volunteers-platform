@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { AppShell } from '@/components/shell/AppShell'
+import { ToastProvider } from '@/components/ui/Toast'
 import { LOCALES } from '@/lib/domain/locale'
 import { I18nProvider } from '@/lib/i18n/client'
 import { getMessages } from '@/lib/i18n/messages'
@@ -28,14 +30,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
   const locale = await getLocale()
+  const common = await getTranslations('common')
   return (
     <html
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col font-sans">
         <I18nProvider locale={locale} messages={getMessages(locale)}>
-          {children}
+          <ToastProvider dismissLabel={common('dismiss')}>
+            <AppShell>{children}</AppShell>
+          </ToastProvider>
         </I18nProvider>
       </body>
     </html>

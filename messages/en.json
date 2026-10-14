@@ -3,6 +3,19 @@
     "name": "PauseAI IT",
     "description": "Volunteer platform for PauseAI Italy"
   },
+  "shell": {
+    "logoAlt": "PauseAI logo",
+    "skipToContent": "Skip to content",
+    "mainNavigation": "Main navigation",
+    "menu": "Menu",
+    "home": "Home",
+    "footerName": "PauseAI Italy",
+    "privacy": "Privacy notice"
+  },
+  "common": {
+    "close": "Close",
+    "dismiss": "Dismiss notification"
+  },
   "home": {
     "title": "PauseAI IT"
   },
@@ -17,5 +30,42 @@
   },
   "privacy": {
     "title": "Privacy notice"
+  },
+  "devStyle": {
+    "title": "Style guide",
+    "intro": "Every shared primitive in one place. Development only.",
+    "buttons": "Buttons",
+    "primary": "Primary",
+    "secondary": "Secondary",
+    "danger": "Danger",
+    "ghost": "Ghost",
+    "disabled": "Disabled",
+    "forms": "Form fields",
+    "textLabel": "Full name",
+    "textHint": "As you would like it shown to other volunteers.",
+    "textError": "Enter a name.",
+    "messageLabel": "Message",
+    "selectLabel": "Working group",
+    "optionLobbying": "Lobbying",
+    "optionOutreach": "Outreach",
+    "checkboxLabel": "I agree to the privacy notice",
+    "display": "Cards and badges",
+    "cardTitle": "Card title",
+    "cardBody": "Cards group related content.",
+    "badgeNeutral": "Neutral",
+    "badgeBrand": "New",
+    "badgeSuccess": "Approved",
+    "badgeDanger": "Rejected",
+    "feedback": "Dialogs, toasts and empty states",
+    "openModal": "Open dialog",
+    "modalTitle": "Dialog title",
+    "modalBody": "Focus stays inside until it closes. Escape also closes it.",
+    "toastInfo": "Show toast",
+    "toastError": "Show error toast",
+    "toastMessage": "Saved.",
+    "toastErrorMessage": "Something went wrong.",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "When there is something to show it will appear here.",
+    "emptyAction": "Add the first one"
   }
 }

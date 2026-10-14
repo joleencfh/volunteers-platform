@@ -15,7 +15,7 @@ describe('isLocalTarget', () => {
 
   it.each([
     'https://abcdefgh.supabase.co',
-    'postgresql://postgres.abc:pw@aws-0-eu-central-1.pooler.supabase.com:5432/postgres',
+    'postgresql://postgres.abc:pw@example.com:5432/postgres',
     'http://10.0.0.5:54321',
     'not a url at all',
     '',

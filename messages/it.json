@@ -1,0 +1,17 @@
+{
+  "app": {
+    "description": "Piattaforma per i volontari di PauseAI Italia"
+  },
+  "apply": {
+    "title": "Candidati come volontario"
+  },
+  "applyPending": {
+    "title": "Candidatura ricevuta"
+  },
+  "applyRejected": {
+    "title": "Candidatura non accettata"
+  },
+  "privacy": {
+    "title": "Informativa sulla privacy"
+  }
+}

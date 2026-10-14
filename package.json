@@ -10,9 +10,9 @@
     "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:unit": "echo \"No unit tests yet (added in F-04)\"",
-    "test:db": "bun scripts/rls-guard.selftest.ts",
-    "test:e2e": "echo \"No end-to-end tests yet (added in F-04)\"",
+    "test:unit": "vitest run --coverage",
+    "test:db": "bun scripts/test-db.ts",
+    "test:e2e": "playwright test",
     "check": "bun run lint && bun run typecheck && bun run format:check && bun run test:unit && bun run test:db && bun run build",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
@@ -21,16 +21,21 @@
     "check:rls": "bun scripts/check-rls.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.3",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@electric-sql/pglite": "^0.5.8",
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^5.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "eslint-config-prettier": "^10.1.8",
@@ -38,7 +43,8 @@
     "prettier": "^3.9.10",
     "supabase": "^2.120.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.3"
   },
   "packageManager": "bun@1.3.10",
   "ignoreScripts": [

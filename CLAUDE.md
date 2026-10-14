@@ -33,7 +33,7 @@ bun run db:reset       # reapply migrations and seed
 bun run db:types       # regenerate lib/database.types.ts
 ```
 
-F-01 created `dev`, `lint`, `typecheck`, `format`, `build` and `check`. `test:unit`, `test:db` and `test:e2e` are placeholders that print a message until F-02 and F-04 replace them; `db:*` scripts exist (F-02) but need Docker; see Environments. Do not invent scripts that are not in package.json.
+Scripts: `dev`, `lint`, `typecheck`, `format`, `build`, `check`, `test:unit` (Vitest with coverage), `test:db` (database and RLS tests; skips with a message when no local database is reachable, fails in CI), `test:e2e` (Playwright), `db:*` (need Docker; see Environments) and `check:rls`. Do not invent scripts that are not in package.json. Write RLS tests by copying `tests/db/example-rls.test.ts`; sign E2E users in with `loginAs()`; fixture users are synthetic (`tests/fixtures/users.ts`).
 
 ## Environments
 

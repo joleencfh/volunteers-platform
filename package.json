@@ -17,8 +17,11 @@
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
-    "db:types": "supabase gen types typescript --local > lib/database.types.ts",
-    "check:rls": "bun scripts/check-rls.ts"
+    "db:types": "supabase gen types typescript --local --schema public > lib/database.types.ts",
+    "check:rls": "bun scripts/check-rls.ts",
+    "check:fast": "bun run lint && bun run typecheck && bun run format:check && bun run test:unit",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "db:types:staging": "supabase gen types typescript --linked --schema public > lib/database.types.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

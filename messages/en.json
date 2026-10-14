@@ -1,0 +1,21 @@
+{
+  "app": {
+    "name": "PauseAI IT",
+    "description": "Volunteer platform for PauseAI Italy"
+  },
+  "home": {
+    "title": "PauseAI IT"
+  },
+  "apply": {
+    "title": "Apply to volunteer"
+  },
+  "applyPending": {
+    "title": "Application received"
+  },
+  "applyRejected": {
+    "title": "Application not accepted"
+  },
+  "privacy": {
+    "title": "Privacy notice"
+  }
+}

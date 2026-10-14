@@ -1,6 +1,6 @@
 # Development plan: PauseAI IT Volunteer Platform
 
-This plan turns `docs/spec.md` into 52 stories in build order. Each story has acceptance criteria and a prompt to paste into a fresh Claude Code session. Status of each story is tracked in the Notion hub "PauseAI IT Platform: Development" (databases Epics and Stories); this file is the source of truth for scope and prompts.
+This plan turns `docs/spec.md` into 53 stories in build order. Each story has acceptance criteria and a prompt to paste into a fresh Claude Code session. Status of each story is tracked in the Notion hub "PauseAI IT Platform: Development" (databases Epics and Stories); this file is the source of truth for scope and prompts.
 
 ## How to read story codes
 
@@ -38,14 +38,14 @@ You are working on the PauseAI IT volunteer platform. Before writing code, read 
 
 | Milestone                  | Stories                                  | You can then                                                                                       |
 | -------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| M0 Shell                   | F-01 to F-09                             | See a branded, deployed, empty app with CI, tests, translations and docs in place                  |
+| M0 Shell                   | F-01 to F-10                             | See a branded, deployed, empty app with CI, tests, translations and docs in place                  |
 | M1 Sign-in                 | A-01 to A-05                             | Receive applications, approve them, and let people sign in                                         |
 | M2 Onboarding live         | P-01, P-02, O-01, O-02, O-03, P-03       | Invite your first volunteers and walk them through the checklist. Steps 5 and 7 stay open until M3 |
 | M3 Working groups and work | W-01 to W-06, T-01 to T-06, O-04 to O-06 | Run Lobbying: groups, activities, tasks, leads, automatic levels                                   |
 | M4 Targets                 | G-01 to G-07                             | Track parliamentarians, organisations, journalists and experts, and import your lists              |
 | M5 Launch                  | D-01 to D-04, L-01 to L-06               | Run the pilot with about 10 volunteers on a hardened, backed-up system                             |
 
-Build order follows the milestone table, not the epic grouping below: the stories are listed by epic, so for example O-04 to O-06 come after the working group and task stories. Inside M2 do P-01, P-02, O-01, O-02, O-03, P-03. The Order column in the Notion Stories database gives the exact sequence (1 to 52).
+Build order follows the milestone table, not the epic grouping below: the stories are listed by epic, so for example O-04 to O-06 come after the working group and task stories. Inside M0, build F-10 right after F-04 (before F-05). Inside M2 do P-01, P-02, O-01, O-02, O-03, P-03. The Order column in the Notion Stories database gives the exact sequence (1 to 52; F-10 sits at 4.5, between F-04 and F-05).
 
 ---
 
@@ -204,6 +204,26 @@ Size S · Chore · Spec 1, 10
 
 ```text
 Help me deploy the shell. I will create the Vercel project and the Supabase staging and production projects (EU region) myself; guide me step by step, then do what you can with the CLIs: link the repository, define environment variables per environment from .env.schema, confirm preview and production deployments of the placeholder page, and push the current migrations to staging. Check the current Vercel Hobby plan terms against our use and record the conclusion. Record every step in docs/runbook.md.
+```
+
+### F-10 Guardrails
+
+Size L · Chore · Spec 10 (build right after F-04, before F-05)
+
+**Acceptance criteria**
+
+- CI fails when a migration already on the base branch is edited or deleted (label `allow-migration-edit` overrides), when `lib/database.types.ts` differs from freshly generated types (skipped while it is the placeholder), and when the pull request description lacks the checklist or has unticked items (not for Dependabot).
+- CI warns when a pull request adds a migration but no ADR.
+- gitleaks has custom rules for Windows user paths and non-placeholder email addresses, used by CI and the pre-commit hook.
+- Test suites refuse to run against a non-local database or API URL unless `ALLOW_REMOTE_TESTS=1` (unit-tested).
+- `.claude/settings.json` is committed with deny rules (reading `.env` files, force pushes, `--no-verify`), ask rules (`supabase db push`, `supabase link`, mutating `gh api`, `gh pr merge`), a PreToolUse file guard (committed migrations, `.env` files, data files outside fixtures), a PostToolUse Prettier hook and a Stop hook that runs `check:fast` with caching and no loops. The guard rules are unit-tested.
+- A pre-commit hook (format check, lint, gitleaks if installed, no commits on `main`) is activated by `bun install`.
+- `docs/runbook.md` lists every rule, where it is enforced and how to override it; `CLAUDE.md` tells assistants what is enforced.
+
+**Prompt**
+
+```text
+Turn the repository rules from docs/runbook.md and .github/pull_request_template.md into automated checks, following the F-10 acceptance criteria. Prefer CI checks (they bind everyone), and add local hooks only for fast feedback. Add: a guards job in .github/workflows/ci.yml (applied migrations immutable, ADR reminder), a generated-types drift check in the database job, .github/workflows/pr-checklist.yml, .gitleaks.toml custom rules, tests/helpers/local-only.ts wired into the test helpers and scripts/test-db.ts, .githooks/pre-commit activated by a prepare script, and a committed .claude/settings.json with hooks in .claude/hooks (pure rules in guard-rules.ts with unit tests). Pipe-test every hook with sample JSON input and prove each rule blocks what it should and allows what it should. Finish by adding the Guardrails table to docs/runbook.md and the summary to CLAUDE.md.
 ```
 
 ---

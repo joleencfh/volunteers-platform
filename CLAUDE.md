@@ -30,7 +30,9 @@ bun run build
 bun run check          # lint + typecheck + format check + unit + db + build; run before every commit
 bun run db:start       # local Supabase
 bun run db:reset       # reapply migrations and seed
-bun run db:types       # regenerate lib/database.types.ts
+bun run db:types       # regenerate lib/database.types.ts from local Supabase
+bun run db:types:staging  # same, from the linked staging project (no Docker needed)
+bun run check:fast     # lint + typecheck + format check + unit; what the Stop hook runs
 ```
 
 Scripts: `dev`, `lint`, `typecheck`, `format`, `build`, `check`, `test:unit` (Vitest with coverage), `test:db` (database and RLS tests; skips with a message when no local database is reachable, fails in CI), `test:e2e` (Playwright), `db:*` (need Docker; see Environments) and `check:rls`. Do not invent scripts that are not in package.json. Write RLS tests by copying `tests/db/example-rls.test.ts`; sign E2E users in with `loginAs()`; fixture users are synthetic (`tests/fixtures/users.ts`).
@@ -71,6 +73,17 @@ docs/                 spec.md, development-plan.md, adr/, architecture/, runbook
 12. **Accessibility:** WCAG 2.2 AA, keyboard operable, black text on PauseAI orange (orange text on white fails contrast).
 13. **Secrets:** never commit `.env*`; declare variables in `.env.schema`.
 14. **Public repository.** This repo is public. Never commit real personal data (volunteer details, real target lists, real contact details), real CSV exports, keys, connection strings, personal file paths or personal email addresses. Fixtures and seeds are synthetic and obviously fake. Commit author email is the GitHub noreply address. Use GitHub private vulnerability reporting, not a personal email, for security reports.
+
+## Guardrails (enforced, not just advice)
+
+CI, the GitHub ruleset, a pre-commit hook and Claude Code hooks enforce the rules above; `docs/runbook.md` ("Guardrails") lists every rule, where it is enforced and how to override it. What this means for you:
+
+- Never edit a migration that is already committed (the file guard and CI block it); add a new one.
+- Never create `.env*` files or CSV/XLSX files outside `tests/fixtures/`.
+- Tests refuse to run against a non-local database; do not set `ALLOW_REMOTE_TESTS`.
+- Pull request descriptions must contain the "## Checklist" section from `.github/pull_request_template.md`, with every item ticked or removed with a reason (CI checks this). Build the description from the template.
+- `bun run check:fast` runs automatically when you finish; if it fails, fix the cause. Never use `--no-verify`, never force-push.
+- If a hook or check blocks you, fix the cause or ask the maintainer; do not look for a way around it.
 
 ## Git
 

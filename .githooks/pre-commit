@@ -1,0 +1,18 @@
+#!/bin/sh
+# Pre-commit hook, installed by `bun install` (the "prepare" script sets core.hooksPath).
+# Fast checks only; CI runs everything. Do not bypass with --no-verify.
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ "$branch" = "main" ] && [ -z "$ALLOW_MAIN_COMMIT" ]; then
+  echo "pre-commit: do not commit on main. Create a branch (feature/, fix/, chore/) and open a pull request."
+  exit 1
+fi
+
+bun run format:check || { echo "pre-commit: formatting differs. Run: bun run format"; exit 1; }
+bun run lint || exit 1
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --config .gitleaks.toml --redact --no-banner || exit 1
+else
+  echo "pre-commit: gitleaks is not installed locally, so staged changes were not scanned for secrets (CI scans every pull request)."
+fi

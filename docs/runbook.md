@@ -37,14 +37,15 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 
 ### Commands
 
-| Command             | What it does                                                                       |
-| ------------------- | ---------------------------------------------------------------------------------- |
-| `bun run db:start`  | Starts local Supabase (Postgres on port 54322, API on 54321, Studio on 54323)      |
-| `bun run db:stop`   | Stops it                                                                           |
-| `bun run db:reset`  | Drops the local database, reapplies every migration, then runs `supabase/seed.sql` |
-| `bun run db:types`  | Regenerates `lib/database.types.ts` from the local database                        |
-| `bun run check:rls` | Fails if any table in schema `public` lacks row-level security                     |
-| `bun run test:db`   | Self-test of the RLS guard on an in-memory Postgres (no Docker needed)             |
+| Command                    | What it does                                                                             |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| `bun run db:start`         | Starts local Supabase (Postgres on port 54322, API on 54321, Studio on 54323)            |
+| `bun run db:stop`          | Stops it                                                                                 |
+| `bun run db:reset`         | Drops the local database, reapplies every migration, then runs `supabase/seed.sql`       |
+| `bun run db:types`         | Regenerates `lib/database.types.ts` from the local database                              |
+| `bun run db:types:staging` | Same, from the linked staging project (no Docker needed; run `bunx supabase link` first) |
+| `bun run check:rls`        | Fails if any table in schema `public` lacks row-level security                           |
+| `bun run test:db`          | Database and row-level-security tests (`tests/db`) against the local database            |
 
 `db:start` prints the local API URL and keys. Copy them into `.env.local` (never commit that file; the variable list arrives with F-07).
 
@@ -91,6 +92,34 @@ These settings live in GitHub, not in the repository. **Status (2026-10-11):** i
 2. **Security features:** Settings → Code security: enable Dependabot alerts and security updates, secret scanning with push protection, and private vulnerability reporting (this is where `SECURITY.md` points).
 3. **Actions:** Settings → Actions → General: set workflow permissions to read-only by default and require approval for pull requests from first-time contributors.
 4. **Merge strategy:** allow squash merging only, so each pull request is one commit on `main`.
+
+## Guardrails: what is enforced where
+
+Every rule below is checked by something that cannot be forgotten. CI and the GitHub ruleset apply to everyone, including Claude Code. Local hooks give faster feedback but only protect the machine they run on.
+
+| Rule                                                                                                   | Enforced by                                                                                                         | Override                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Row-level security on every table                                                                      | CI `database` job (`check:rls`)                                                                                     | none                                                                                                                                                       |
+| Committed generated types match the migrations                                                         | CI `database` job (diff; skipped while the file is the placeholder)                                                 | Run `bun run db:types:staging` after pushing migrations, or take the file from the `database-types` artifact of the failed run                             |
+| Applied migrations are never edited or deleted                                                         | CI `guards` job; Claude Code file guard                                                                             | Label `allow-migration-edit` on the pull request; `ALLOW_MIGRATION_EDIT=1` when starting Claude Code. Only for a migration that was never applied anywhere |
+| A new migration should come with an ADR                                                                | CI `guards` job (warning only)                                                                                      | Add an ADR, or ignore if no lasting decision was taken                                                                                                     |
+| No secrets, personal paths or non-placeholder email addresses                                          | CI `secret-scan` (gitleaks with `.gitleaks.toml`); GitHub push protection; pre-commit hook if gitleaks is installed | Add a narrow allowlist entry to `.gitleaks.toml` in a reviewed pull request                                                                                |
+| Pull request description has the checklist, fully ticked                                               | CI `pr-checklist` workflow                                                                                          | Delete a line that does not apply and say why                                                                                                              |
+| Tests never run against a non-local database                                                           | `tests/helpers/local-only.ts`, used by the test helpers and `test:db`                                               | `ALLOW_REMOTE_TESTS=1`, only for a throwaway database                                                                                                      |
+| Formatting, lint, types, unit tests, 80% coverage on `lib/domain`                                      | CI `checks`; pre-commit (format and lint); Claude Code Stop hook (`check:fast`)                                     | none                                                                                                                                                       |
+| No commits on `main`; changes go through a pull request                                                | Pre-commit hook; GitHub ruleset "Protect main"                                                                      | `ALLOW_MAIN_COMMIT=1` locally (the ruleset still blocks the push)                                                                                          |
+| Claude Code never reads `.env` files, force-pushes or skips hooks                                      | `.claude/settings.json` deny rules                                                                                  | Edit the settings in a reviewed pull request                                                                                                               |
+| Claude Code asks before `supabase db push`, `supabase link`, mutating `gh api` calls and `gh pr merge` | `.claude/settings.json` ask rules                                                                                   | Approve the prompt                                                                                                                                         |
+| Claude Code cannot write `.env` files or data files outside `tests/fixtures`                           | PreToolUse file guard (`.claude/hooks/guard-files.ts`)                                                              | none                                                                                                                                                       |
+| Claude Code formats what it edits and runs `check:fast` before finishing                               | PostToolUse and Stop hooks (`.claude/hooks`)                                                                        | none                                                                                                                                                       |
+
+Notes:
+
+- The pre-commit hook lives in `.githooks/`. `bun install` activates it (the `prepare` script sets `core.hooksPath`). Never bypass it with `--no-verify`.
+- Claude Code reads `.claude/settings.json` at the start of a session, so changes apply to new sessions. `/hooks` lists the active hooks.
+- The Stop hook skips work when the exact working tree already passed (cache in `.claude/.last-check`, not committed) and never loops (it ignores `stop_hook_active`).
+- When you add a rule, prefer a CI check, add a local hook only for speed, and add a row to this table.
+- After F-10 reaches `main`, add the new `guards` and `pr-checklist` checks to the "Protect main" ruleset's required checks.
 
 ## Restore a backup
 

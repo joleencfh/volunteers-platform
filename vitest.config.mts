@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 import { fileURLToPath } from 'node:url'
 
 // Unit tests: pure logic, no network and no database. Database tests use vitest.db.config.mts.
@@ -7,6 +7,8 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['tests/unit/**/*.test.ts'],
+    // Keep Vitest's defaults; also skip nested checkouts in .claude/worktrees
+    exclude: [...configDefaults.exclude, '.claude/worktrees/**'],
     coverage: {
       provider: 'v8',
       // Business rules live in lib/domain and must stay well covered.

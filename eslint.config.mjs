@@ -18,7 +18,15 @@ const eslintConfig = defineConfig([
     },
   },
   // Override default ignores of eslint-config-next.
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'coverage/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'coverage/**',
+    'next-env.d.ts',
+    // Nested checkouts for parallel Claude Code sessions, each with its own node_modules
+    '.claude/worktrees/**',
+  ]),
 ])
 
 export default eslintConfig

@@ -6,3 +6,4 @@ supabase/migrations
 docs/spec.md
 .impeccable
 lib/database.types.ts
+.claude/worktrees

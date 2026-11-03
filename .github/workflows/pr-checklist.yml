@@ -1,0 +1,33 @@
+name: PR checklist
+
+# Fails while the pull request description is missing the checklist from the template or still has
+# unticked items. Re-runs whenever the description is edited.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  pr-checklist:
+    # Dependabot pull requests do not use the template
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Checklist present and fully ticked
+        env:
+          # Passed through the environment, never interpolated into the script
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if ! printf '%s\n' "$BODY" | grep -qE '^## Checklist'; then
+            echo "::error::The pull request description has no '## Checklist' section. Use .github/pull_request_template.md."
+            exit 1
+          fi
+          open=$(printf '%s\n' "$BODY" | grep -cE '^\s*- \[ \]' || true)
+          if [ "$open" -gt 0 ]; then
+            echo "::error::$open checklist item(s) are not ticked. Tick each one, or delete a line that does not apply and say why in the description."
+            exit 1
+          fi
+          echo "Checklist complete."

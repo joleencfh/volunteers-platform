@@ -3,8 +3,10 @@
 // Switch identity with actAs(): policies see the same role and auth.uid() they would in production.
 import { randomUUID } from 'node:crypto'
 import postgres from 'postgres'
+import { assertLocalTarget } from '../../helpers/local-only'
 
 const url = process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+assertLocalTarget('DATABASE_URL', url)
 export const sql = postgres(url, { max: 1, onnotice: () => {} })
 
 export type Tx = postgres.TransactionSql

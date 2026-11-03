@@ -1,0 +1,32 @@
+# gitleaks configuration: the default secret rules plus two rules for a public repository.
+# Used by CI (secret-scan job) and by the pre-commit hook when gitleaks is installed.
+title = "PauseAI IT gitleaks config"
+
+[extend]
+useDefault = true
+
+# Any email address that is not an obvious placeholder. Real addresses never belong in a public repo.
+[[rules]]
+id = "non-placeholder-email"
+description = "Email address that is not a placeholder"
+regex = '''[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}'''
+keywords = ["@"]
+
+[rules.allowlist]
+regexTarget = "match"
+regexes = [
+  '''@example\.(test|com|org|net)$''',
+  '''@users\.noreply\.github\.com$''',
+  '''^noreply@anthropic\.com$''',
+]
+paths = [
+  '''bun\.lock$''',
+  '''supabase/config\.toml$''',
+]
+
+# A Windows user-profile path leaks the account name.
+[[rules]]
+id = "windows-user-path"
+description = "Windows user-profile path"
+regex = '''(?i)[A-Z]:\\Users\\[A-Za-z0-9._-]+\\'''
+keywords = ["users"]

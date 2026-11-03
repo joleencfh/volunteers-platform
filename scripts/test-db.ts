@@ -4,8 +4,16 @@
 // tests on every pull request.
 import { spawnSync } from 'node:child_process'
 import postgres from 'postgres'
+import { assertLocalTarget } from '../tests/helpers/local-only'
 
 const url = process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+
+try {
+  assertLocalTarget('DATABASE_URL', url)
+} catch (error) {
+  console.error(error instanceof Error ? error.message : error)
+  process.exit(1)
+}
 
 async function databaseReachable(): Promise<boolean> {
   const sql = postgres(url, { max: 1, connect_timeout: 3, onnotice: () => {} })

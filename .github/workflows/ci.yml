@@ -65,8 +65,11 @@ jobs:
       - name: Unit tests
         run: bun run test:unit
 
+      # No secrets in this job, so skip the environment check (the e2e job builds with real ones)
       - name: Build
         run: bun run build
+        env:
+          SKIP_ENV_VALIDATION: '1'
 
   # Database layer against a local Supabase started in the runner. Never touches staging or
   # production. Starts only the services the tests need.

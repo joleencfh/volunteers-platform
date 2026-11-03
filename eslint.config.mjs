@@ -2,6 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier'
+import localRules from './eslint-rules/no-server-only-in-client.mjs'
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -16,6 +17,11 @@ const eslintConfig = defineConfig([
       // error. Blank lines and comments do not count.
       'max-lines': ['warn', { max: 500, skipBlankLines: true, skipComments: true }],
     },
+  },
+  {
+    files: ['**/*.{ts,tsx,js,jsx,mjs}'],
+    plugins: { local: localRules },
+    rules: { 'local/no-server-only-in-client': 'error' },
   },
   // Override default ignores of eslint-config-next.
   globalIgnores([

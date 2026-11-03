@@ -25,7 +25,7 @@ Keep staging to synthetic data. Database and end-to-end tests run in CI against 
 
 ## Environment variables
 
-Declared in [`.env.schema`](.env.schema) and validated at build and start by `lib/env.ts`. Builds that cannot have secrets (CI static checks) set `SKIP_ENV_VALIDATION=1`.
+Declared in [`.env.schema`](.env.schema) and validated at build and start by `lib/env.ts`. Builds that cannot have secrets (CI static checks) set `SKIP_ENV_VALIDATION=1`; it applies only to `next build`, never to a running server.
 
 | Variable                               | Required  | Purpose                                                      |
 | -------------------------------------- | --------- | ------------------------------------------------------------ |

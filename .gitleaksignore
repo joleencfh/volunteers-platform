@@ -1,0 +1,7 @@
+# Reviewed false positives, by gitleaks fingerprint (commit:file:rule:line).
+# Both are a made-up database connection string in tests/unit/local-only.test.ts
+# ("pw@host" looks like an email address to the non-placeholder-email rule). The current version
+# of the file uses an example.com host and no longer triggers the rule, but the scan covers
+# history, so the commits that introduced the old line stay listed here.
+6cbc22d8c0764706145feeb547248f656814c4a2:tests/unit/local-only.test.ts:non-placeholder-email:18
+5ef4097e9c601ef2f2c95ea20beb1c02e87d0b54:tests/unit/local-only.test.ts:non-placeholder-email:18

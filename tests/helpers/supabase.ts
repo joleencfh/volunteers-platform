@@ -2,6 +2,7 @@
 // (or that CI exports) and creates fixture users through the admin API.
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { FixtureUser } from '../fixtures/users'
+import { assertLocalTarget } from './local-only'
 
 export type SupabaseEnv = { url: string; anonKey: string; serviceKey: string }
 
@@ -11,6 +12,7 @@ export function supabaseEnv(): SupabaseEnv | null {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !anonKey || !serviceKey) return null
+  assertLocalTarget('NEXT_PUBLIC_SUPABASE_URL', url)
   return { url, anonKey, serviceKey }
 }
 

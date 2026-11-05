@@ -54,6 +54,7 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 - Create one with `bunx supabase migration new <name>`; it appears in `supabase/migrations/` with a timestamp prefix.
 - Never edit a migration that has been applied to staging or production; add a new one.
 - After every schema change: `bun run db:reset`, `bun run db:types`, `bun run check:rls`, commit all three results together.
+- The CI `database` job regenerates the types and compares them byte for byte with the committed file. Its runner has no formatter for the generated TypeScript, so the output differs in layout from one generated on a machine that has it, even when the schema is identical. If the drift check fails only on layout, download the `database-types` artifact from that run and commit it as `lib/database.types.ts`.
 - Every new table needs `alter table ... enable row level security;` and policies in the same migration. CI runs the guard and fails otherwise.
 
 ## Staging and production projects (you do this once)
@@ -150,7 +151,18 @@ After rotating: redeploy, load `/`, check an admin can sign in, and note the dat
 
 Admin is a flag on the person's row in `users` in the database, never an environment variable.
 
-- **First admin:** `scripts/seed-admin.ts` (arrives with A-01) creates the first admin from an email in an environment variable declared in `.env.schema`. Run it once per environment, with that variable set for the single command only; it never goes into a committed file.
+- **First admin:** `scripts/seed-admin.ts` creates the first admin from `SEED_ADMIN_EMAIL`, declared in `.env.schema`. Run it once per environment, after the migrations, with that variable set for the single command only; it never goes into a committed file. It reads the Supabase URL and service-role key from the environment (bun loads `.env.local`, so check which project that file points at).
+
+  ```powershell
+  $env:SEED_ADMIN_EMAIL = '<admin email>'; bun scripts/seed-admin.ts; Remove-Item Env:SEED_ADMIN_EMAIL
+  ```
+
+  ```bash
+  SEED_ADMIN_EMAIL='<admin email>' bun scripts/seed-admin.ts
+  ```
+
+  It confirms the auth user and creates an active member at level experienced, with the display name and real name set to the placeholder "Admin"; edit them in the Supabase table editor. Running it again is safe: an existing member keeps their names and level and only becomes an active admin. It never prints the email.
+
 - **Later admins:** an existing admin approves the person like any volunteer (A-04), then sets the admin flag. Until an admin tool exists (M5), the maintainer sets `is_admin` on that user in the Supabase dashboard's table editor, and the change is recorded in the audit log by hand.
 - The person must already be an active member: sign-in matches the verified email, so an admin flag on someone without a member record gives no access.
 - To remove an admin, clear the flag the same way.

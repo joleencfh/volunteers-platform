@@ -23,11 +23,24 @@ describe('config', () => {
     })
   })
 
-  it('denies anon', async () => {
+  it('lets anon read only the two retention periods, and write nothing', async () => {
     await inRolledBackTransaction(async (tx) => {
       await actAs(tx, { role: 'anon' })
-      expect(await isDenied(tx, () => tx`select key from public.config`)).toBe(true)
+      const keys = (await tx`select key from public.config order by key`).map((row) => row.key)
+      expect(keys).toEqual([
+        'retention.people_who_leave_months',
+        'retention.rejected_applications_months',
+      ])
+      expect((await tx`select key from public.config where key like 'level.%'`).length).toBe(0)
       expect(await isDenied(tx, () => tx`update public.config set value = '1'`)).toBe(true)
+      expect(await isDenied(tx, () => tx`delete from public.config`)).toBe(true)
+      expect(
+        await isDenied(
+          tx,
+          () => tx`insert into public.config (key, value, description)
+          values ('x', '1', 'x')`,
+        ),
+      ).toBe(true)
     })
   })
 
@@ -49,16 +62,24 @@ describe('config', () => {
     })
   })
 
-  it('shows nothing to someone signed in without a member row or deactivated', async () => {
+  it('shows only the public retention periods to someone signed in without a member row or deactivated', async () => {
     await inRolledBackTransaction(async (tx) => {
       const stranger = await addAuthUser(tx)
       const former = await addMember(tx, { status: 'deactivated' })
+      const publicKeys = [
+        'retention.people_who_leave_months',
+        'retention.rejected_applications_months',
+      ]
 
       await actAs(tx, { role: 'authenticated', userId: stranger })
-      expect((await tx`select key from public.config`).length).toBe(0)
+      expect((await tx`select key from public.config order by key`).map((r) => r.key)).toEqual(
+        publicKeys,
+      )
 
       await actAs(tx, { role: 'authenticated', userId: former })
-      expect((await tx`select key from public.config`).length).toBe(0)
+      expect((await tx`select key from public.config order by key`).map((r) => r.key)).toEqual(
+        publicKeys,
+      )
     })
   })
 

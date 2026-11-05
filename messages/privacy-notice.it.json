@@ -1,0 +1,82 @@
+{
+  "draft": "BOZZA: questa informativa non è ancora stata approvata dal titolare. Le parti tra [parentesi quadre] vanno completate o confermate prima del lancio.",
+  "intro": "Questa piattaforma è un progetto personale di un volontario di PauseAI Italia, pensato per coordinare il lavoro dei volontari. Qui spieghiamo quali dati personali raccogliamo, perché, chi li vede e per quanto tempo li conserviamo.",
+  "sections": [
+    {
+      "heading": "Titolare del trattamento e contatto",
+      "paragraphs": [
+        "Il titolare del trattamento è [nome e cognome del titolare], che gestisce la piattaforma a titolo personale per i volontari di PauseAI Italia. Per qualsiasi richiesta scrivi a [indirizzo email di contatto]."
+      ]
+    },
+    {
+      "heading": "Perché usiamo i tuoi dati",
+      "items": [
+        "valutare la tua candidatura e decidere se darti accesso alla piattaforma;",
+        "farti accedere e riconoscerti quando usi la piattaforma;",
+        "organizzare gruppi di lavoro, attività e compiti dei volontari e mostrare chi se ne occupa;",
+        "mandarti le email di servizio: link di accesso, esito della candidatura, compiti assegnati;",
+        "tenere un registro delle azioni degli amministratori, per sicurezza e responsabilità."
+      ]
+    },
+    {
+      "heading": "Quali dati conserviamo",
+      "items": [
+        "dati della candidatura: nome visibile, nome e cognome, indirizzo email, città o regione, come hai conosciuto PauseAI, la tua esperienza con la sicurezza dell'IA e le date dei consensi con la versione di questa informativa;",
+        "dati del profilo e dell'attività: livello, gruppi di lavoro, compiti e attività a cui partecipi, data di ingresso e ultimo accesso;",
+        "registro delle azioni degli amministratori."
+      ],
+      "paragraphs": [
+        "Raccogliamo solo ciò che serve alla piattaforma. LinkedIn, se lo indichi, è solo un collegamento: non carichiamo curriculum."
+      ]
+    },
+    {
+      "heading": "Chi vede cosa",
+      "items": [
+        "gli amministratori vedono tutti i dati, compresi nome reale, email, città e come hai conosciuto PauseAI;",
+        "gli altri volontari vedono il tuo nome visibile e la tua attività nei gruppi di cui fanno parte;",
+        "nome reale, email, città e come hai conosciuto PauseAI non sono mai mostrati agli altri volontari;",
+        "non vendiamo né cediamo i dati a terzi."
+      ]
+    },
+    {
+      "heading": "Consenso per categorie particolari di dati",
+      "paragraphs": [
+        "Far parte di un gruppo che si occupa di advocacy può rivelare opinioni politiche, che il GDPR (art. 9) tratta come categoria particolare di dati. Per questo, quando ti candidi, ti chiediamo un consenso esplicito e separato, registrato con data e versione di questa informativa.",
+        "Puoi revocare il consenso in qualsiasi momento scrivendo al contatto indicato sopra. La revoca non incide sul trattamento già avvenuto, ma comporta la chiusura del tuo accesso."
+      ]
+    },
+    {
+      "heading": "Per quanto tempo li conserviamo",
+      "items": [
+        "candidature rifiutate: {rejectedMonths} mesi dalla decisione, poi vengono cancellate;",
+        "volontari che lasciano: i dati personali sono eliminati dopo {leaverMonths} mesi; i compiti e le attività restano, con il nome sostituito da «Ex volontario»;",
+        "volontari attivi: finché fai parte della piattaforma."
+      ],
+      "paragraphs": ["[Il titolare conferma questi periodi prima del lancio.]"]
+    },
+    {
+      "heading": "I tuoi diritti",
+      "paragraphs": [
+        "Puoi chiedere l'accesso ai tuoi dati e una copia in formato leggibile (esportazione), la rettifica, la cancellazione o l'anonimizzazione, la limitazione del trattamento e opporti al trattamento. Scrivi al contatto indicato sopra.",
+        "Se ritieni che i tuoi dati siano trattati in modo illecito puoi presentare reclamo al Garante per la protezione dei dati personali (garanteprivacy.it)."
+      ]
+    },
+    {
+      "heading": "Servizi che usiamo e dove sono i dati",
+      "items": [
+        "Supabase: database e accesso, con progetto in una regione dell'Unione europea;",
+        "Vercel: pubblicazione dell'applicazione;",
+        "Resend: invio delle email di servizio."
+      ],
+      "paragraphs": [
+        "Questi fornitori trattano i dati per nostro conto, sulla base dei loro termini per il trattamento dei dati, che il titolare ha accettato. [Il titolare conferma regione e termini di ciascun fornitore.]"
+      ]
+    },
+    {
+      "heading": "Passaggio a PauseAI Global",
+      "paragraphs": [
+        "In futuro la piattaforma potrebbe passare a PauseAI Global. In quel caso questa informativa sarà aggiornata con il nuovo titolare, che dovrà approvare il trattamento, e ti avviseremo."
+      ]
+    }
+  ]
+}

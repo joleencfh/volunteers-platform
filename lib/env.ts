@@ -13,7 +13,7 @@ const schema = z.object({
   // Public address of the site, the only origin sign-in links may point back to. Local origins
   // are allowed outside production without it; set it on every deployment.
   NEXT_PUBLIC_SITE_URL: z.url().optional(),
-  // Required from A-04 (admin review emails); optional until then.
+  // Application emails (A-04). Optional: without both, decisions save but no email is sent.
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(1).optional(),
 })

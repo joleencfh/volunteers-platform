@@ -15,3 +15,4 @@ One short numbered file per decision that future maintainers need to know about:
 | [0008](0008-security-headers-and-content-security-policy.md) | Security headers and Content-Security-Policy  | accepted (F-07) |
 | [0009](0009-member-data-foundation.md)                       | Member data foundation                        | accepted (A-01) |
 | [0010](0010-sign-in-and-route-access.md)                     | Sign-in and route access                      | accepted (A-02) |
+| [0011](0011-application-review-and-email.md)                 | Application review and transactional email    | accepted (A-04) |

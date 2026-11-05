@@ -15,7 +15,8 @@ keywords = ["@"]
 [rules.allowlist]
 regexTarget = "match"
 regexes = [
-  '''@example\.(test|com|org|net)$''',
+  # Case-insensitive: tests use mixed-case placeholders such as Ada@Example.test on purpose
+  '''(?i)@example\.(test|com|org|net)$''',
   '''@users\.noreply\.github\.com$''',
   '''^noreply@anthropic\.com$''',
 ]

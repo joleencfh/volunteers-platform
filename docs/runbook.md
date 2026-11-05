@@ -54,6 +54,7 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 - Create one with `bunx supabase migration new <name>`; it appears in `supabase/migrations/` with a timestamp prefix.
 - Never edit a migration that has been applied to staging or production; add a new one.
 - After every schema change: `bun run db:reset`, `bun run db:types`, `bun run check:rls`, commit all three results together.
+- The CI `database` job regenerates the types and compares them byte for byte with the committed file. Its runner has no formatter for the generated TypeScript, so the output differs in layout from one generated on a machine that has it, even when the schema is identical. If the drift check fails only on layout, download the `database-types` artifact from that run and commit it as `lib/database.types.ts`.
 - Every new table needs `alter table ... enable row level security;` and policies in the same migration. CI runs the guard and fails otherwise.
 
 ## Staging and production projects (you do this once)

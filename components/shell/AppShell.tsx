@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { ReactNode } from 'react'
+import { Suspense, type ReactNode } from 'react'
 import { getTranslations } from '@/lib/i18n/server'
+import { AdminLink } from './AdminLink'
 import { HeaderNav, type NavItem } from './HeaderNav'
 
 /** Header, main area and footer around every page. New sections add entries to NAV_ITEMS. */
@@ -29,7 +30,12 @@ export async function AppShell({ children }: { children: ReactNode }) {
               priority
             />
           </Link>
-          <HeaderNav items={items} menuLabel={t('menu')} navLabel={t('mainNavigation')} />
+          <div className="flex items-center gap-2 md:ml-auto">
+            <Suspense fallback={null}>
+              <AdminLink />
+            </Suspense>
+            <HeaderNav items={items} menuLabel={t('menu')} navLabel={t('mainNavigation')} />
+          </div>
         </div>
       </header>
       <main

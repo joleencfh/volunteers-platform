@@ -9,6 +9,7 @@ import {
   type FieldError,
 } from '@/lib/domain/application'
 import { NOTICE_VERSION } from '@/lib/domain/notice'
+import { notifyAdminsOfApplication } from '@/lib/email/notify'
 import { createRateLimiter } from '@/lib/rate-limit'
 import { createAdminClient } from '@/lib/supabase/admin'
 
@@ -90,6 +91,8 @@ export async function submitApplication(
   })
   // A pending application for this email already exists: same outcome, no second row.
   if (error && error.code !== PG_UNIQUE_VIOLATION) return { status: 'unavailable' }
+  // Only a new row tells the admins; a repeat adds nothing to review. Never throws.
+  if (!error) await notifyAdminsOfApplication()
 
   redirect(PENDING_PATH)
 }

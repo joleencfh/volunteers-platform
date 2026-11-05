@@ -17,6 +17,9 @@ vi.mock('next/navigation', () => ({
 let requestHeaders: Record<string, string> = {}
 vi.mock('next/headers', () => ({ headers: async () => new Headers(requestHeaders) }))
 
+const notifyAdmins = vi.fn()
+vi.mock('@/lib/email/notify', () => ({ notifyAdminsOfApplication: () => notifyAdmins() }))
+
 const insert = vi.fn()
 const maybeSingle = vi.fn()
 const ilike = vi.fn(() => ({ maybeSingle }))
@@ -66,6 +69,7 @@ async function outcome(promise: Promise<unknown>) {
 
 beforeEach(() => {
   insert.mockReset()
+  notifyAdmins.mockReset()
   insert.mockResolvedValue({ error: null })
   maybeSingle.mockReset()
   maybeSingle.mockResolvedValue({ data: null, error: null })
@@ -88,6 +92,7 @@ describe('submitApplication', () => {
     })
     expect(row.privacy_accepted_at).toBeTruthy()
     expect(row.special_category_consent_at).toBeTruthy()
+    expect(notifyAdmins).toHaveBeenCalledOnce()
   })
 
   it('refuses an invalid form without touching the database, keeping the typed values', async () => {
@@ -114,6 +119,7 @@ describe('submitApplication', () => {
     const submit = await load()
     insert.mockResolvedValue({ error: { code: '23505' } })
     expect(await outcome(submit(idle, form()))).toBe('redirect:/apply/pending')
+    expect(notifyAdmins).not.toHaveBeenCalled()
   })
 
   it('gives an existing member the same answer and stores nothing', async () => {

@@ -37,7 +37,62 @@
     "apply": "Apply to volunteer"
   },
   "admin": {
-    "title": "Admin"
+    "title": "Admin",
+    "applicationsLink": "Applications",
+    "applicationsLinkPending": "Applications, {count} pending",
+    "applications": {
+      "title": "Applications",
+      "pendingHeading": "Waiting for review",
+      "pendingEmpty": "No applications are waiting.",
+      "recentHeading": "Recent decisions",
+      "recentEmpty": "No decisions yet.",
+      "displayName": "Display name",
+      "realName": "Name",
+      "email": "Email",
+      "city": "City or region",
+      "motivation": "Motivation",
+      "heardVia": "Heard about PauseAI via",
+      "knowledge": "AI safety knowledge",
+      "submittedAt": "Applied on",
+      "decidedAt": "Decided on",
+      "none": "Not given",
+      "status": {
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "heardOptions": {
+        "global_website": "PauseAI global website",
+        "italian_website": "PauseAI Italian website",
+        "word_of_mouth": "Word of mouth",
+        "other": "Other: {text}"
+      },
+      "approveHeading": "Approve",
+      "startLevel": "Starting level",
+      "startLevelHint": "Everyone starts as new. Pick a higher level only for someone who is already experienced.",
+      "levels": {
+        "new": "New",
+        "fresh": "Fresh",
+        "experienced": "Experienced"
+      },
+      "reason": "Reason for the higher level",
+      "reasonHint": "Required when the level is not new. It is kept in the audit log. Do not write personal details.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "working": "Working…",
+      "errors": {
+        "invalidApplication": "This application cannot be found. Reload the page.",
+        "invalidLevel": "Choose one of the levels.",
+        "reasonRequired": "Give a reason for starting above new.",
+        "tooLong": "The text is too long."
+      },
+      "results": {
+        "done": "Decision saved.",
+        "doneEmailFailed": "Decision saved, but the email could not be sent. Tell the person yourself.",
+        "notFound": "This application no longer exists. Reload the page.",
+        "conflict": "This application was already decided the other way. Reload the page.",
+        "unavailable": "The decision could not be saved. Try again."
+      }
+    }
   },
   "apply": {
     "title": "Apply to volunteer",

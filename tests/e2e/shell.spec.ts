@@ -1,7 +1,16 @@
 import { expect, test } from '@playwright/test'
+import { fixtureUser } from '../fixtures/users'
 import { expectNoSeriousA11yViolations } from './helpers/a11y'
+import { loginAs } from './helpers/auth'
 
 test.describe('style guide', () => {
+  // /dev/* is open to logged-out visitors only outside production. CI serves a production build,
+  // so the style guide is opened as a signed-in member there.
+  test.beforeEach(async ({ context, baseURL }) => {
+    if (process.env.CI)
+      await loginAs(context, fixtureUser('fresh'), baseURL ?? 'http://localhost:3000')
+  })
+
   test('has no serious accessibility violations', async ({ page }) => {
     await page.goto('/dev/style')
     await expect(page.getByRole('heading', { level: 1, name: 'Style guide' })).toBeVisible()

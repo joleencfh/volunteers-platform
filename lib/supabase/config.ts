@@ -1,0 +1,7 @@
+// NEXT_PUBLIC_* variables are inlined at build time only when read as literal property accesses.
+export function supabasePublicConfig() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  if (!url || !key) throw new Error('Supabase URL and publishable key are not configured.')
+  return { url, key }
+}

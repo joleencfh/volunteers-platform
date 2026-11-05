@@ -19,6 +19,26 @@
   "home": {
     "title": "PauseAI IT"
   },
+  "login": {
+    "title": "Sign in",
+    "intro": "Sign-in is for approved volunteers. Use the email address of your application.",
+    "refused": "We could not sign you in. Sign-in only works for approved volunteers, with the email address of their application. If you have not applied yet, apply first.",
+    "emailLabel": "Email address",
+    "sendLink": "Email me a sign-in link",
+    "sending": "Sending…",
+    "linkSent": "If this address can sign in, a link is on its way. Open it in the same browser.",
+    "invalidEmail": "Enter a valid email address.",
+    "tooManyRequests": "Too many requests. Wait a few minutes and try again.",
+    "unavailable": "Sign-in is not available right now. Try again later.",
+    "or": "or",
+    "google": "Continue with Google",
+    "googleFailed": "Google sign-in could not start. Try again or use the email link.",
+    "notAMember": "Not a volunteer yet?",
+    "apply": "Apply to volunteer"
+  },
+  "admin": {
+    "title": "Admin"
+  },
   "apply": {
     "title": "Apply to volunteer"
   },

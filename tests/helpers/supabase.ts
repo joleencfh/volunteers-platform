@@ -49,7 +49,11 @@ export const provisionProfile: Provision = async (admin, userId, user) => {
 }
 
 /** Creates the fixture user, or resets its password and metadata if it already exists. */
-export async function ensureUser(user: FixtureUser, password: string): Promise<string> {
+export async function ensureUser(
+  user: FixtureUser,
+  password: string,
+  { member = true }: { member?: boolean } = {},
+): Promise<string> {
   const admin = adminClient()
   const appMetadata = { level: user.level, is_admin: user.isAdmin }
 
@@ -75,6 +79,6 @@ export async function ensureUser(user: FixtureUser, password: string): Promise<s
     if (updated.error) throw updated.error
   }
 
-  await provisionProfile(admin, userId, user)
+  if (member) await provisionProfile(admin, userId, user)
   return userId
 }

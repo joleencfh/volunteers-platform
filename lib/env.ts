@@ -10,6 +10,9 @@ const schema = z.object({
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
   // Bypasses row-level security. Server-only.
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  // Public address of the site, the only origin sign-in links may point back to. Local origins
+  // are allowed outside production without it; set it on every deployment.
+  NEXT_PUBLIC_SITE_URL: z.url().optional(),
   // Required from A-04 (admin review emails); optional until then.
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(1).optional(),

@@ -1,11 +1,25 @@
 import { describe, expect, it } from 'vitest'
 import {
   allowedOrigins,
+  hasLocalePrefix,
   isAuthRoute,
   isPublicRoute,
   pickRedirectOrigin,
   safeNextPath,
 } from '@/lib/domain/routes'
+
+describe('hasLocalePrefix', () => {
+  it.each(['/en', '/it', '/en/apply', '/it/privacy'])('recognises %s', (path) => {
+    expect(hasLocalePrefix(path)).toBe(true)
+  })
+
+  it.each(['/', '/login', '/apply', '/privacy', '/admin', '/english', '/items'])(
+    'does not treat %s as prefixed',
+    (path) => {
+      expect(hasLocalePrefix(path)).toBe(false)
+    },
+  )
+})
 
 describe('isPublicRoute', () => {
   it.each([

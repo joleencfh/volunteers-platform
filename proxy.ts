@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { localeForPath } from '@/lib/domain/locale'
-import { isAuthRoute, isPublicRoute } from '@/lib/domain/routes'
+import { hasLocalePrefix, isAuthRoute, isPublicRoute } from '@/lib/domain/routes'
 import { refreshSession } from '@/lib/supabase/session'
 
 // Runs on every page request. It refreshes the session cookies, sends logged-out visitors from
@@ -26,7 +26,13 @@ export async function proxy(request: NextRequest) {
     return redirect
   }
 
-  if (!signedIn && !isPublicRoute(pathname, process.env.NODE_ENV !== 'production')) {
+  // A path that already carries a locale prefix does not exist: let it 404 instead of sending
+  // the visitor to the login page.
+  if (
+    !signedIn &&
+    !hasLocalePrefix(pathname) &&
+    !isPublicRoute(pathname, process.env.NODE_ENV !== 'production')
+  ) {
     return redirectTo('/login')
   }
   // A refused sign-in lands on /login?error=...; do not bounce those away.

@@ -37,7 +37,10 @@ test('someone without a member record is refused and signed out', async ({
 
   await page.goto(link)
   await expect(page).toHaveURL(/\/login\?error=signin$/)
-  await expect(page.getByRole('alert')).toContainText('We could not sign you in')
+  // The page also has an empty field-error alert and Next.js's route announcer.
+  await expect(
+    page.getByRole('alert').filter({ hasText: 'We could not sign you in' }),
+  ).toBeVisible()
 
   // Signed out: a protected route sends them back to the login page.
   await page.goto('/admin')

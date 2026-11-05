@@ -1,11 +1,20 @@
 // Which paths a logged-out visitor may open, and where sign-in may send someone afterwards.
 // Paths here are URL paths without a locale prefix (proxy.ts adds the locale by rewriting).
+import { LOCALES } from './locale'
 
 const PUBLIC_EXACT = ['/', '/login', '/privacy']
 const PUBLIC_PREFIXES = ['/apply', '/auth']
 
 function isUnder(pathname: string, route: string): boolean {
   return pathname === route || pathname.startsWith(`${route}/`)
+}
+
+/**
+ * True for `/en`, `/it/privacy` and the like. The locale is added by the proxy and never typed in
+ * a URL, so such paths do not exist (they 404) and must not be sent to the login page first.
+ */
+export function hasLocalePrefix(pathname: string): boolean {
+  return LOCALES.some((locale) => isUnder(pathname, `/${locale}`))
 }
 
 /**

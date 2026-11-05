@@ -32,12 +32,21 @@ export function adminClient(env: SupabaseEnv = requireEnv()): SupabaseClient {
   })
 }
 
-/**
- * Extension point for A-01: once public.users exists, insert or update the user's row here so the
- * level and admin flag come from the database. Until then they live in the auth user's app_metadata.
- */
+/** Gives the fixture user a member row, so its level and admin flag come from the database. */
 type Provision = (admin: SupabaseClient, userId: string, user: FixtureUser) => Promise<void>
-export const provisionProfile: Provision = async () => {}
+export const provisionProfile: Provision = async (admin, userId, user) => {
+  const { error } = await admin.from('users').upsert({
+    id: userId,
+    email: user.email,
+    display_name: `E2E ${user.key}`,
+    real_name: `E2E Fixture ${user.key}`,
+    city: 'Testville',
+    level: user.level,
+    is_admin: user.isAdmin,
+    status: 'active',
+  })
+  if (error) throw error
+}
 
 /** Creates the fixture user, or resets its password and metadata if it already exists. */
 export async function ensureUser(user: FixtureUser, password: string): Promise<string> {

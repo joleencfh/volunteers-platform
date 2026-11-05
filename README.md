@@ -36,6 +36,7 @@ Declared in [`.env.schema`](.env.schema) and validated at build and start by `li
 | `EMAIL_FROM`                           | from A-04 | From address for outgoing email                              |
 | `SKIP_ENV_VALIDATION`                  | no        | Set to `1` to skip validation in secret-less builds          |
 | `DATABASE_URL`                         | no        | Database tests and scripts against local Supabase only       |
+| `SEED_ADMIN_EMAIL`                     | no        | First admin, read only by `scripts/seed-admin.ts`            |
 
 ## Commands
 

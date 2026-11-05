@@ -150,7 +150,18 @@ After rotating: redeploy, load `/`, check an admin can sign in, and note the dat
 
 Admin is a flag on the person's row in `users` in the database, never an environment variable.
 
-- **First admin:** `scripts/seed-admin.ts` (arrives with A-01) creates the first admin from an email in an environment variable declared in `.env.schema`. Run it once per environment, with that variable set for the single command only; it never goes into a committed file.
+- **First admin:** `scripts/seed-admin.ts` creates the first admin from `SEED_ADMIN_EMAIL`, declared in `.env.schema`. Run it once per environment, after the migrations, with that variable set for the single command only; it never goes into a committed file. It reads the Supabase URL and service-role key from the environment (bun loads `.env.local`, so check which project that file points at).
+
+  ```powershell
+  $env:SEED_ADMIN_EMAIL = '<admin email>'; bun scripts/seed-admin.ts; Remove-Item Env:SEED_ADMIN_EMAIL
+  ```
+
+  ```bash
+  SEED_ADMIN_EMAIL='<admin email>' bun scripts/seed-admin.ts
+  ```
+
+  It confirms the auth user and creates an active member at level experienced, with the display name and real name set to the placeholder "Admin"; edit them in the Supabase table editor. Running it again is safe: an existing member keeps their names and level and only becomes an active admin. It never prints the email.
+
 - **Later admins:** an existing admin approves the person like any volunteer (A-04), then sets the admin flag. Until an admin tool exists (M5), the maintainer sets `is_admin` on that user in the Supabase dashboard's table editor, and the change is recorded in the audit log by hand.
 - The person must already be an active member: sign-in matches the verified email, so an admin flag on someone without a member record gives no access.
 - To remove an admin, clear the flag the same way.

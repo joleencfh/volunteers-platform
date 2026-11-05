@@ -40,13 +40,62 @@
     "title": "Admin"
   },
   "apply": {
-    "title": "Apply to volunteer"
+    "title": "Apply to volunteer",
+    "intro": "Fill in the form to apply as a PauseAI Italy volunteer. An admin reviews every application and replies by email.",
+    "requiredNote": "Fields marked * are required.",
+    "checkFields": "Some fields are not correct. Check the messages under the fields.",
+    "tooManyRequests": "You have sent too many requests. Try again in a while.",
+    "unavailable": "We could not send your application. Try again later.",
+    "displayName": "Display name",
+    "displayNameHint": "The name other volunteers will see. It can be a nickname.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "adminOnlyHint": "Visible to admins only.",
+    "email": "Email address",
+    "emailHint": "Use the address you will sign in with. Visible to admins only.",
+    "city": "City or region",
+    "motivation": "Why do you want to take part?",
+    "motivationHint": "Optional. A few lines are enough.",
+    "heardVia": "How did you hear about PauseAI?",
+    "heardOther": "Say how you heard about PauseAI",
+    "heardOptions": {
+      "global_website": "PauseAI global website",
+      "italian_website": "PauseAI Italian website",
+      "word_of_mouth": "Word of mouth",
+      "other": "Other"
+    },
+    "knowledge": "How well do you know AI safety?",
+    "knowledgeOptions": {
+      "none": "Not yet",
+      "basic": "I know a little",
+      "intermediate": "I know it fairly well",
+      "advanced": "I know it very well"
+    },
+    "choose": "Choose an option",
+    "consentTitle": "Consents",
+    "privacyConsent": "I have read and accept the privacy notice.",
+    "privacyLink": "Read the notice",
+    "specialCategoryConsent": "I explicitly consent to the processing of my data, which may reveal my political opinions (joining an advocacy group can do so).",
+    "submit": "Send application",
+    "sending": "Sending…",
+    "errors": {
+      "required": "This field is required.",
+      "tooLong": "The text is too long.",
+      "invalidEmail": "Enter a valid email address.",
+      "invalidChoice": "Choose one of the options."
+    }
   },
   "applyPending": {
-    "title": "Application received"
+    "title": "Application received",
+    "body": "Thank you! An admin will review your application and write to the email address you gave.",
+    "signIn": "You cannot sign in until the application is approved. When it is, you will get a sign-in link.",
+    "home": "Back to home"
   },
   "applyRejected": {
-    "title": "Application not accepted"
+    "title": "Application not accepted",
+    "body": "We cannot accept your application at the moment, so you cannot sign in.",
+    "reapply": "You can apply again at any time.",
+    "apply": "Apply again"
   },
   "privacy": {
     "title": "Privacy notice"

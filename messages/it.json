@@ -13,13 +13,62 @@
     "dismiss": "Chiudi la notifica"
   },
   "apply": {
-    "title": "Candidati come volontario"
+    "title": "Candidati come volontario",
+    "intro": "Compila il modulo per candidarti come volontario di PauseAI Italia. Un amministratore esamina ogni candidatura e ti risponde via email.",
+    "requiredNote": "I campi contrassegnati con * sono obbligatori.",
+    "checkFields": "Alcuni campi non sono corretti. Controlla i messaggi sotto ai campi.",
+    "tooManyRequests": "Hai inviato troppe richieste. Riprova tra un po'.",
+    "unavailable": "Non siamo riusciti a inviare la candidatura. Riprova più tardi.",
+    "displayName": "Nome visibile",
+    "displayNameHint": "Il nome che gli altri volontari vedranno. Può essere un soprannome.",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "adminOnlyHint": "Visibile solo agli amministratori.",
+    "email": "Indirizzo email",
+    "emailHint": "Usa lo stesso indirizzo con cui accederai alla piattaforma. Visibile solo agli amministratori.",
+    "city": "Città o regione",
+    "motivation": "Perché vuoi partecipare?",
+    "motivationHint": "Facoltativo. Poche righe bastano.",
+    "heardVia": "Come hai conosciuto PauseAI?",
+    "heardOther": "Specifica come hai conosciuto PauseAI",
+    "heardOptions": {
+      "global_website": "Sito globale di PauseAI",
+      "italian_website": "Sito italiano di PauseAI",
+      "word_of_mouth": "Passaparola",
+      "other": "Altro"
+    },
+    "knowledge": "Quanto conosci la sicurezza dell'IA?",
+    "knowledgeOptions": {
+      "none": "Per ora non la conosco",
+      "basic": "Ne so qualcosa",
+      "intermediate": "La conosco abbastanza bene",
+      "advanced": "La conosco molto bene"
+    },
+    "choose": "Scegli un'opzione",
+    "consentTitle": "Consensi",
+    "privacyConsent": "Ho letto e accetto l'informativa sulla privacy.",
+    "privacyLink": "Leggi l'informativa",
+    "specialCategoryConsent": "Acconsento esplicitamente al trattamento dei miei dati, che può rivelare le mie opinioni politiche (l'adesione a un gruppo di advocacy può farlo).",
+    "submit": "Invia la candidatura",
+    "sending": "Invio in corso…",
+    "errors": {
+      "required": "Questo campo è obbligatorio.",
+      "tooLong": "Il testo è troppo lungo.",
+      "invalidEmail": "Inserisci un indirizzo email valido.",
+      "invalidChoice": "Scegli una delle opzioni."
+    }
   },
   "applyPending": {
-    "title": "Candidatura ricevuta"
+    "title": "Candidatura ricevuta",
+    "body": "Grazie! Un amministratore esaminerà la tua candidatura e ti scriverà all'indirizzo email indicato.",
+    "signIn": "Finché la candidatura non è approvata non puoi accedere alla piattaforma. Quando sarà approvata riceverai un link per accedere.",
+    "home": "Torna alla home"
   },
   "applyRejected": {
-    "title": "Candidatura non accettata"
+    "title": "Candidatura non accettata",
+    "body": "Al momento non possiamo accettare la tua candidatura, e quindi non puoi accedere alla piattaforma.",
+    "reapply": "Puoi candidarti di nuovo in qualsiasi momento.",
+    "apply": "Candidati di nuovo"
   },
   "privacy": {
     "title": "Informativa sulla privacy"

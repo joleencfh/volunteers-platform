@@ -6,7 +6,7 @@ import {
   applicationRejectedEmail,
   newApplicationEmail,
 } from './templates'
-import { sendEmail } from './transport'
+import { EmailNotConfiguredError, sendEmail } from './transport'
 
 // Every function here swallows nothing the caller needs: they return whether the email went out,
 // and log only a fixed label, never an address, a name or the provider's message.
@@ -24,12 +24,20 @@ async function deliver(
   build: (origin: string) => { subject: string; text: string },
 ): Promise<boolean> {
   const origin = siteOrigin()
-  if (!origin) return false
+  if (!origin) {
+    console.error('Email not sent: NEXT_PUBLIC_SITE_URL is not set')
+    return false
+  }
   try {
     await sendEmail({ to, ...build(origin) })
     return true
-  } catch {
-    console.error('Email delivery failed')
+  } catch (error) {
+    // The not-configured error names settings only, so it is safe to log; anything else is not.
+    console.error(
+      error instanceof EmailNotConfiguredError
+        ? 'Email not sent: RESEND_API_KEY or EMAIL_FROM is not set'
+        : 'Email delivery failed',
+    )
     return false
   }
 }

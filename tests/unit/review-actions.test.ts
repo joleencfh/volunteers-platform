@@ -32,6 +32,9 @@ let memberRows: Record<string, unknown>[]
 let authUsers: { id: string; email: string }[]
 const createUser = vi.fn()
 const usersInsert = vi.fn()
+// Runs once, just before the next status update: lets a test play another admin deciding first.
+let beforeClaim: (() => void) | null = null
+let createUserFails = false
 
 function fakeDb() {
   return {
@@ -57,23 +60,32 @@ function fakeDb() {
         select: () => ({
           eq: () => ({ maybeSingle: async () => ({ data: application, error: null }) }),
         }),
-        update: (values: Partial<Application>) => ({
-          eq: () => ({
-            eq: (_column: string, status: string) => ({
-              select: async () => {
-                if (!application || application.status !== status) return { data: [], error: null }
-                Object.assign(application, values)
-                return { data: [{ id: application.id }], error: null }
-              },
+        update: (values: Partial<Application>) => {
+          const hook = beforeClaim
+          beforeClaim = null
+          hook?.()
+          return {
+            eq: () => ({
+              eq: (_column: string, status: string) => ({
+                select: async () => {
+                  if (!application || application.status !== status) {
+                    return { data: [], error: null }
+                  }
+                  Object.assign(application, values)
+                  return { data: [{ id: application.id }], error: null }
+                },
+              }),
             }),
-          }),
-        }),
+          }
+        },
       }
     },
     auth: {
       admin: {
         createUser: async ({ email }: { email: string }) => {
           createUser(email)
+          if (createUserFails)
+            return { data: { user: null }, error: { code: 'unexpected_failure' } }
           const existing = authUsers.find((user) => user.email === email)
           if (existing) return { data: { user: null }, error: { code: 'email_exists' } }
           const user = { id: `auth-${authUsers.length + 1}`, email }
@@ -115,6 +127,8 @@ beforeEach(() => {
   authUsers = []
   sent.length = 0
   transportFails = false
+  beforeClaim = null
+  createUserFails = false
   createUser.mockClear()
   usersInsert.mockClear()
   recordAudit.mockReset()
@@ -169,7 +183,7 @@ describe('approveApplication', () => {
     await approveApplication(idle, data())
     const second = await approveApplication(idle, data())
     expect(second).toEqual({ status: 'done' })
-    expect(createUser).toHaveBeenCalledOnce()
+    expect(authUsers).toHaveLength(1)
     expect(memberRows).toHaveLength(1)
     expect(recordAudit).toHaveBeenCalledOnce()
     expect(sent).toHaveLength(1)
@@ -229,6 +243,65 @@ describe('approveApplication', () => {
     expect(createUser).not.toHaveBeenCalled()
   })
 
+  it('leaves no member behind when another admin rejects it first', async () => {
+    beforeClaim = () => {
+      if (application) application.status = 'rejected'
+    }
+    const { approveApplication } = await load()
+    const result = await approveApplication(
+      idle,
+      form({ applicationId: APPLICATION_ID, level: 'new' }),
+    )
+    expect(result).toEqual({ status: 'conflict' })
+    expect(createUser).not.toHaveBeenCalled()
+    expect(memberRows).toHaveLength(0)
+    expect(application?.status).toBe('rejected')
+    expect(recordAudit).not.toHaveBeenCalled()
+    expect(sent).toHaveLength(0)
+  })
+
+  it('does not audit or email twice when another admin approves it first', async () => {
+    beforeClaim = () => {
+      if (application) application.status = 'approved'
+    }
+    const { approveApplication } = await load()
+    const result = await approveApplication(
+      idle,
+      form({ applicationId: APPLICATION_ID, level: 'new' }),
+    )
+    expect(result).toEqual({ status: 'done' })
+    expect(memberRows).toHaveLength(1)
+    expect(recordAudit).not.toHaveBeenCalled()
+    expect(sent).toHaveLength(0)
+  })
+
+  it('puts the application back to pending when the member cannot be created', async () => {
+    createUserFails = true
+    const { approveApplication } = await load()
+    const result = await approveApplication(
+      idle,
+      form({ applicationId: APPLICATION_ID, level: 'new' }),
+    )
+    expect(result).toEqual({ status: 'unavailable' })
+    expect(application).toMatchObject({ status: 'pending', decided_by: null })
+    expect(memberRows).toHaveLength(0)
+    expect(recordAudit).not.toHaveBeenCalled()
+    expect(sent).toHaveLength(0)
+  })
+
+  it('creates the missing member when an approved application has none, without a second email', async () => {
+    if (application) application.status = 'approved'
+    const { approveApplication } = await load()
+    const result = await approveApplication(
+      idle,
+      form({ applicationId: APPLICATION_ID, level: 'new' }),
+    )
+    expect(result).toEqual({ status: 'done' })
+    expect(memberRows).toHaveLength(1)
+    expect(recordAudit).not.toHaveBeenCalled()
+    expect(sent).toHaveLength(0)
+  })
+
   it('keeps the decision when the email fails and says so', async () => {
     transportFails = true
     const { approveApplication } = await load()
@@ -275,6 +348,26 @@ describe('rejectApplication', () => {
 })
 
 describe('logging', () => {
+  it('says why an email was not sent when email is not configured, without any address', async () => {
+    setEmailTransport(null)
+    const previous = { key: process.env.RESEND_API_KEY, from: process.env.EMAIL_FROM }
+    delete process.env.RESEND_API_KEY
+    delete process.env.EMAIL_FROM
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { approveApplication } = await load()
+    const result = await approveApplication(
+      idle,
+      form({ applicationId: APPLICATION_ID, level: 'new' }),
+    )
+    expect(result).toEqual({ status: 'done', emailSent: false })
+    const output = JSON.stringify(error.mock.calls)
+    expect(output).toContain('RESEND_API_KEY')
+    expect(output.toLowerCase()).not.toContain('ada@example.test')
+    error.mockRestore()
+    if (previous.key) process.env.RESEND_API_KEY = previous.key
+    if (previous.from) process.env.EMAIL_FROM = previous.from
+  })
+
   it('writes no personal data to the console, even when email fails', async () => {
     transportFails = true
     const spies = (['log', 'error', 'warn'] as const).map((level) =>

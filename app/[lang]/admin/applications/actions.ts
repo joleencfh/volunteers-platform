@@ -60,10 +60,36 @@ async function ensureAuthUser(db: Db, email: string): Promise<string | null> {
   return null
 }
 
+/** The Auth user id once the member row exists for an approved applicant, or null on failure. */
+async function ensureMember(
+  db: Db,
+  email: string,
+  application: { display_name: string; real_name: string; city: string },
+  level: Database['public']['Enums']['user_level'],
+): Promise<string | null> {
+  const userId = await ensureAuthUser(db, email)
+  if (!userId) return null
+  const { error } = await db.from('users').insert({
+    id: userId,
+    display_name: application.display_name,
+    real_name: application.real_name,
+    email,
+    city: application.city,
+    level,
+  })
+  // The row exists already (an earlier, half-finished approval): carry on.
+  if (error && error.code !== PG_UNIQUE_VIOLATION) return null
+  return userId
+}
+
 /**
- * Approves a pending application: creates the Auth user and the member row, marks the
- * application approved, writes the audit entry and emails the applicant a sign-in link.
- * Idempotent: approving an approved application changes nothing and sends nothing.
+ * Approves a pending application: marks it approved, creates the Auth user and the member row,
+ * writes the audit entry and emails the applicant how to sign in.
+ *
+ * The application is claimed first, so only one request can decide it: if another admin rejected
+ * it in the meantime, nothing is created. If the member cannot be created after the claim, the
+ * claim is undone. Idempotent: approving an approved application sends and audits nothing, and
+ * creates the member only if an earlier attempt left it missing.
  */
 export async function approveApplication(
   _previous: ReviewState,
@@ -79,34 +105,44 @@ export async function approveApplication(
   const { application, failed } = await findApplication(db, applicationId)
   if (failed) return { status: 'unavailable' }
   if (!application) return { status: 'notFound' }
-  if (application.status === 'approved') return { status: 'done' }
   if (application.status === 'rejected') return { status: 'conflict' }
 
   const email = normalizeEmail(application.email)
-  const userId = await ensureAuthUser(db, email)
-  if (!userId) return { status: 'unavailable' }
+  let claimedHere = false
+  if (application.status === 'pending') {
+    // Only the request that flips pending to approved audits and emails, so a double click or a
+    // second admin cannot produce a second entry or a second email.
+    const { data: claimed, error: claimError } = await db
+      .from('applications')
+      .update({ status: 'approved', decided_by: admin.id, decided_at: new Date().toISOString() })
+      .eq('id', applicationId)
+      .eq('status', 'pending')
+      .select('id')
+    if (claimError) return { status: 'unavailable' }
+    claimedHere = claimed.length > 0
+    if (!claimedHere) {
+      // Someone decided it between our read and our claim: go along with an approval only.
+      const latest = await findApplication(db, applicationId)
+      if (latest.failed) return { status: 'unavailable' }
+      if (latest.application?.status !== 'approved') return { status: 'conflict' }
+    }
+  }
 
-  const { error: insertError } = await db.from('users').insert({
-    id: userId,
-    display_name: application.display_name,
-    real_name: application.real_name,
-    email,
-    city: application.city,
-    level,
-  })
-  // The row exists already (an earlier, half-finished approval): carry on.
-  if (insertError && insertError.code !== PG_UNIQUE_VIOLATION) return { status: 'unavailable' }
-
-  // Only the request that flips pending to approved audits and emails, so a double click or a
-  // second admin cannot produce a second entry or a second email.
-  const { data: claimed, error: claimError } = await db
-    .from('applications')
-    .update({ status: 'approved', decided_by: admin.id, decided_at: new Date().toISOString() })
-    .eq('id', applicationId)
-    .eq('status', 'pending')
-    .select('id')
-  if (claimError) return { status: 'unavailable' }
-  if (claimed.length === 0) return { status: 'done' }
+  const userId = await ensureMember(db, email, application, level)
+  if (!userId) {
+    // Undo our claim so the application can be approved again. Best effort: if this fails too,
+    // approving it again creates the missing member.
+    if (claimedHere) {
+      await db
+        .from('applications')
+        .update({ status: 'pending', decided_by: null, decided_at: null })
+        .eq('id', applicationId)
+        .eq('status', 'approved')
+        .select('id')
+    }
+    return { status: 'unavailable' }
+  }
+  if (!claimedHere) return { status: 'done' }
 
   await recordAudit(db, {
     actorId: admin.id,

@@ -42,11 +42,18 @@ export function setEmailTransport(transport: EmailTransport | null): void {
   override = transport
 }
 
+/** Email cannot be sent because the Resend settings are missing. The message names variables only. */
+export class EmailNotConfiguredError extends Error {
+  constructor() {
+    super('Email is not configured (RESEND_API_KEY, EMAIL_FROM).')
+  }
+}
+
 function configuredTransport(): EmailTransport {
   if (override) return override
   const apiKey = process.env.RESEND_API_KEY
   const from = process.env.EMAIL_FROM
-  if (!apiKey || !from) throw new Error('Email is not configured (RESEND_API_KEY, EMAIL_FROM).')
+  if (!apiKey || !from) throw new EmailNotConfiguredError()
   return createResendTransport(apiKey, from)
 }
 

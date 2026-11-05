@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 import { fileURLToPath } from 'node:url'
 
 // Database tests: need local Supabase (see scripts/test-db.ts). CI runs them on every pull request.
@@ -7,6 +7,8 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['tests/db/**/*.test.ts'],
+    // Keep Vitest's defaults; also skip nested checkouts in .claude/worktrees
+    exclude: [...configDefaults.exclude, '.claude/worktrees/**'],
     testTimeout: 30_000,
     hookTimeout: 30_000,
     // Tests share one database, so run files one after another

@@ -71,6 +71,8 @@
     "apply": "Candidati di nuovo"
   },
   "privacy": {
-    "title": "Informativa sulla privacy"
+    "title": "Informativa sulla privacy",
+    "stub": "L'informativa è disponibile solo in italiano. Il testo italiano qui sotto è quello che vale.",
+    "version": "Versione: {version}"
   }
 }

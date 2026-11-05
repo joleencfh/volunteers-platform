@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { NOTICE_VERSION } from '@/lib/domain/notice'
 
 vi.mock('server-only', () => ({}))
 
@@ -88,7 +89,7 @@ describe('submitApplication', () => {
       real_name: 'Ada Example',
       email: 'ada@example.test',
       heard_via: 'italian_website',
-      notice_version: 'placeholder',
+      notice_version: NOTICE_VERSION,
     })
     expect(row.privacy_accepted_at).toBeTruthy()
     expect(row.special_category_consent_at).toBeTruthy()

@@ -1,6 +1,7 @@
 // The application journey of story A-03. Needs a local Supabase, so it runs in CI.
 import { randomUUID } from 'node:crypto'
 import { expect, test, type Page } from '@playwright/test'
+import { NOTICE_VERSION } from '../../lib/domain/notice'
 import { adminClient, supabaseEnv } from '../helpers/supabase'
 import { expectNoSeriousA11yViolations } from './helpers/a11y'
 
@@ -51,7 +52,7 @@ test('a valid application is stored and shows the pending screen', async ({ page
   await expect(page.getByRole('heading', { name: 'Candidatura ricevuta' })).toBeVisible()
   const rows = await rowsFor(email)
   expect(rows).toHaveLength(1)
-  expect(rows[0]).toMatchObject({ status: 'pending' })
+  expect(rows[0]).toMatchObject({ status: 'pending', notice_version: NOTICE_VERSION })
   expect(rows[0].privacy_accepted_at).not.toBeNull()
   expect(rows[0].special_category_consent_at).not.toBeNull()
 })

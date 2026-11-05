@@ -32,6 +32,22 @@ describe('migrations', () => {
     expect(offenders).toEqual([])
   })
 
+  it('let an anonymous visitor read the two retention periods and nothing else in config', async () => {
+    await db.exec('set role anon')
+    try {
+      const { rows } = await db.query<{ key: string }>('select key from public.config order by key')
+      expect(rows.map((row) => row.key)).toEqual([
+        'retention.people_who_leave_months',
+        'retention.rejected_applications_months',
+      ])
+      await expect(db.exec("update public.config set value = '1'")).rejects.toThrow(
+        /permission denied/,
+      )
+    } finally {
+      await db.exec('reset role')
+    }
+  })
+
   it('create the data foundation tables', async () => {
     const { rows } = await db.query<{ table_name: string }>(
       "select table_name from information_schema.tables where table_schema = 'public'",

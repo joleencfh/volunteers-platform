@@ -10,7 +10,9 @@ const uniqueEmail = () => `e2e-apply-${randomUUID()}@example.test`
 
 async function fill(page: Page, email: string) {
   await page.getByLabel('Nome visibile').fill('Tester')
-  await page.getByLabel('Nome', { exact: true }).fill('Test')
+  // The label "Nome" is also the start of "Nome visibile", and the required marker is part of the
+  // accessible name, so an exact label match finds nothing: pick this field by its name.
+  await page.locator('input[name="firstName"]').fill('Test')
   await page.getByLabel('Cognome').fill('Applicant')
   await page.getByLabel('Indirizzo email').fill(email)
   await page.getByLabel('Città o regione').fill('Test City')

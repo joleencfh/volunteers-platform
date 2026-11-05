@@ -89,6 +89,17 @@ CI, the GitHub ruleset, a pre-commit hook and Claude Code hooks enforce the rule
 
 Branches `feature/`, `fix/`, `chore/` off `main`. Commit messages start with the story ID (for example `A-02: add magic link sign-in`). End commit messages with the attribution trailer the tooling gives you. Open a pull request even for solo work; CI must be green.
 
+### Plan runs: one stacked pull request per story
+
+Multi-step plans (`plans/<name>.md`, run with `plan run`) commit every step to one branch `plan/<name>` in a separate worktree. The runner never pushes. That branch is never pushed or merged as it is. The maintainer approved this routine: at every stop of a plan run (a review gate, a blocker, or the end), Claude turns the new work into pull requests, one per story, all at once:
+
+- One branch per story: `feature/<story-id>-<slug>` (`chore/<slug>` for chores). Build it by cherry-picking only the story's work commits from the plan branch. Leave out the bookkeeping commits (`plan:` seed, blocked, unblock and done commits, `wip(step N, blocked)`), the plan file and `plans/.plan.json`.
+- Stacked: the first branch starts from `main`; each next branch starts from the previous story's branch, and its pull request targets that branch. Stories already merged are skipped.
+- Each pull request: title starts with the story ID; description built from `.github/pull_request_template.md` with the `## Checklist` section ticked or items removed with a reason; one line naming its place in the stack ("Stacked on #N"); `bun run check:fast` passed on the branch before pushing.
+- Push each story branch and open its pull request as soon as the run stops, so the review gate can be read as small pieces. Never force-push. Never push `plan/<name>`.
+- When a pull request in the stack is merged, retarget the next one to `main` and bring its branch up to date by merging `main` into it.
+- Follow-up fixes found in review go on the story's own branch as new commits, and are cherry-picked back to the plan branch only if the plan still needs them.
+
 ## Reference
 
 The maintainer's other project, a local checkout of Tell The World (ask the maintainer where it is; use its main folder, not any worktrees), is a read-only reference for auth, admin approval, CI and conventions. Copy patterns, then adapt; do not copy its briefs, content, directory or messages code, and never share its Supabase project.

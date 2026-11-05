@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { setEmailTransport, type EmailMessage } from '@/lib/email/transport'
 
 vi.mock('server-only', () => ({}))
-vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))
 
 let admin: { id: string } | 'not-admin' = { id: 'admin-1' }
 vi.mock('@/lib/authz', () => ({

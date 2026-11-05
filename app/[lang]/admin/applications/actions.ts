@@ -1,7 +1,6 @@
 'use server'
 
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/authz'
 import type { Database } from '@/lib/database.types'
 import { normalizeEmail } from '@/lib/domain/membership'
@@ -153,7 +152,8 @@ export async function approveApplication(
   })
   const emailSent = await sendApprovalEmail(email)
 
-  revalidatePath('/[lang]/admin/applications', 'page')
+  // No revalidatePath: re-rendering the list would remove this application's card, and with it
+  // the result (including "the email could not be sent"). The list refreshes on the next visit.
   return { status: 'done', emailSent }
 }
 
@@ -195,6 +195,5 @@ export async function rejectApplication(
   })
   const emailSent = await sendRejectionEmail(normalizeEmail(application.email))
 
-  revalidatePath('/[lang]/admin/applications', 'page')
   return { status: 'done', emailSent }
 }

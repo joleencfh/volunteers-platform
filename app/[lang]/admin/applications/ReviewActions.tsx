@@ -33,6 +33,16 @@ export function ReviewActions({ applicationId }: { applicationId: string }) {
   const levelError = approveState.errors?.level
   const applicationError = approveState.errors?.applicationId ?? rejectState.errors?.applicationId
 
+  // Once decided, the buttons go and only the result stays (including a failed email, which the
+  // admin has to follow up by hand). The list itself refreshes on the next visit.
+  if (approveState.status === 'done' || rejectState.status === 'done') {
+    return (
+      <p role="status" className="text-base font-semibold">
+        {message}
+      </p>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <form action={approve} className="flex flex-col gap-4" noValidate>

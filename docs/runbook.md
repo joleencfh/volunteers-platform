@@ -19,7 +19,7 @@ If you do have local Supabase running, `bun scripts/supabase-env.ts >> .env.loca
 Day-to-day development runs against the hosted **staging** Supabase project; database and end-to-end tests run in CI. A local database is optional.
 
 1. Create the staging project (next section) and push migrations to it.
-2. Copy the staging API URL and publishable key from the project settings into `.env.local` (never commit it; the variable list arrives with F-07).
+2. Copy the staging API URL and publishable key from the project settings into `.env.local` (never commit it; the variables are listed in `.env.schema` and the README).
 3. Keep staging to synthetic data and never run test suites that create or delete users against it or against production. Those suites run in CI against a local Supabase started in the GitHub runner.
 
 ## Local database (Supabase, optional)
@@ -47,7 +47,7 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 | `bun run check:rls`        | Fails if any table in schema `public` lacks row-level security                           |
 | `bun run test:db`          | Database and row-level-security tests (`tests/db`) against the local database            |
 
-`db:start` prints the local API URL and keys. Copy them into `.env.local` (never commit that file; the variable list arrives with F-07).
+`db:start` prints the local API URL and keys. Copy them into `.env.local` (never commit that file; the variables are listed in `.env.schema`).
 
 ### Migrations
 
@@ -123,16 +123,44 @@ Notes:
 
 ## Restore a backup
 
-To be written in L-02.
+The Supabase free plan has no automatic backups, so the scheduled export is the only copy (to be built in L-02; until then there is no backup, and the project must hold synthetic data only on staging). This section is completed in L-02 with the exact commands. The outline:
+
+1. Take the most recent export from the private storage location chosen in L-02.
+2. Restore into a **new, empty** Supabase project first (never over production), by applying `supabase/migrations/` and then loading the export.
+3. Check row counts and sign in as an admin against the restored project.
+4. Only then point the Vercel environment variables at it, or load the data into production.
+5. Record what happened and how long it took here.
+
+Also check that the free-tier project has not been paused for inactivity; a paused project can be restored from the Supabase dashboard within the grace period.
 
 ## Rotate keys
 
-To be written in F-08.
+Never paste keys into a chat, an issue, a commit or a command that is kept in shell history. Keys live in the Vercel project settings and in the maintainer's `.env.local`.
+
+| Key                                                                 | Where it comes from            | How to rotate                                                                                                              |
+| ------------------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase project, API settings | Generate a new key in the dashboard, update Vercel (each environment) and `.env.local`, redeploy, then revoke the old key. |
+| Supabase database password                                          | Supabase project, Database     | Reset it in the dashboard; update any stored connection string and `DATABASE_URL` for scripts.                             |
+| `RESEND_API_KEY`                                                    | Resend dashboard, API keys     | Create a new key, update Vercel, redeploy, delete the old key.                                                             |
+| Google sign-in client secret (from A-02)                            | Google Cloud console           | Create a new secret, enter it in Supabase Authentication providers, then delete the old one.                               |
+
+After rotating: redeploy, load `/`, check an admin can sign in, and note the date here. If a key was exposed (for example committed), treat it as compromised: rotate it immediately, then remove it from history with the maintainer's help. GitHub push protection and `secret-scan` are there to catch this earlier.
 
 ## Add an admin
 
-To be written in A-01 (the seed script) and F-08.
+Admin is a flag on the person's row in `users` in the database, never an environment variable.
+
+- **First admin:** `scripts/seed-admin.ts` (arrives with A-01) creates the first admin from an email in an environment variable declared in `.env.schema`. Run it once per environment, with that variable set for the single command only; it never goes into a committed file.
+- **Later admins:** an existing admin approves the person like any volunteer (A-04), then sets the admin flag. Until an admin tool exists (M5), the maintainer sets `is_admin` on that user in the Supabase dashboard's table editor, and the change is recorded in the audit log by hand.
+- The person must already be an active member: sign-in matches the verified email, so an admin flag on someone without a member record gives no access.
+- To remove an admin, clear the flag the same way.
 
 ## Deploy
 
-To be written in F-09.
+Each pull request gets a Vercel preview; `main` deploys to production. The full setup (Vercel project, Supabase staging and production, environment variables per environment) is done in F-09 and recorded here by that story.
+
+1. Merge only when CI is green (squash merge).
+2. If the change includes migrations: push them to **staging** (`bunx supabase db push` while linked to staging), check the staging app, then push to production. Regenerate the types after the change.
+3. Environment variables are set per environment in Vercel from `.env.schema`. A deployment with a missing required variable fails at build; that is intended.
+4. After the production deploy, load the home page and sign in as an admin.
+5. To roll back, redeploy the previous deployment in Vercel. A migration is not rolled back; write a new migration that reverses it.

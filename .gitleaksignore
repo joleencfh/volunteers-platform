@@ -5,3 +5,8 @@
 # history, so the commits that introduced the old line stay listed here.
 6cbc22d8c0764706145feeb547248f656814c4a2:tests/unit/local-only.test.ts:non-placeholder-email:18
 5ef4097e9c601ef2f2c95ea20beb1c02e87d0b54:tests/unit/local-only.test.ts:non-placeholder-email:18
+# Resend's shared test sender (the onboarding address on resend.dev) named in docs/runbook.md. It
+# is a public, documented placeholder, not a person's address. Later commits no longer contain it;
+# the scan covers history, so the two commits that did stay listed.
+a82b415756f78ff0b2ea8b94fa6bb0b159c8932b:docs/runbook.md:non-placeholder-email:212
+392b7d3ba692a0398c14803162d4aa5b7354a867:docs/runbook.md:non-placeholder-email:212

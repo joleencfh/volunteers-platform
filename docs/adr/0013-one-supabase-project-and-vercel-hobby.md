@@ -14,7 +14,7 @@ Vercel's fair use guidelines restrict Hobby teams to non-commercial personal use
 - **Vercel Hobby** hosts the app. This is a volunteer tool, with no payments, advertising or paid developer, so it fits the non-commercial rule. Hobby has no team features, so the maintainer's own account owns the project.
 - **Preview and Production use the same Supabase values.** Only Production gets `NEXT_PUBLIC_SITE_URL`. Sign-in works on the production address and on localhost, not on preview addresses.
 - Migrations are applied by hand with `supabase db push --linked`; Vercel does not run them.
-- **Before real volunteers join**, the maintainer either creates a second project for production and keeps this one as staging, or deletes the synthetic data and treats this project as production, and records the choice in an ADR that supersedes this one.
+- **Before real volunteers join**, the maintainer deletes the synthetic data and treats this project as production (chosen on 2026-11-06). The setup is expected to be temporary: if funding allows, a paid Supabase plan and a separate staging project replace it, and an ADR that supersedes this one records the move.
 
 ## Consequences
 

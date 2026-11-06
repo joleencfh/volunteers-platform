@@ -82,7 +82,7 @@ One hosted Supabase project serves development, previews and production until th
 
 4. Authentication → URL Configuration: add `http://localhost:3000/**` and, once Vercel has given you an address, `https://<your-address>/**` to **Redirect URLs**. A bare Site URL only covers the site root, not `/auth/callback`.
 5. Add the three values from Project Settings → API (URL, publishable key, secret key) to `.env.local` and to Vercel (see Deploy). Never commit them and never put the secret key in browser code.
-6. **Before inviting real volunteers**, choose one and record it in an ADR that supersedes ADR-0013: (a) create a second project for production, push the same migrations, point the Vercel Production environment at it and keep this one as staging; or (b) delete the synthetic data and treat this project as production.
+6. **Before inviting real volunteers**, delete the synthetic data (test applications, test members and their Auth users, audit entries from tests) and keep only the real admin; from then on this project is production and no test or experiment may touch it. If a paid Supabase plan becomes available, create a separate staging project, point previews at it and record the change in an ADR that supersedes ADR-0013.
 
 ### Google sign-in
 

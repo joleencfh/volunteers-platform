@@ -16,11 +16,11 @@ If you do have local Supabase running, `bun scripts/supabase-env.ts >> .env.loca
 
 ## Development environment
 
-Day-to-day development runs against the hosted **staging** Supabase project; database and end-to-end tests run in CI. A local database is optional.
+Day-to-day development runs against the hosted Supabase project (one for now, see ADR-0013); database and end-to-end tests run in CI. A local database is optional.
 
-1. Create the staging project (next section) and push migrations to it.
+1. Create the Supabase project (next section) and push migrations to it.
 2. Copy the staging API URL and publishable key from the project settings into `.env.local` (never commit it; the variables are listed in `.env.schema` and the README).
-3. Keep staging to synthetic data and never run test suites that create or delete users against it or against production. Those suites run in CI against a local Supabase started in the GitHub runner.
+3. Keep the project to synthetic data until the pilot and never run test suites that create or delete users against it or against production. Those suites run in CI against a local Supabase started in the GitHub runner.
 
 ## Local database (Supabase, optional)
 
@@ -57,30 +57,45 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 - The CI `database` job regenerates the types and compares them byte for byte with the committed file. Its runner has no formatter for the generated TypeScript, so the output differs in layout from one generated on a machine that has it, even when the schema is identical. If the drift check fails only on layout, download the `database-types` artifact from that run and commit it as `lib/database.types.ts`.
 - Every new table needs `alter table ... enable row level security;` and policies in the same migration. CI runs the guard and fails otherwise.
 
-## Staging and production projects (you do this once)
+## Supabase project (one for now) and Google sign-in
 
-Two hosted Supabase projects keep production data away from tests and previews. Check on the Supabase pricing page that the free plan still allows two active projects; if not, use one project and a branch strategy, and record the decision in an ADR.
+One hosted Supabase project serves development, previews and production until the pilot, so the account stays on the free plan (ADR-0013). It holds synthetic data only until real volunteers are invited; tests never run against it.
 
-1. Sign in at supabase.com and create a project named `pauseai-it-staging`. Choose an **EU region** (for example Frankfurt). Generate a strong database password and store it in your password manager.
-2. Repeat for `pauseai-it-prod`.
-3. In each project's Authentication settings, set the Site URL and redirect URLs once the Vercel domain exists (F-09). Provider setup (email link, Google) is part of A-02.
-4. Link and push from your machine:
+1. Create the project at supabase.com in an **EU region** (for example Ireland or Frankfurt), with a strong database password kept in your password manager. Note the **project reference** (Project Settings → General → Reference ID). It is not a secret.
+2. Link and push from your machine:
 
    ```bash
    bunx supabase login
-   bunx supabase link --project-ref <staging-project-ref>
-   bunx supabase db push
+   bunx supabase link --project-ref <project-ref>
+   bunx supabase db push --linked
    ```
 
-   Push to production only after the same migrations have run on staging.
+   `supabase login` opens the browser, so no token is copied or stored in a file. `supabase link` creates `supabase/.temp/`, which Git and Prettier ignore. If the CLI says it cannot parse `.env.local`, a value there is malformed, usually a missing closing quote.
 
-5. Verify row-level security on the remote database. Use the connection string from the project's Database settings (the session pooler string) and keep it out of shell history and git:
+3. Check that row-level security is on for every table. This needs no database password:
 
    ```bash
-   DATABASE_URL="postgresql://postgres.<ref>:<password>@<pooler-host>:5432/postgres" bun run check:rls
+   bunx supabase db query --linked "select c.relname, c.relrowsecurity from pg_class c join pg_namespace n on n.oid = c.relnamespace where n.nspname = 'public' and c.relkind = 'r' order by 1"
    ```
 
-6. Never commit keys, passwords or connection strings. Never use the service-role key in browser code.
+   Every row must show `true`. CI also runs the guard against a local database on every pull request.
+
+4. Authentication → URL Configuration: add `http://localhost:3000/**` and, once Vercel has given you an address, `https://<your-address>/**` to **Redirect URLs**. A bare Site URL only covers the site root, not `/auth/callback`.
+5. Add the three values from Project Settings → API (URL, publishable key, secret key) to `.env.local` and to Vercel (see Deploy). Never commit them and never put the secret key in browser code.
+6. **Before inviting real volunteers**, choose one and record it in an ADR that supersedes ADR-0013: (a) create a second project for production, push the same migrations, point the Vercel Production environment at it and keep this one as staging; or (b) delete the synthetic data and treat this project as production.
+
+### Google sign-in
+
+Magic-link sign-in needs nothing more. To add Google, you create an OAuth client in Google Cloud and give its ID and secret to Supabase. Supabase handles the sign-in itself, so the app needs no new variables.
+
+1. In the [Google Cloud Console](https://console.cloud.google.com), create a project (for example `pauseai-it`).
+2. Open **Google Auth Platform** (older consoles: APIs & Services → OAuth consent screen) and set it up: app name, a support email, **External** audience, a contact email. Scopes: the defaults `openid`, `email` and `profile` are enough.
+3. Publish the app ("In production"). While it is in "Testing", only the test users you list can sign in. The basic scopes need no Google review.
+4. Create the client: **Clients → Create client**, type **Web application**. Under **Authorized redirect URIs** add `https://<project-ref>.supabase.co/auth/v1/callback`. Leave Authorized JavaScript origins empty. Copy the **Client ID** and **Client secret**.
+5. In Supabase: Authentication → **Sign In / Providers** → **Google**. Turn it on, paste the Client ID and secret, save. Keep "Skip nonce checks" off.
+6. Check it: sign in with the Google account that matches an approved member's email. A Google account with an unverified email, or one that matches no member, is refused with the same generic message as everywhere else.
+
+The Client secret is a secret: it lives only in the Supabase dashboard, never in the repository or `.env.local`.
 
 ## GitHub settings you apply once
 
@@ -169,10 +184,37 @@ Admin is a flag on the person's row in `users` in the database, never an environ
 
 ## Deploy
 
-Each pull request gets a Vercel preview; `main` deploys to production. The full setup (Vercel project, Supabase staging and production, environment variables per environment) is done in F-09 and recorded here by that story.
+The app runs on Vercel's Hobby plan (free). Each pull request gets a preview deployment and `main` deploys to production. Hosting terms are in ADR-0013.
+
+### Set up the Vercel project (once)
+
+1. Sign in at vercel.com with your GitHub account and keep the free **Hobby** plan.
+2. Dashboard → **Add New…** → **Project** → **Import Git Repository**. If the repository is not listed, choose **Adjust GitHub App Permissions**, install Vercel on your account with **Only select repositories**, pick this repository, and come back.
+3. Import it. On **Configure Project**: Framework Preset **Next.js** (detected), Root Directory `./`, leave Build and Output Settings and the Install Command on their defaults (Vercel installs with Bun because of `bun.lock`).
+4. Open **Environment Variables** and add the variables below before the first deploy, with the right environments ticked. Mark the secrets **Sensitive**.
+5. Click **Deploy**. When it finishes, open the Production address (`https://<project>.vercel.app`), note it, and add `https://<project>.vercel.app/**` to the Supabase Redirect URLs.
+6. Project → **Settings** → **Environment Variables**: set `NEXT_PUBLIC_SITE_URL` to that address for **Production** only, then redeploy (Deployments → the latest → ⋯ → Redeploy).
+7. Project → **Settings** → **Deployment Protection**: keep Vercel Authentication on for previews. The Production address must stay public, because `/apply` and `/privacy` are public.
+
+### Environment variables
+
+| Variable                               | Production | Preview | Sensitive | Where it comes from                                                                     |
+| -------------------------------------- | ---------- | ------- | --------- | --------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`             | yes        | yes     | no        | Supabase → Project Settings → API → Project URL                                         |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | yes        | yes     | no        | Same page, Publishable key                                                              |
+| `SUPABASE_SERVICE_ROLE_KEY`            | yes        | yes     | yes       | Same page, Secret key (or the legacy `service_role` key)                                |
+| `RESEND_API_KEY`                       | yes        | yes     | yes       | Resend → API Keys, with **Sending access** only                                         |
+| `EMAIL_FROM`                           | yes        | yes     | no        | A sender on a domain verified in Resend, for example `PauseAI IT <noreply@your-domain>` |
+| `NEXT_PUBLIC_SITE_URL`                 | yes        | no      | no        | The production address, with no trailing slash                                          |
+
+`SKIP_ENV_VALIDATION`, `DATABASE_URL` and `SEED_ADMIN_EMAIL` are never set in Vercel. With one Supabase project, Preview and Production use the same values (ADR-0013).
+
+Sign-in works on the Production address and on `localhost`. Preview addresses change with every deployment and are not on the sign-in allowlist, so a preview is for looking at pages, not for signing in. Sending email needs a domain verified in Resend; until then `onboarding@resend.dev` only delivers to the Resend account's own address.
+
+### Routine deploys
 
 1. Merge only when CI is green (squash merge).
-2. If the change includes migrations: push them to **staging** (`bunx supabase db push` while linked to staging), check the staging app, then push to production. Regenerate the types after the change.
-3. Environment variables are set per environment in Vercel from `.env.schema`. A deployment with a missing required variable fails at build; that is intended.
+2. If the change includes migrations, push them (`bunx supabase db push --linked`) before or together with the merge, check the app, and regenerate the types. A migration is applied by hand; Vercel does not run it.
+3. A deployment with a missing or malformed required variable fails at build or start. That is intended.
 4. After the production deploy, load the home page and sign in as an admin.
 5. To roll back, redeploy the previous deployment in Vercel. A migration is not rolled back; write a new migration that reverses it.

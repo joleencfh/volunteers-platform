@@ -209,7 +209,7 @@ The app runs on Vercel's Hobby plan (free). Each pull request gets a preview dep
 
 `SKIP_ENV_VALIDATION`, `DATABASE_URL` and `SEED_ADMIN_EMAIL` are never set in Vercel. With one Supabase project, Preview and Production use the same values (ADR-0013).
 
-Sign-in works on the Production address and on `localhost`. Preview addresses change with every deployment and are not on the sign-in allowlist, so a preview is for looking at pages, not for signing in. Sending email needs a domain verified in Resend; until then `onboarding@resend.dev` only delivers to the Resend account's own address.
+Sign-in works on the Production address and on `localhost`. Preview addresses change with every deployment and are not on the sign-in allowlist, so a preview is for looking at pages, not for signing in. Sending email needs a domain verified in Resend; until then Resend's shared test sender (the `onboarding` address on `resend.dev`, see Resend's documentation) only delivers to the Resend account's own address.
 
 ### Routine deploys
 

@@ -14,11 +14,11 @@ test('an approved member signs in with a magic link', async ({ page, context, ba
   const link = await requestMagicLink(context, member.email, baseURL ?? BASE)
 
   await page.goto(link)
-  await expect(page).toHaveURL(`${baseURL ?? BASE}/`)
+  await expect(page).toHaveURL(`${baseURL ?? BASE}/home`)
 
-  // The session is live: /login bounces a signed-in person to the home page.
+  // The session is live: /login bounces a signed-in person to /home.
   await page.goto('/login')
-  await expect(page).toHaveURL(`${baseURL ?? BASE}/`)
+  await expect(page).toHaveURL(`${baseURL ?? BASE}/home`)
 
   const { data } = await adminClient()
     .from('users')

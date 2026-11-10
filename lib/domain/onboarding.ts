@@ -43,3 +43,32 @@ export function buildChecklist(
     nextSelfStep: items.find((item) => !item.done && item.confirmedBy === 'self') ?? null,
   }
 }
+
+/**
+ * Self-confirmed steps that are completed from a read-and-confirm window instead of a plain
+ * button (the welcome document and the current activities).
+ */
+export const WINDOW_STEP_KEYS: readonly string[] = ['read_welcome_document', 'looked_at_activities']
+
+/** True when the checklist row can offer a plain "mark as done" button (while it is open). */
+export function hasMarkDoneButton(item: ChecklistItem): boolean {
+  return item.confirmedBy === 'self' && !WINDOW_STEP_KEYS.includes(item.key)
+}
+
+export type StepWindowKind = 'welcome' | 'activities'
+
+/** Which read-and-confirm window a step opens, or null for a step without one. */
+export function stepWindowKind(key: string): StepWindowKind | null {
+  if (key === 'read_welcome_document') return 'welcome'
+  if (key === 'looked_at_activities') return 'activities'
+  return null
+}
+
+/**
+ * The step whose window opens by itself on the home page (first-login prompt): the welcome
+ * document while it is still open. The activities window never opens by itself.
+ */
+export function autoOpenStepKey(items: readonly ChecklistItem[]): string | null {
+  const welcome = items.find((item) => item.key === 'read_welcome_document')
+  return welcome && !welcome.done && welcome.confirmedBy === 'self' ? welcome.key : null
+}

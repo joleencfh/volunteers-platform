@@ -18,7 +18,18 @@
     "dismiss": "Dismiss notification"
   },
   "home": {
-    "title": "PauseAI IT"
+    "title": "PauseAI IT",
+    "welcome": "Welcome, {name}",
+    "profilePrompt": {
+      "title": "Complete your profile",
+      "body": "Other volunteers get to know you through your profile. Still to add: {missing}.",
+      "fields": {
+        "city": "city",
+        "bio": "a few lines about you"
+      },
+      "separator": ", ",
+      "action": "Go to my profile"
+    }
   },
   "onboarding": {
     "steps": {
@@ -30,7 +41,36 @@
       "first_group_call": "Took part in the first group call",
       "first_contribution": "Joined or contributed to a first activity",
       "one_to_one_checkin": "One-on-one check-in of 15–20 minutes"
-    }
+    },
+    "title": "Your onboarding checklist",
+    "progress": "{done} of {total} steps done",
+    "progressLabel": "Onboarding progress",
+    "confirmedBy": {
+      "self": "You confirm this step",
+      "auto": "Completed automatically",
+      "admin": "An admin confirms this step"
+    },
+    "state": {
+      "done": "Done",
+      "open": "Open"
+    },
+    "markDone": "Mark as done",
+    "markingDone": "Saving…",
+    "markedDone": "Step marked as done.",
+    "markDoneFailed": "We could not save this step. Try again later.",
+    "window": {
+      "open": "Open",
+      "confirm": "I've read it",
+      "later": "Later",
+      "close": "Close",
+      "closeWindow": "Close window",
+      "welcomeLink": "Open the welcome document",
+      "newTab": "(opens in a new tab)",
+      "welcomeUnavailable": "The welcome document is not available yet. Please check again later.",
+      "activitiesEmpty": "There are no current activities yet. Once working groups start their activities, they will be listed here."
+    },
+    "completeTitle": "Onboarding complete",
+    "completeBody": "You have finished every onboarding step. Thank you!"
   },
   "profile": {
     "title": "My profile",

@@ -37,8 +37,10 @@ export async function proxy(request: NextRequest) {
   }
   // A refused sign-in lands on /login?error=...; do not bounce those away.
   if (signedIn && pathname === '/login' && !request.nextUrl.searchParams.has('error')) {
-    return redirectTo('/')
+    return redirectTo('/home')
   }
+  // The public landing page is for visitors; a signed-in member goes to their home.
+  if (signedIn && pathname === '/') return redirectTo('/home')
   return response
 }
 

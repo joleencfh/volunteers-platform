@@ -21,6 +21,8 @@ You need Bun, Git, and a hosted Supabase staging project (the runbook explains h
 3. Push the migrations to staging: `bunx supabase login`, `bunx supabase link --project-ref <staging-project-ref>`, `bunx supabase db push`.
 4. `bun run dev` and open http://localhost:3000.
 
+Milestone M2 (profiles and onboarding) adds migrations and one config value to set before inviting volunteers; see [the runbook](docs/runbook.md#milestone-m2-profiles-and-onboarding-what-to-do-by-hand).
+
 Keep staging to synthetic data. Database and end-to-end tests run in CI against a local Supabase; do not run suites that create or delete users against staging or production. With Docker you can run the same local stack as CI: see [the runbook](docs/runbook.md#local-database-supabase-optional).
 
 ## Environment variables

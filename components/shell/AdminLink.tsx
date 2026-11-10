@@ -6,7 +6,7 @@ import { getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 
 /**
- * Header link to the application review, with the number waiting. Rendered only for an active
+ * Header link to the admin home, with the number of applications waiting. Rendered only for an active
  * admin; for everyone else it renders nothing. Reads the session, so it sits behind <Suspense>.
  */
 export async function AdminLink() {
@@ -26,11 +26,11 @@ export async function AdminLink() {
 
   return (
     <Link
-      href="/admin/applications"
+      href="/admin"
       className={`${buttonClasses('ghost')} gap-2`}
-      aria-label={pending > 0 ? t('applicationsLinkPending', { count: pending }) : undefined}
+      aria-label={pending > 0 ? t('navLinkPending', { count: pending }) : undefined}
     >
-      {t('applicationsLink')}
+      {t('navLink')}
       {pending > 0 && (
         <span
           aria-hidden="true"

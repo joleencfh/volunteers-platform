@@ -42,10 +42,22 @@ type Outcome = 'page' | 'login' | 'refused' | 'notFound'
 
 /** Opens the path and tells which of the four outcomes the visitor got. */
 async function outcome(page: Page, path: string): Promise<Outcome> {
-  const response = await page.goto(path)
+  await page.goto(path)
+  // Pages stream inside <Suspense>, so a redirect or the not-found screen arrives after the HTTP
+  // response (the status is already 200). Wait for whichever final state shows up first.
+  const notFound = page.getByText(/could not be found/i)
+  await Promise.race([
+    page.waitForURL(/\/login/, { timeout: 10_000 }).catch(() => undefined),
+    notFound.waitFor({ timeout: 10_000 }).catch(() => undefined),
+    page
+      .getByRole('heading', { level: 1 })
+      .first()
+      .waitFor({ timeout: 10_000 })
+      .catch(() => undefined),
+  ])
   const url = new URL(page.url())
   if (url.pathname === '/login') return url.searchParams.has('error') ? 'refused' : 'login'
-  if (response?.status() === 404) return 'notFound'
+  if (await notFound.isVisible()) return 'notFound'
   return 'page'
 }
 
@@ -102,6 +114,8 @@ test.describe('route access', () => {
     await loginAs(context, fixtureUser('admin'), baseURL ?? BASE)
     await page.goto('/home')
     const nav = page.getByRole('banner')
+    // The Admin link reads the session inside <Suspense>: wait for it before collecting links.
+    await expect(nav.getByRole('link', { name: /^Admin/ })).toBeVisible()
     const hrefs = await nav
       .getByRole('link')
       .evaluateAll((links) =>

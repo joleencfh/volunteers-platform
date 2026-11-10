@@ -59,13 +59,13 @@ test('an admin ticks and unticks a step and each change is audited', async ({
   const signal = card.getByRole('checkbox', { name: 'Added to the Signal group' })
   await expect(signal).not.toBeChecked()
 
-  await signal.check()
+  await signal.click()
   await expect(signal).toBeChecked()
   await expect(card.getByRole('status').filter({ hasText: 'Marked as done' })).toBeVisible()
   expect(await auditCount(member.id, 'onboarding.step_confirmed')).toBe(1)
 
   // The person stays visible after the change, so a mistake can be undone.
-  await signal.uncheck()
+  await signal.click()
   await expect(signal).not.toBeChecked()
   await expect(card.getByRole('status').filter({ hasText: 'Marked as not done' })).toBeVisible()
   expect(await auditCount(member.id, 'onboarding.step_unconfirmed')).toBe(1)
@@ -86,7 +86,7 @@ test('the step filter narrows the list and a finished person drops off after a r
     'Took part in the first group call',
     'One-on-one check-in of 15–20 minutes',
   ]) {
-    await card.getByRole('checkbox', { name }).check()
+    await card.getByRole('checkbox', { name }).click()
     await expect(card.getByRole('checkbox', { name })).toBeChecked()
   }
   await expect(card).toBeVisible()

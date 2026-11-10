@@ -133,7 +133,8 @@ test.describe('with members', () => {
 
   test('an id that is not a member is a 404', async ({ page, context, baseURL }) => {
     await loginAs(context, viewer, baseURL ?? BASE)
-    const response = await page.goto('/people/8b1c2f3e-4d5a-4b6c-8d7e-9f0a1b2c3d4e')
-    expect(response?.status()).toBe(404)
+    await page.goto('/people/8b1c2f3e-4d5a-4b6c-8d7e-9f0a1b2c3d4e')
+    // The page streams inside Suspense, so the status is already 200: assert the not-found screen.
+    await expect(page.getByText(/could not be found/i)).toBeVisible()
   })
 })

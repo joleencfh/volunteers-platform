@@ -28,9 +28,9 @@ beforeEach(() => {
 })
 
 describe('GET /auth/callback', () => {
-  it('signs an active member in, records the login and goes to the home page', async () => {
+  it('signs an active member in, records the login and goes to /home', async () => {
     const response = await call('?code=abc')
-    expect(location(response)).toBe('http://localhost:3000/')
+    expect(location(response)).toBe('http://localhost:3000/home')
     expect(update).toHaveBeenCalledWith({ last_login_at: expect.any(String) })
     expect(eq).toHaveBeenCalledWith('id', 'u1')
     expect(signOut).not.toHaveBeenCalled()
@@ -38,7 +38,7 @@ describe('GET /auth/callback', () => {
 
   it('follows a safe next path and ignores an unsafe one', async () => {
     expect(location(await call('?code=abc&next=/admin'))).toBe('http://localhost:3000/admin')
-    expect(location(await call('?code=abc&next=//evil.example'))).toBe('http://localhost:3000/')
+    expect(location(await call('?code=abc&next=//evil.example'))).toBe('http://localhost:3000/home')
   })
 
   it('signs out anyone who is not an active member and sends them back with the generic error', async () => {

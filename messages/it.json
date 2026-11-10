@@ -23,7 +23,36 @@
       "first_group_call": "Partecipato alla prima call di gruppo",
       "first_contribution": "Partecipato o contribuito a una prima attività",
       "one_to_one_checkin": "Colloquio individuale di 15–20 minuti"
-    }
+    },
+    "title": "La tua checklist di accoglienza",
+    "progress": "{done} passi su {total} completati",
+    "progressLabel": "Avanzamento dell’accoglienza",
+    "confirmedBy": {
+      "self": "Questo passo lo confermi tu",
+      "auto": "Completato automaticamente",
+      "admin": "Questo passo lo conferma un admin"
+    },
+    "state": {
+      "done": "Fatto",
+      "open": "Da fare"
+    },
+    "markDone": "Segna come fatto",
+    "markingDone": "Salvataggio…",
+    "markedDone": "Passo segnato come fatto.",
+    "markDoneFailed": "Non siamo riusciti a salvare questo passo. Riprova più tardi.",
+    "window": {
+      "open": "Apri",
+      "confirm": "L’ho letto",
+      "later": "Più tardi",
+      "close": "Chiudi",
+      "closeWindow": "Chiudi la finestra",
+      "welcomeLink": "Apri il documento di benvenuto",
+      "newTab": "(si apre in una nuova scheda)",
+      "welcomeUnavailable": "Il documento di benvenuto non è ancora disponibile. Riprova più tardi.",
+      "activitiesEmpty": "Non ci sono ancora attività in corso. Quando i gruppi di lavoro avvieranno le loro attività, le vedrai qui."
+    },
+    "completeTitle": "Accoglienza completata",
+    "completeBody": "Hai completato tutti i passi di accoglienza. Grazie!"
   },
   "profile": {
     "title": "Il mio profilo",
@@ -139,5 +168,18 @@
     "title": "Informativa sulla privacy",
     "stub": "L'informativa è disponibile solo in italiano. Il testo italiano qui sotto è quello che vale.",
     "version": "Versione: {version}"
+  },
+  "home": {
+    "welcome": "Benvenuto, {name}",
+    "profilePrompt": {
+      "title": "Completa il tuo profilo",
+      "body": "Gli altri volontari ti conoscono attraverso il tuo profilo. Ancora da aggiungere: {missing}.",
+      "fields": {
+        "city": "la città",
+        "bio": "qualche riga su di te"
+      },
+      "separator": ", ",
+      "action": "Vai al mio profilo"
+    }
   }
 }

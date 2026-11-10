@@ -20,6 +20,18 @@
   "home": {
     "title": "PauseAI IT"
   },
+  "onboarding": {
+    "steps": {
+      "added_to_platform": "Added to the platform",
+      "signal_group": "Added to the Signal group",
+      "read_welcome_document": "Read the welcome document",
+      "looked_at_activities": "Looked at current activities",
+      "joined_working_group": "Joined one working group",
+      "first_group_call": "Took part in the first group call",
+      "first_contribution": "Joined or contributed to a first activity",
+      "one_to_one_checkin": "One-on-one check-in of 15–20 minutes"
+    }
+  },
   "profile": {
     "title": "My profile",
     "intro": "This is what other volunteers can learn about you. For each detail you choose who sees it.",

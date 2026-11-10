@@ -13,6 +13,18 @@
     "close": "Chiudi",
     "dismiss": "Chiudi la notifica"
   },
+  "onboarding": {
+    "steps": {
+      "added_to_platform": "Aggiunto alla piattaforma",
+      "signal_group": "Aggiunto al gruppo Signal",
+      "read_welcome_document": "Letto il documento di benvenuto",
+      "looked_at_activities": "Guardato le attività in corso",
+      "joined_working_group": "Entrato in un gruppo di lavoro",
+      "first_group_call": "Partecipato alla prima call di gruppo",
+      "first_contribution": "Partecipato o contribuito a una prima attività",
+      "one_to_one_checkin": "Colloquio individuale di 15–20 minuti"
+    }
+  },
   "profile": {
     "title": "Il mio profilo",
     "intro": "Questo è ciò che gli altri volontari possono sapere di te. Per ogni dato scegli chi lo vede.",

@@ -59,7 +59,9 @@ test.describe('with members', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Welcome')
 
     const list = page.getByRole('list').filter({ hasText: STEP_TITLES[0] })
-    for (const title of STEP_TITLES) await expect(list.getByText(title)).toBeVisible()
+    for (const title of STEP_TITLES) {
+      await expect(list.getByRole('listitem').filter({ hasText: title })).toBeVisible()
+    }
     // Step 1 is done by the database trigger; the others are open.
     const first = list.getByRole('listitem').filter({ hasText: STEP_TITLES[0] })
     await expect(first.getByText('Done')).toBeVisible()

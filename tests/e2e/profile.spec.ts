@@ -64,7 +64,7 @@ test.describe('with members', () => {
     await page.getByLabel('LinkedIn profile').fill(LINKEDIN)
     await page.getByLabel('AI safety knowledge level').selectOption('basic')
     await page.getByRole('button', { name: 'Save profile' }).click()
-    await expect(page.getByRole('status')).toContainText('Profile saved')
+    await expect(page.getByText('Profile saved.')).toBeVisible()
 
     // Defaults: city admin only, bio all members.
     await page.reload()
@@ -106,7 +106,7 @@ test.describe('with members', () => {
     await page.goto('/profile')
     await page.locator('#visibility-city').selectOption('members')
     await page.getByRole('button', { name: 'Save profile' }).click()
-    await expect(page.getByRole('status')).toContainText('Profile saved')
+    await expect(page.getByText('Profile saved.')).toBeVisible()
 
     const other = await context.browser()!.newContext()
     const otherPage = await other.newPage()

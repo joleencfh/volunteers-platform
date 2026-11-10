@@ -71,6 +71,20 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"onboarding_steps": {
+                  Row: {
+                    "active": boolean,"confirmed_by": Database["public"]['Enums']["onboarding_confirmer"],"id": string,"key": string,"position": number,"title_key": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"confirmed_by": Database["public"]['Enums']["onboarding_confirmer"],"id"?: string,"key": string,"position": number,"title_key": string
+                  }
+                  Update: {
+                    "active"?: boolean,"confirmed_by"?: Database["public"]['Enums']["onboarding_confirmer"],"id"?: string,"key"?: string,"position"?: number,"title_key"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"profile_visibility": {
                   Row: {
                     "field": string,"tier": string,"user_id": string
@@ -91,6 +105,50 @@ isOneToOne: false
       referencedColumns: ["id"]
     },{
       foreignKeyName: "profile_visibility_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"user_onboarding": {
+                  Row: {
+                    "completed_at": string,"completed_by": string | null,"step_id": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "completed_at"?: string,"completed_by"?: string | null,"step_id": string,"user_id": string
+                  }
+                  Update: {
+                    "completed_at"?: string,"completed_by"?: string | null,"step_id"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "user_onboarding_completed_by_fkey"
+      columns: ["completed_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "user_onboarding_completed_by_fkey"
+      columns: ["completed_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "user_onboarding_step_id_fkey"
+      columns: ["step_id"]
+isOneToOne: false
+      referencedRelation: "onboarding_steps"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "user_onboarding_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "user_onboarding_user_id_fkey"
       columns: ["user_id"]
 isOneToOne: false
       referencedRelation: "users"
@@ -156,7 +214,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "application_status": "pending"|"approved"|"rejected","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
+            "application_status": "pending"|"approved"|"rejected","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","onboarding_confirmer": "self"|"auto"|"admin","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -272,7 +330,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "application_status": ["pending", "approved", "rejected"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
+            "application_status": ["pending", "approved", "rejected"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"onboarding_confirmer": ["self", "auto", "admin"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
           }
         }
 } as const

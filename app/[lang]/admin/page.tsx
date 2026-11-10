@@ -24,6 +24,7 @@ async function AdminContent() {
   const tools = [
     { href: '/admin/applications', title: t('applicationsLink'), text: t('applicationsBlurb') },
     { href: '/admin/onboarding', title: t('onboarding.title'), text: t('onboardingBlurb') },
+    { href: '/admin/data-requests', title: t('dataRequests.title'), text: t('dataRequestsBlurb') },
   ]
   return (
     <div className="flex flex-col gap-8">

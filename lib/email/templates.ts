@@ -55,3 +55,28 @@ export function newApplicationEmail(reviewUrl: string): Template {
     ].join('\n'),
   }
 }
+
+/**
+ * Sent to every admin when a member asks for an export or deletion of their data. It names the
+ * kind of request and the display name and points to the admin list; it never carries the
+ * member's email address or real name.
+ */
+export function dataRequestEmail(
+  kind: 'export' | 'deletion',
+  displayName: string,
+  listUrl: string,
+): Template {
+  const what = kind === 'export' ? 'an export of their data' : 'the deletion of their data'
+  return {
+    subject: `Data ${kind} request`,
+    text: [
+      'Hello,',
+      '',
+      `A volunteer (${displayName}) has asked for ${what}.`,
+      '',
+      `See the request here (sign-in required): ${listUrl}`,
+      '',
+      'PauseAI IT platform',
+    ].join('\n'),
+  }
+}

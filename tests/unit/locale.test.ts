@@ -20,6 +20,12 @@ describe('localeForPath', () => {
     expect(localeForPath('/privacy', 'en')).toBe('it')
   })
 
+  it('applies the preference to every non-legal path and never to the legal ones', () => {
+    expect(localeForPath('/home', 'it')).toBe('it')
+    expect(localeForPath('/apply', 'en')).toBe('it')
+    expect(localeForPath('/privacy', 'it')).toBe('it')
+  })
+
   it('uses a supported user preference elsewhere and ignores an unsupported one', () => {
     expect(localeForPath('/profile', 'it')).toBe('it')
     expect(localeForPath('/profile', 'fr')).toBe('en')

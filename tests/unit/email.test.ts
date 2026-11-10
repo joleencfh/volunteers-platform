@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { notifyAdminsOfApplication } from '@/lib/email/notify'
+import { notifyAdminsOfApplication, sendDataRequestEmail } from '@/lib/email/notify'
 import {
   applicationApprovedEmail,
   applicationRejectedEmail,
@@ -71,6 +71,33 @@ describe('notifyAdminsOfApplication', () => {
       throw new Error('down')
     })
     await expect(notifyAdminsOfApplication()).resolves.toBeUndefined()
+  })
+})
+
+describe('sendDataRequestEmail', () => {
+  const sent: EmailMessage[] = []
+  beforeEach(() => {
+    sent.length = 0
+    setEmailTransport(async (message) => void sent.push(message))
+  })
+
+  it('sends one email per admin with the kind, the display name and the list link only', async () => {
+    adminEmails = [{ email: 'a@example.test' }, { email: 'b@example.test' }]
+    await sendDataRequestEmail('export', 'Ada')
+    expect(sent.map((message) => message.to)).toEqual(['a@example.test', 'b@example.test'])
+    expect(sent[0].subject).toBe('Data export request')
+    expect(sent[0].text).toContain('Ada')
+    expect(sent[0].text).toContain('/admin/data-requests')
+    expect(sent[0].text).not.toContain('@')
+  })
+
+  it('never throws, even when delivery fails', async () => {
+    adminEmails = [{ email: 'a@example.test' }]
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    setEmailTransport(async () => {
+      throw new Error('down')
+    })
+    await expect(sendDataRequestEmail('deletion', 'Ada')).resolves.toBeUndefined()
   })
 })
 

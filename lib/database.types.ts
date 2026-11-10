@@ -71,16 +71,42 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
-                },"users": {
+                },"profile_visibility": {
                   Row: {
-                    "city": string | null,"created_at": string,"display_name": string,"email": string,"first_active_at": string | null,"id": string,"is_admin": boolean,"joined_at": string,"last_login_at": string | null,"level": Database["public"]['Enums']["user_level"],"locale": string,"real_name": string,"status": Database["public"]['Enums']["user_status"],"updated_at": string
+                    "field": string,"tier": string,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "city"?: string | null,"created_at"?: string,"display_name": string,"email": string,"first_active_at"?: string | null,"id": string,"is_admin"?: boolean,"joined_at"?: string,"last_login_at"?: string | null,"level"?: Database["public"]['Enums']["user_level"],"locale"?: string,"real_name": string,"status"?: Database["public"]['Enums']["user_status"],"updated_at"?: string
+                    "field": string,"tier": string,"user_id": string
                   }
                   Update: {
-                    "city"?: string | null,"created_at"?: string,"display_name"?: string,"email"?: string,"first_active_at"?: string | null,"id"?: string,"is_admin"?: boolean,"joined_at"?: string,"last_login_at"?: string | null,"level"?: Database["public"]['Enums']["user_level"],"locale"?: string,"real_name"?: string,"status"?: Database["public"]['Enums']["user_status"],"updated_at"?: string
+                    "field"?: string,"tier"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "profile_visibility_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "profile_visibility_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"users": {
+                  Row: {
+                    "ai_risks": string | null,"ai_safety_knowledge": string | null,"bio": string | null,"city": string | null,"created_at": string,"display_name": string,"email": string,"first_active_at": string | null,"id": string,"is_admin": boolean,"joined_at": string,"last_login_at": string | null,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string | null,"locale": string,"real_name": string,"status": Database["public"]['Enums']["user_status"],"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "ai_risks"?: string | null,"ai_safety_knowledge"?: string | null,"bio"?: string | null,"city"?: string | null,"created_at"?: string,"display_name": string,"email": string,"first_active_at"?: string | null,"id": string,"is_admin"?: boolean,"joined_at"?: string,"last_login_at"?: string | null,"level"?: Database["public"]['Enums']["user_level"],"linkedin_url"?: string | null,"locale"?: string,"real_name": string,"status"?: Database["public"]['Enums']["user_status"],"updated_at"?: string
+                  }
+                  Update: {
+                    "ai_risks"?: string | null,"ai_safety_knowledge"?: string | null,"bio"?: string | null,"city"?: string | null,"created_at"?: string,"display_name"?: string,"email"?: string,"first_active_at"?: string | null,"id"?: string,"is_admin"?: boolean,"joined_at"?: string,"last_login_at"?: string | null,"level"?: Database["public"]['Enums']["user_level"],"linkedin_url"?: string | null,"locale"?: string,"real_name"?: string,"status"?: Database["public"]['Enums']["user_status"],"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -105,11 +131,28 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "is_active_member":
+            "can_view_profile_field":
+{ Args: { "field": string,"owner": string,"viewer": string }; Returns: boolean
+                           },
+"get_profile":
+{ Args: { "owner": string }; Returns: {
+              "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"email": string,"first_active_at": string,"id": string,"joined_at": string,"last_login_at": string,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string,"real_name": string
+            }[]
+                           },
+"is_active_member":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"profile_field_default_tier":
+{ Args: { "field": string }; Returns: string
+                           },
+"shares_working_group":
+{ Args: { "a": string,"b": string }; Returns: boolean
+                           },
+"update_own_profile":
+{ Args: { "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"linkedin_url": string }; Returns: undefined
                            }
           }
           Enums: {

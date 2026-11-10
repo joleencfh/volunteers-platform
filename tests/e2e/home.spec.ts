@@ -64,7 +64,7 @@ test.describe('with members', () => {
     }
     // Step 1 is done by the database trigger; the others are open.
     const first = list.getByRole('listitem').filter({ hasText: STEP_TITLES[0] })
-    await expect(first.getByText('Done')).toBeVisible()
+    await expect(first.getByText('Done', { exact: true })).toBeVisible()
     await expect(first.getByText('Completed automatically')).toBeVisible()
     const signal = list.getByRole('listitem').filter({ hasText: STEP_TITLES[1] })
     await expect(signal.getByText('Open')).toBeVisible()
@@ -151,7 +151,7 @@ test.describe('with members', () => {
       await expect(
         page.getByRole('status').filter({ hasText: 'Step marked as done.' }),
       ).toBeVisible()
-      await expect(row.getByText('Done')).toBeVisible()
+      await expect(row.getByText('Done', { exact: true })).toBeVisible()
       const after = await page.getByText(/^\d+ of \d+ steps done$/).innerText()
       expect(after).not.toBe(before)
       // The step is recorded as the member's own confirmation.

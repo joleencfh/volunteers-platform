@@ -92,7 +92,7 @@ test.describe('onboarding windows', () => {
     await window.getByRole('button', { name: "I've read it" }).click()
     await expect(window).toBeHidden()
     await expect(page.getByRole('status').filter({ hasText: 'Step marked as done.' })).toBeVisible()
-    await expect(row(page, WELCOME_TITLE).getByText('Done')).toBeVisible()
+    await expect(row(page, WELCOME_TITLE).getByText('Done', { exact: true })).toBeVisible()
     await expect(progress(page)).toHaveText('2 of 8 steps done')
 
     // The window does not open again once the step is done.
@@ -179,7 +179,7 @@ test.describe('onboarding windows', () => {
 
     await window.getByRole('button', { name: "I've read it" }).click()
     await expect(window).toBeHidden()
-    await expect(row(page, ACTIVITIES_TITLE).getByText('Done')).toBeVisible()
+    await expect(row(page, ACTIVITIES_TITLE).getByText('Done', { exact: true })).toBeVisible()
     const count = (text: string) => Number(/^(\d+) of/.exec(text)?.[1])
     await expect(progress(page)).not.toHaveText(before)
     expect(count(await progress(page).innerText())).toBe(count(before) + 1)

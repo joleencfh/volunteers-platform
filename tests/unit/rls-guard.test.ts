@@ -1,8 +1,12 @@
 // Proves the RLS guard works without Docker, using an in-memory Postgres (PGlite).
 import { PGlite } from '@electric-sql/pglite'
 import { readFileSync } from 'node:fs'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { findTablesWithoutRls, type Query } from '../../scripts/rls-guard'
+
+// PGlite loads a WebAssembly build on first use; with many parallel workers that can exceed the
+// 5 second default.
+vi.setConfig({ testTimeout: 30_000 })
 
 let db: PGlite
 const query: Query = async (sql) => (await db.query<{ table_name: string }>(sql)).rows

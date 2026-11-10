@@ -63,7 +63,8 @@ test.describe('onboarding windows', () => {
 
   const row = (page: Page, title: string) => page.getByRole('listitem').filter({ hasText: title })
   const dialog = (page: Page) => page.getByRole('dialog')
-  const progress = (page: Page) => page.getByText(/^\d+ of \d+ steps done$/)
+  // The text is also the fallback content of the <progress> element, so match the paragraph only.
+  const progress = (page: Page) => page.locator('p', { hasText: /^\d+ of \d+ steps done$/ })
   const openButton = (page: Page, title: string) =>
     row(page, title).getByRole('button', { name: /^Open/ })
 

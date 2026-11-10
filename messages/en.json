@@ -9,6 +9,7 @@
     "mainNavigation": "Main navigation",
     "menu": "Menu",
     "home": "Home",
+    "profile": "My profile",
     "footerName": "PauseAI Italy",
     "privacy": "Privacy notice"
   },
@@ -18,6 +19,58 @@
   },
   "home": {
     "title": "PauseAI IT"
+  },
+  "profile": {
+    "title": "My profile",
+    "intro": "This is what other volunteers can learn about you. For each detail you choose who sees it.",
+    "requiredNote": "Fields marked * are required.",
+    "checkFields": "Some fields are not valid. Check the messages under the fields.",
+    "saved": "Profile saved.",
+    "unavailable": "We could not save your profile. Try again later.",
+    "save": "Save profile",
+    "saving": "Saving…",
+    "displayName": "Display name",
+    "displayNameHint": "The name other volunteers see. It can be a nickname. Always visible to all members.",
+    "city": "City or region",
+    "bio": "About you",
+    "bioHint": "A few lines are enough.",
+    "linkedinUrl": "LinkedIn profile",
+    "linkedinUrlHint": "A link starting with https://",
+    "knowledge": "AI safety knowledge level",
+    "knowledgeNotGiven": "Not given",
+    "knowledgeOptions": {
+      "none": "Not yet",
+      "basic": "I know a little",
+      "intermediate": "I know it fairly well",
+      "advanced": "I know it very well"
+    },
+    "aiRisks": "AI risks you are most invested in",
+    "visibility": "Who can see this",
+    "tiers": {
+      "admin": "Admins only",
+      "group": "People who share a working group with me",
+      "members": "All members"
+    },
+    "fixedHeading": "Only you and the admins see these",
+    "fixedHint": "You cannot change them here.",
+    "realName": "Name",
+    "email": "Email",
+    "joinedAt": "Joined on",
+    "levelLabel": "Level",
+    "levels": {
+      "new": "New",
+      "fresh": "Fresh",
+      "experienced": "Experienced"
+    },
+    "noDetails": "This volunteer has not shared any more details with you.",
+    "activityHeading": "Latest and planned work",
+    "activityPlaceholder": "Activities will appear here once working groups are live.",
+    "errors": {
+      "required": "This field is required.",
+      "tooLong": "This text is too long.",
+      "invalidUrl": "Enter a link that starts with https://",
+      "invalidChoice": "Choose one of the options."
+    }
   },
   "login": {
     "title": "Sign in",

@@ -93,3 +93,55 @@ function isHttpsUrl(value: string): boolean {
     return false
   }
 }
+
+/** Form fields the profile form sends. Its visibility selects are named `visibility.<field>`. */
+export type ProfileFormField =
+  'displayName' | 'city' | 'bio' | 'linkedinUrl' | 'aiSafetyKnowledge' | 'aiRisks' | ProfileField
+
+export type ParsedProfile =
+  | { ok: true; data: ProfileInput }
+  | { ok: false; errors: Partial<Record<ProfileFormField, ProfileFieldError>> }
+
+const formText = (value: unknown) => (typeof value === 'string' ? value : '')
+
+/**
+ * Parses the profile form. A visibility select that is missing falls back to the field's default
+ * tier; one that holds an unknown value is refused.
+ */
+export function parseProfileForm(raw: Record<string, unknown>): ParsedProfile {
+  const visibility = Object.fromEntries(
+    PROFILE_FIELDS.map((field) => [field, raw[`visibility.${field}`] ?? DEFAULT_TIERS[field]]),
+  )
+  const result = profileInputSchema.safeParse({
+    displayName: formText(raw.displayName),
+    city: formText(raw.city),
+    bio: formText(raw.bio),
+    linkedinUrl: formText(raw.linkedinUrl),
+    aiSafetyKnowledge: formText(raw.aiSafetyKnowledge),
+    aiRisks: formText(raw.aiRisks),
+    visibility,
+  })
+  if (result.success) return { ok: true, data: result.data }
+
+  const errors: Partial<Record<ProfileFormField, ProfileFieldError>> = {}
+  for (const issue of result.error.issues) {
+    const [first, second] = issue.path
+    const field = (first === 'visibility' ? second : first) as ProfileFormField
+    errors[field] ??= issue.message as ProfileFieldError
+  }
+  return { ok: false, errors }
+}
+
+/**
+ * What to write to profile_visibility: a choice equal to the field's default is not stored (a
+ * missing row means the default, so a future change of defaults reaches everyone who never chose).
+ */
+export function visibilityChanges(visibility: Record<ProfileField, VisibilityTier>) {
+  const store: { field: ProfileField; tier: VisibilityTier }[] = []
+  const clear: ProfileField[] = []
+  for (const field of PROFILE_FIELDS) {
+    if (visibility[field] === DEFAULT_TIERS[field]) clear.push(field)
+    else store.push({ field, tier: visibility[field] })
+  }
+  return { store, clear }
+}

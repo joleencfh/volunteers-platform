@@ -18,3 +18,4 @@ One short numbered file per decision that future maintainers need to know about:
 | [0011](0011-application-review-and-email.md)                   | Application review and transactional email    | accepted (A-04) |
 | [0012](0012-public-retention-periods-by-row-level-security.md) | Public retention periods through RLS          | accepted (A-05) |
 | [0013](0013-one-supabase-project-and-vercel-hobby.md)          | One Supabase project and Vercel Hobby         | accepted (F-09) |
+| [0014](0014-profile-visibility-enforcement.md)                 | Profile visibility enforcement                | accepted (P-01) |

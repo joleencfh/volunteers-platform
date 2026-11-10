@@ -262,8 +262,8 @@ describe('user_onboarding: admins', () => {
       expect(rows).toHaveLength(1)
     }))
 
-  it.each(['signal_group', 'read_welcome_document', 'joined_working_group'])(
-    'ticks and unticks the %s step for a member',
+  it.each(['signal_group', 'first_group_call', 'one_to_one_checkin'])(
+    'ticks and unticks the admin-confirmed %s step for a member',
     (key) =>
       inRolledBackTransaction(async (tx) => {
         const admin = await addMember(tx, { isAdmin: true })
@@ -282,6 +282,61 @@ describe('user_onboarding: admins', () => {
         expect(deleted).toHaveLength(1)
       }),
   )
+
+  it.each(['read_welcome_document', 'joined_working_group'])(
+    'cannot tick the %s step, which is not admin-confirmed',
+    (key) =>
+      inRolledBackTransaction(async (tx) => {
+        const admin = await addMember(tx, { isAdmin: true })
+        const member = await addMember(tx)
+        const step = await stepId(tx, key)
+        await actAs(tx, { role: 'authenticated', userId: admin })
+        expect(
+          await isDenied(
+            tx,
+            () => tx`
+              insert into public.user_onboarding (user_id, step_id, completed_by)
+              values (${member}, ${step}, ${admin})`,
+          ),
+        ).toBe(true)
+      }),
+  )
+
+  it('cannot tick an inactive step', () =>
+    inRolledBackTransaction(async (tx) => {
+      const admin = await addMember(tx, { isAdmin: true })
+      const member = await addMember(tx)
+      const step = await stepId(tx, 'signal_group')
+      await tx`update public.onboarding_steps set active = false where id = ${step}`
+      await actAs(tx, { role: 'authenticated', userId: admin })
+      expect(
+        await isDenied(
+          tx,
+          () => tx`
+            insert into public.user_onboarding (user_id, step_id, completed_by)
+            values (${member}, ${step}, ${admin})`,
+        ),
+      ).toBe(true)
+    }))
+
+  it('cannot tick a step for a deactivated member or someone who is not a member', () =>
+    inRolledBackTransaction(async (tx) => {
+      const admin = await addMember(tx, { isAdmin: true })
+      const former = await addMember(tx, { status: 'deactivated' })
+      const outsider = await addAuthUser(tx)
+      const step = await stepId(tx, 'signal_group')
+      await actAs(tx, { role: 'authenticated', userId: admin })
+      for (const target of [former, outsider]) {
+        expect(
+          await isDenied(
+            tx,
+            () => tx`
+              insert into public.user_onboarding (user_id, step_id, completed_by)
+              values (${target}, ${step}, ${admin})`,
+          ),
+        ).toBe(true)
+      }
+    }))
 
   it('cannot record someone else as the completer', () =>
     inRolledBackTransaction(async (tx) => {

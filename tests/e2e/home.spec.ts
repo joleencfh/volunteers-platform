@@ -59,10 +59,12 @@ test.describe('with members', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Welcome')
 
     const list = page.getByRole('list').filter({ hasText: STEP_TITLES[0] })
-    for (const title of STEP_TITLES) await expect(list.getByText(title)).toBeVisible()
+    for (const title of STEP_TITLES) {
+      await expect(list.getByRole('listitem').filter({ hasText: title })).toBeVisible()
+    }
     // Step 1 is done by the database trigger; the others are open.
     const first = list.getByRole('listitem').filter({ hasText: STEP_TITLES[0] })
-    await expect(first.getByText('Done')).toBeVisible()
+    await expect(first.getByText('Done', { exact: true })).toBeVisible()
     await expect(first.getByText('Completed automatically')).toBeVisible()
     const signal = list.getByRole('listitem').filter({ hasText: STEP_TITLES[1] })
     await expect(signal.getByText('Open')).toBeVisible()
@@ -71,7 +73,8 @@ test.describe('with members', () => {
     // it too, see tests/db/onboarding-rls.test.ts).
     await expect(signal.getByRole('button')).toHaveCount(0)
 
-    await expect(page.getByText(/^1 of \d+ steps done$/)).toBeVisible()
+    // The text is also the fallback content of the <progress> element: match the paragraph only.
+    await expect(page.locator('p', { hasText: /^1 of \d+ steps done$/ })).toBeVisible()
     await expect(page.getByRole('progressbar', { name: 'Onboarding progress' })).toHaveAttribute(
       'value',
       '1',
@@ -144,13 +147,13 @@ test.describe('with members', () => {
       await loginAs(context, user, baseURL ?? BASE)
       await page.goto('/home')
       const row = page.getByRole('listitem').filter({ hasText: KEY })
-      const before = await page.getByText(/^\d+ of \d+ steps done$/).innerText()
+      const before = await page.locator('p', { hasText: /^\d+ of \d+ steps done$/ }).innerText()
       await row.getByRole('button', { name: 'Mark as done' }).click()
       await expect(
         page.getByRole('status').filter({ hasText: 'Step marked as done.' }),
       ).toBeVisible()
-      await expect(row.getByText('Done')).toBeVisible()
-      const after = await page.getByText(/^\d+ of \d+ steps done$/).innerText()
+      await expect(row.getByText('Done', { exact: true })).toBeVisible()
+      const after = await page.locator('p', { hasText: /^\d+ of \d+ steps done$/ }).innerText()
       expect(after).not.toBe(before)
       // The step is recorded as the member's own confirmation.
       const { data: rows } = await db

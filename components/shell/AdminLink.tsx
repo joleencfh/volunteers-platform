@@ -25,17 +25,12 @@ export async function AdminLink() {
   const t = await getTranslations('admin')
 
   return (
-    <Link
-      href="/admin"
-      className={`${buttonClasses('ghost')} gap-2`}
-      aria-label={pending > 0 ? t('navLinkPending', { count: pending }) : undefined}
-    >
+    // No aria-label: the accessible name must contain the visible text (WCAG 2.5.3), and the
+    // visible text includes the number, so the name is "Admin 2".
+    <Link href="/admin" className={`${buttonClasses('ghost')} gap-2`}>
       {t('navLink')}
       {pending > 0 && (
-        <span
-          aria-hidden="true"
-          className="inline-flex min-w-6 items-center justify-center rounded-full bg-brand px-1.5 text-sm font-bold text-ink"
-        >
+        <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-brand px-1.5 text-sm font-bold text-ink">
           {pending}
         </span>
       )}

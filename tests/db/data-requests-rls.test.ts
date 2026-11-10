@@ -96,6 +96,8 @@ describe('data_requests insert', () => {
     inRolledBackTransaction(async (tx) => {
       const former = await addMember(tx, { status: 'deactivated' })
       const outsider = await addAuthUser(tx)
+      // Fixture rows are created as the superuser, so all of them come before the first actAs().
+      const member = await addMember(tx)
       for (const userId of [former, outsider]) {
         await actAs(tx, { role: 'authenticated', userId })
         expect(
@@ -105,7 +107,6 @@ describe('data_requests insert', () => {
           ),
         ).toBe(true)
       }
-      const member = await addMember(tx)
       await actAs(tx, { role: 'anon' })
       expect(
         await isDenied(

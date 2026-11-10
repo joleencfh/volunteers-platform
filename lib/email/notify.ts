@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import {
   applicationApprovedEmail,
   applicationRejectedEmail,
+  dataRequestEmail,
   newApplicationEmail,
 } from './templates'
 import { EmailNotConfiguredError, sendEmail } from './transport'
@@ -52,8 +53,10 @@ export function sendRejectionEmail(to: string): Promise<boolean> {
   return deliver(to, (origin) => applicationRejectedEmail(`${origin}/apply`))
 }
 
-/** Tells every active admin (in English) that an application is waiting. Never throws. */
-export async function notifyAdminsOfApplication(): Promise<void> {
+/** Sends one separate email to every active admin. Never throws. */
+async function notifyAdmins(
+  build: (origin: string) => { subject: string; text: string },
+): Promise<void> {
   try {
     // Service role: the visitor who just applied has no session, and this reads admin addresses
     // only to send mail, never to render them.
@@ -63,12 +66,27 @@ export async function notifyAdminsOfApplication(): Promise<void> {
       .eq('is_admin', true)
       .eq('status', 'active')
     if (error || !data) return
-    await Promise.all(
-      data.map((admin) =>
-        deliver(admin.email, (origin) => newApplicationEmail(`${origin}/admin/applications`)),
-      ),
-    )
+    await Promise.all(data.map((admin) => deliver(admin.email, build)))
   } catch {
     console.error('Admin notification failed')
   }
+}
+
+/** Tells every active admin (in English) that an application is waiting. Never throws. */
+export function notifyAdminsOfApplication(): Promise<void> {
+  return notifyAdmins((origin) => newApplicationEmail(`${origin}/admin/applications`))
+}
+
+/**
+ * Tells every active admin (in English) that a member filed a data request. The email carries
+ * the kind and the display name, never an address or real name. Never throws; the request is
+ * already saved when this runs, so a failed email loses nothing.
+ */
+export function sendDataRequestEmail(
+  kind: 'export' | 'deletion',
+  displayName: string,
+): Promise<void> {
+  return notifyAdmins((origin) =>
+    dataRequestEmail(kind, displayName, `${origin}/admin/data-requests`),
+  )
 }

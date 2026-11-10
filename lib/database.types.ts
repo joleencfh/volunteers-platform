@@ -71,6 +71,44 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"data_requests": {
+                  Row: {
+                    "created_at": string,"handled_at": string | null,"handled_by": string | null,"id": string,"kind": Database["public"]['Enums']["data_request_kind"],"status": Database["public"]['Enums']["data_request_status"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"handled_at"?: string | null,"handled_by"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["data_request_kind"],"status"?: Database["public"]['Enums']["data_request_status"],"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"handled_at"?: string | null,"handled_by"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["data_request_kind"],"status"?: Database["public"]['Enums']["data_request_status"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "data_requests_handled_by_fkey"
+      columns: ["handled_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "data_requests_handled_by_fkey"
+      columns: ["handled_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "data_requests_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "data_requests_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"onboarding_steps": {
                   Row: {
                     "active": boolean,"confirmed_by": Database["public"]['Enums']["onboarding_confirmer"],"id": string,"key": string,"position": number,"title_key": string
@@ -206,6 +244,9 @@ isOneToOne: false
 "profile_field_default_tier":
 { Args: { "field": string }; Returns: string
                            },
+"set_own_locale":
+{ Args: { "new_locale": string }; Returns: undefined
+                           },
 "shares_working_group":
 { Args: { "a": string,"b": string }; Returns: boolean
                            },
@@ -214,7 +255,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "application_status": "pending"|"approved"|"rejected","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","onboarding_confirmer": "self"|"auto"|"admin","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
+            "application_status": "pending"|"approved"|"rejected","data_request_kind": "export"|"deletion","data_request_status": "open"|"done","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","onboarding_confirmer": "self"|"auto"|"admin","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -330,7 +371,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "application_status": ["pending", "approved", "rejected"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"onboarding_confirmer": ["self", "auto", "admin"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
+            "application_status": ["pending", "approved", "rejected"],"data_request_kind": ["export", "deletion"],"data_request_status": ["open", "done"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"onboarding_confirmer": ["self", "auto", "admin"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
           }
         }
 } as const

@@ -50,6 +50,7 @@ const memberRow = (overrides: Record<string, unknown> = {}) => ({
   level: 'new',
   is_admin: false,
   status: 'active',
+  locale: 'en',
   ...overrides,
 })
 
@@ -69,7 +70,15 @@ describe('findMember', () => {
       displayName: 'Ada',
       level: 'new',
       isAdmin: true,
+      locale: 'en',
     })
+  })
+
+  it('carries the stored language and falls back to English for an unknown one', async () => {
+    row = memberRow({ locale: 'it' })
+    expect((await findMember(fakeClient(), user()))?.locale).toBe('it')
+    row = memberRow({ locale: 'xx' })
+    expect((await findMember(fakeClient(), user()))?.locale).toBe('en')
   })
 
   it('returns null without a row, for a deactivated user, a different email or an unverified one', async () => {

@@ -7,11 +7,54 @@
     "mainNavigation": "Navigazione principale",
     "profile": "Il mio profilo",
     "footerName": "PauseAI Italia",
-    "privacy": "Informativa sulla privacy"
+    "privacy": "Informativa sulla privacy",
+    "settings": "Impostazioni"
   },
   "common": {
     "close": "Chiudi",
     "dismiss": "Chiudi la notifica"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "languageHeading": "Lingua",
+    "languageIntro": "Scegli la lingua della piattaforma. Viene salvata nel tuo account e usata al prossimo accesso.",
+    "languageLabel": "Lingua dell’interfaccia",
+    "currentLanguage": "Lingua attuale: {language}",
+    "languages": {
+      "en": "English",
+      "it": "Italiano"
+    },
+    "legalNote": "Il modulo di candidatura, l’informativa sulla privacy e le altre pagine legali sono sempre in italiano.",
+    "save": "Salva la lingua",
+    "saving": "Salvataggio…",
+    "saved": "Lingua salvata.",
+    "failed": "Non siamo riusciti a salvare la lingua. Riprova più tardi.",
+    "accountHeading": "Account",
+    "signOutIntro": "Esci dalla piattaforma su questo dispositivo.",
+    "signOut": "Esci",
+    "dataRequest": {
+      "heading": "I tuoi dati",
+      "intro": "Puoi chiedere una copia dei dati che abbiamo su di te, oppure chiederci di cancellarli. Un admin ti contatterà via email.",
+      "deletionNote": "Se chiedi la cancellazione, le attività e i compiti restano, ma il tuo nome viene sostituito da “Ex volontario”.",
+      "kindLabel": "Di cosa hai bisogno?",
+      "kinds": {
+        "export": "Esportazione dei miei dati",
+        "deletion": "Cancellazione dei miei dati"
+      },
+      "submit": "Invia la richiesta",
+      "sending": "Invio…",
+      "recorded": "La tua richiesta è stata registrata. Un admin ti contatterà via email.",
+      "errors": {
+        "invalid": "Scegli di cosa hai bisogno e riprova.",
+        "limited": "Troppe richieste. Riprova più tardi.",
+        "unavailable": "Non siamo riusciti a registrare la richiesta. Riprova più tardi."
+      },
+      "yourRequests": "Le tue richieste",
+      "status": {
+        "open": "Aperta",
+        "done": "Gestita"
+      }
+    }
   },
   "onboarding": {
     "steps": {

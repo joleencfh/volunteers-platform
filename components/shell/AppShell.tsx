@@ -8,7 +8,10 @@ import { HeaderNav, type NavItem } from './HeaderNav'
 /** Header, main area and footer around every page. New sections add entries to NAV_ITEMS. */
 export async function AppShell({ children }: { children: ReactNode }) {
   const t = await getTranslations('shell')
-  const items: NavItem[] = [{ href: '/', label: t('home') }]
+  const items: NavItem[] = [
+    { href: '/', label: t('home') },
+    { href: '/profile', label: t('profile') },
+  ]
 
   return (
     <>

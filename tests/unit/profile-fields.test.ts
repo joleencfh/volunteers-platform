@@ -4,9 +4,11 @@ import {
   DEFAULT_TIERS,
   effectiveTier,
   FIXED_FIELDS,
+  parseProfileForm,
   PROFILE_FIELDS,
   profileInputSchema,
   VISIBILITY_TIERS,
+  visibilityChanges,
 } from '@/lib/domain/profile-fields'
 
 const visibility = {
@@ -123,5 +125,55 @@ describe('profileInputSchema', () => {
   it('needs a tier for every optional field', () => {
     const missing = { ...visibility, bio: undefined }
     expect(profileInputSchema.safeParse({ ...valid, visibility: missing }).success).toBe(false)
+  })
+})
+
+describe('parseProfileForm', () => {
+  const form = {
+    displayName: 'Ada',
+    city: '',
+    bio: 'Hello',
+    linkedinUrl: '',
+    aiSafetyKnowledge: '',
+    aiRisks: '',
+  }
+
+  it('falls back to the default tiers when no visibility is sent', () => {
+    const parsed = parseProfileForm(form)
+    expect(parsed.ok && parsed.data.visibility).toEqual(DEFAULT_TIERS)
+  })
+
+  it('reads visibility.<field> and stores blank text as null', () => {
+    const parsed = parseProfileForm({ ...form, 'visibility.city': 'members' })
+    expect(parsed.ok && parsed.data.visibility.city).toBe('members')
+    expect(parsed.ok && parsed.data.city).toBeNull()
+  })
+
+  it('names the field and the reason for each refusal', () => {
+    const parsed = parseProfileForm({
+      ...form,
+      displayName: '  ',
+      linkedinUrl: 'http://example.test',
+      'visibility.bio': 'everyone',
+    })
+    expect(parsed).toEqual({
+      ok: false,
+      errors: { displayName: 'required', linkedinUrl: 'invalidUrl', bio: 'invalidChoice' },
+    })
+  })
+
+  it('treats a value that is not text as blank', () => {
+    expect(parseProfileForm({ ...form, displayName: undefined }).ok).toBe(false)
+  })
+})
+
+describe('visibilityChanges', () => {
+  it('stores only choices that differ from the default and clears the others', () => {
+    const changes = visibilityChanges({ ...DEFAULT_TIERS, city: 'members', bio: 'admin' })
+    expect(changes.store).toEqual([
+      { field: 'city', tier: 'members' },
+      { field: 'bio', tier: 'admin' },
+    ])
+    expect(changes.clear).toEqual(['linkedin_url', 'ai_safety_knowledge', 'ai_risks'])
   })
 })

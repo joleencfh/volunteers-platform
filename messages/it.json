@@ -5,12 +5,65 @@
   "shell": {
     "skipToContent": "Vai al contenuto",
     "mainNavigation": "Navigazione principale",
+    "profile": "Il mio profilo",
     "footerName": "PauseAI Italia",
     "privacy": "Informativa sulla privacy"
   },
   "common": {
     "close": "Chiudi",
     "dismiss": "Chiudi la notifica"
+  },
+  "profile": {
+    "title": "Il mio profilo",
+    "intro": "Questo è ciò che gli altri volontari possono sapere di te. Per ogni dato scegli chi lo vede.",
+    "requiredNote": "I campi contrassegnati con * sono obbligatori.",
+    "checkFields": "Alcuni campi non sono corretti. Controlla i messaggi sotto ai campi.",
+    "saved": "Profilo salvato.",
+    "unavailable": "Non siamo riusciti a salvare il profilo. Riprova più tardi.",
+    "save": "Salva il profilo",
+    "saving": "Salvataggio…",
+    "displayName": "Nome visibile",
+    "displayNameHint": "Il nome che gli altri volontari vedono. Può essere un soprannome. Sempre visibile a tutti i membri.",
+    "city": "Città o regione",
+    "bio": "Chi sei",
+    "bioHint": "Poche righe bastano.",
+    "linkedinUrl": "Profilo LinkedIn",
+    "linkedinUrlHint": "Un link che inizia con https://",
+    "knowledge": "Livello di conoscenza della sicurezza dell'IA",
+    "knowledgeNotGiven": "Non indicato",
+    "knowledgeOptions": {
+      "none": "Per ora non la conosco",
+      "basic": "Ne so qualcosa",
+      "intermediate": "La conosco abbastanza bene",
+      "advanced": "La conosco molto bene"
+    },
+    "aiRisks": "Rischi dell'IA che ti stanno più a cuore",
+    "visibility": "Chi può vederlo",
+    "tiers": {
+      "admin": "Solo gli amministratori",
+      "group": "Chi condivide con me un gruppo di lavoro",
+      "members": "Tutti i membri"
+    },
+    "fixedHeading": "Solo tu e gli amministratori li vedete",
+    "fixedHint": "Qui non puoi modificarli.",
+    "realName": "Nome",
+    "email": "Email",
+    "joinedAt": "Iscritto il",
+    "levelLabel": "Livello",
+    "levels": {
+      "new": "Nuovo",
+      "fresh": "Recente",
+      "experienced": "Esperto"
+    },
+    "noDetails": "Questo volontario non ha condiviso altri dettagli con te.",
+    "activityHeading": "Ultime attività e attività in programma",
+    "activityPlaceholder": "Le attività compariranno qui quando i gruppi di lavoro saranno attivi.",
+    "errors": {
+      "required": "Questo campo è obbligatorio.",
+      "tooLong": "Il testo è troppo lungo.",
+      "invalidUrl": "Inserisci un link che inizia con https://",
+      "invalidChoice": "Scegli una delle opzioni."
+    }
   },
   "apply": {
     "title": "Candidati come volontario",

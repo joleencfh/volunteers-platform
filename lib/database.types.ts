@@ -83,7 +83,7 @@ isOneToOne: false
                     "active"?: boolean,"confirmed_by"?: Database["public"]['Enums']["onboarding_confirmer"],"id"?: string,"key"?: string,"position"?: number,"title_key"?: string
                   }
                   Relationships: [
-
+                    
                   ]
                 },"profile_visibility": {
                   Row: {

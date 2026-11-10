@@ -135,7 +135,9 @@ isOneToOne: false
 { Args: { "field": string,"owner": string,"viewer": string }; Returns: boolean
                            },
 "get_profile":
-{ Args: { "owner": string }; Returns: { "ai_risks": string | null,"ai_safety_knowledge": string | null,"bio": string | null,"city": string | null,"display_name": string,"email": string | null,"first_active_at": string | null,"id": string,"joined_at": string | null,"last_login_at": string | null,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string | null,"real_name": string | null }[]
+{ Args: { "owner": string }; Returns: {
+              "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"email": string,"first_active_at": string,"id": string,"joined_at": string,"last_login_at": string,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string,"real_name": string
+            }[]
                            },
 "is_active_member":
 { Args: Record<PropertyKey, never>; Returns: boolean

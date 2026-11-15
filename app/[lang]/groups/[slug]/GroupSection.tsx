@@ -1,4 +1,6 @@
+import { GroupLinksForm } from '@/components/groups/GroupLinksForm'
 import { LeadSection } from '@/components/groups/LeadSection'
+import { MeetingsSection, NextMeetings } from '@/components/groups/MeetingsSection'
 import { LevelBadge } from '@/components/profile/LevelBadge'
 import { Card, EmptyState } from '@/components/ui/display'
 import type { GroupTab, GroupView } from '@/lib/domain/groups'
@@ -10,27 +12,40 @@ export async function GroupSection({
   tab,
   group,
   canAssignLead,
+  canEditContent,
 }: {
   tab: GroupTab
   group: GroupView
   canAssignLead: boolean
+  canEditContent: boolean
 }) {
   const t = await getTranslations('groups')
 
   switch (tab) {
     case 'overview':
-      return <Overview group={group} canAssignLead={canAssignLead} />
+      return (
+        <Overview group={group} canAssignLead={canAssignLead} canEditContent={canEditContent} />
+      )
     case 'members':
       return <Members groupId={group.id} />
+    case 'meetings':
+      return <MeetingsSection groupId={group.id} canEdit={canEditContent} />
     case 'activities':
     case 'tasks':
-    case 'meetings':
-      // Empty until T-01 (activities, tasks) and W-05 (meetings).
+      // Empty until T-01.
       return <EmptyState title={t(`${tab}.emptyTitle`)} description={t(`${tab}.emptyBody`)} />
   }
 }
 
-async function Overview({ group, canAssignLead }: { group: GroupView; canAssignLead: boolean }) {
+async function Overview({
+  group,
+  canAssignLead,
+  canEditContent,
+}: {
+  group: GroupView
+  canAssignLead: boolean
+  canEditContent: boolean
+}) {
   const t = await getTranslations('groups')
   const links = [
     { label: t('overview.signal'), href: group.signalUrl },
@@ -58,7 +73,18 @@ async function Overview({ group, canAssignLead }: { group: GroupView; canAssignL
             ))}
           </ul>
         )}
+        {canEditContent && (
+          <div className="flex flex-col gap-2 pt-2">
+            <h3 className="text-lg font-bold">{t('overview.linksForm.title')}</h3>
+            <GroupLinksForm
+              groupId={group.id}
+              signalUrl={group.signalUrl}
+              docsUrl={group.docsUrl}
+            />
+          </div>
+        )}
       </Card>
+      <NextMeetings groupId={group.id} slug={group.slug} />
       <LeadSection groupId={group.id} canAssign={canAssignLead} currentLead={group.lead} />
     </div>
   )

@@ -122,7 +122,9 @@ test.describe('route access', () => {
         links.map((link) => new URL((link as HTMLAnchorElement).href).pathname),
       )
     // The logo goes to /, which sends a signed-in member to /home.
-    expect(hrefs.sort()).toEqual(['/', '/admin', '/home', '/profile', '/settings'].sort())
+    expect(hrefs.sort()).toEqual(
+      ['/', '/admin', '/groups', '/home', '/profile', '/settings'].sort(),
+    )
     for (const href of hrefs.filter((href) => href !== '/')) {
       expect(await outcome(page, href), href).toBe('page')
     }

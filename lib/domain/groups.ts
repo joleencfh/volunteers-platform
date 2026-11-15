@@ -39,6 +39,14 @@ export function isValidSlug(slug: string): boolean {
   return slug.length <= GROUP_SLUG_MAX_LENGTH && SLUG_PATTERN.test(slug)
 }
 
+export const GROUP_TABS = ['overview', 'activities', 'tasks', 'members', 'meetings'] as const
+export type GroupTab = (typeof GROUP_TABS)[number]
+
+/** The `?tab=` value of a group page; anything unknown (or repeated) falls back to the overview. */
+export function parseGroupTab(value: string | string[] | undefined): GroupTab {
+  return GROUP_TABS.find((tab) => tab === value) ?? 'overview'
+}
+
 /** A row of list_working_groups(); get_working_group() adds the two links. Columns may be null. */
 export type GroupRow = {
   id: string

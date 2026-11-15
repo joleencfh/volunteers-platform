@@ -4,9 +4,24 @@ import {
   canAssignLead,
   canEditGroupContent,
   GROUP_SLUG_MAX_LENGTH,
+  GROUP_TABS,
   isValidSlug,
+  parseGroupTab,
   toGroupView,
 } from '@/lib/domain/groups'
+
+describe('parseGroupTab', () => {
+  it('accepts each known tab', () => {
+    for (const tab of GROUP_TABS) expect(parseGroupTab(tab)).toBe(tab)
+  })
+
+  it('falls back to the overview for missing, unknown or repeated values', () => {
+    expect(parseGroupTab(undefined)).toBe('overview')
+    expect(parseGroupTab('admin')).toBe('overview')
+    expect(parseGroupTab('')).toBe('overview')
+    expect(parseGroupTab(['members', 'tasks'])).toBe('overview')
+  })
+})
 
 const member = (level: 'new' | 'fresh' | 'experienced') => ({
   level,

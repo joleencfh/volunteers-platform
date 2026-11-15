@@ -5,10 +5,56 @@
   "shell": {
     "skipToContent": "Vai al contenuto",
     "mainNavigation": "Navigazione principale",
+    "groups": "Gruppi",
     "profile": "Il mio profilo",
     "footerName": "PauseAI Italia",
     "privacy": "Informativa sulla privacy",
     "settings": "Impostazioni"
+  },
+  "groups": {
+    "title": "Gruppi di lavoro",
+    "intro": "I gruppi di lavoro sono il luogo in cui si svolge il lavoro dei volontari. Apri un gruppo per vedere cosa fa.",
+    "emptyTitle": "Ancora nessun gruppo di lavoro",
+    "emptyBody": "Un amministratore non ha ancora creato nessun gruppo di lavoro.",
+    "memberMarker": "Membro",
+    "lead": "Responsabile della settimana",
+    "noLead": "Nessun responsabile questa settimana",
+    "openGroup": "Apri {name}",
+    "sectionsLabel": "Sezioni di {name}",
+    "limitedTitle": "I dettagli sono per i membri",
+    "limitedBody": "Attività, compiti, membri, riunioni e link sono visibili ai membri di questo gruppo.",
+    "tabs": {
+      "overview": "Panoramica",
+      "activities": "Attività",
+      "tasks": "Compiti",
+      "members": "Membri",
+      "meetings": "Riunioni"
+    },
+    "overview": {
+      "description": "Informazioni sul gruppo",
+      "links": "Link",
+      "signal": "Gruppo Signal",
+      "docs": "Documenti",
+      "noLinks": "Non è stato aggiunto ancora nessun link."
+    },
+    "activities": {
+      "emptyTitle": "Ancora nessuna attività",
+      "emptyBody": "Le attività di questo gruppo compariranno qui."
+    },
+    "tasks": {
+      "emptyTitle": "Ancora nessun compito",
+      "emptyBody": "I compiti di questo gruppo compariranno qui."
+    },
+    "members": {
+      "title": "Membri di questo gruppo",
+      "emptyTitle": "Ancora nessun membro",
+      "emptyBody": "Un amministratore aggiunge i primi membri di un gruppo.",
+      "joined": "Iscritto il {date}"
+    },
+    "meetings": {
+      "emptyTitle": "Nessuna riunione in programma",
+      "emptyBody": "Le riunioni in programma compariranno qui."
+    }
   },
   "common": {
     "close": "Chiudi",

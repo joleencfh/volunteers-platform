@@ -145,6 +145,26 @@
     "title": "Admin",
     "applicationsLink": "Applications",
     "applicationsLinkPending": "Applications, {count} pending",
+    "applicationsBlurb": "Review people who applied to volunteer.",
+    "onboardingBlurb": "Tick the onboarding steps that an admin confirms.",
+    "onboarding": {
+      "title": "Onboarding",
+      "intro": "Volunteers with at least one open step that an admin confirms. Tick a step when it is done; untick it to take it back. Someone leaves the list when all their steps are done and the page is reloaded.",
+      "filterLabel": "Filter by step",
+      "filterAll": "All open steps",
+      "empty": "Nobody has an open admin step right now.",
+      "realName": "Name",
+      "joinedAt": "Joined on",
+      "stepsFor": "Steps for {name}",
+      "confirmed": "Marked as done: {step}.",
+      "unconfirmed": "Marked as not done: {step}.",
+      "errors": {
+        "invalid": "This change is not valid. Reload the page.",
+        "notFound": "This person or step no longer exists. Reload the page.",
+        "refused": "An admin does not confirm this step.",
+        "unavailable": "The change could not be saved. Try again."
+      }
+    },
     "applications": {
       "title": "Applications",
       "pendingHeading": "Waiting for review",

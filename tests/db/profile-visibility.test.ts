@@ -10,13 +10,8 @@ import {
   type VisibilityTier,
 } from '@/lib/domain/profile-fields'
 import { actAs, inRolledBackTransaction, isDenied, sql, type Tx } from './helpers/db'
-import {
-  addAuthUser,
-  addMember,
-  everyoneSharesAGroup,
-  fillProfile,
-  setTier,
-} from './helpers/members'
+import { addGroup, addToGroup } from './helpers/groups'
+import { addAuthUser, addMember, fillProfile, setTier } from './helpers/members'
 
 afterAll(async () => {
   await sql.end({ timeout: 2 })
@@ -55,9 +50,11 @@ async function addViewer(tx: Tx, viewer: Viewer, owner: string): Promise<string>
       return owner
     case 'other member':
       return addMember(tx)
-    case 'member sharing a group':
-      await everyoneSharesAGroup(tx)
-      return addMember(tx)
+    case 'member sharing a group': {
+      const viewer = await addMember(tx)
+      await addToGroup(tx, await addGroup(tx), owner, viewer)
+      return viewer
+    }
     case 'admin':
       return addMember(tx, { isAdmin: true })
     case 'deactivated viewer':
@@ -122,7 +119,7 @@ describe('get_profile', () => {
 
       const [plain] = await profileAs(tx, other, owner)
       await actAs(tx, 'superuser')
-      await everyoneSharesAGroup(tx)
+      await addToGroup(tx, await addGroup(tx), owner, other)
       const [grouped] = await profileAs(tx, other, owner)
       const seen: Record<string, VisibilityTier> = {}
       for (const field of PROFILE_FIELDS) {
@@ -208,23 +205,64 @@ describe('get_profile', () => {
 })
 
 describe('visibility building blocks', () => {
-  it('shares_working_group is a stub returning false until W-01', async () => {
+  const shares = async (tx: Tx, a: string, b: string) =>
+    (await tx`select public.shares_working_group(${a}, ${b}) as shared`)[0]?.shared
+
+  it('shares_working_group is true for two active members of one group', async () => {
     await inRolledBackTransaction(async (tx) => {
       const a = await addMember(tx)
       const b = await addMember(tx)
-      const [row] = await tx`select public.shares_working_group(${a}, ${b}) as shared`
-      expect(row?.shared).toBe(false)
+      await addToGroup(tx, await addGroup(tx), a, b)
+      expect(await shares(tx, a, b)).toBe(true)
+      expect(await shares(tx, b, a)).toBe(true)
     })
   })
 
-  it('hides the group tier from other members while the stub is in place', async () => {
+  it('shares_working_group is false for members of different groups', async () => {
+    await inRolledBackTransaction(async (tx) => {
+      const a = await addMember(tx)
+      const b = await addMember(tx)
+      await addToGroup(tx, await addGroup(tx), a)
+      await addToGroup(tx, await addGroup(tx), b)
+      expect(await shares(tx, a, b)).toBe(false)
+    })
+  })
+
+  it('shares_working_group is false when the only shared group is archived', async () => {
+    await inRolledBackTransaction(async (tx) => {
+      const a = await addMember(tx)
+      const b = await addMember(tx)
+      await addToGroup(tx, await addGroup(tx, { archived: true }), a, b)
+      expect(await shares(tx, a, b)).toBe(false)
+    })
+  })
+
+  it('shares_working_group is false when one of the two is deactivated', async () => {
+    await inRolledBackTransaction(async (tx) => {
+      const a = await addMember(tx)
+      const b = await addMember(tx, { status: 'deactivated' })
+      await addToGroup(tx, await addGroup(tx), a, b)
+      expect(await shares(tx, a, b)).toBe(false)
+      expect(await shares(tx, b, a)).toBe(false)
+    })
+  })
+
+  it('shows knowledge level and risks to a member sharing a group, not to other members', async () => {
     await inRolledBackTransaction(async (tx) => {
       const owner = await addMember(tx)
       await fillProfile(tx, owner)
+      const fellow = await addMember(tx)
       const other = await addMember(tx)
-      const [row] = await profileAs(tx, other, owner)
-      expect(row?.ai_safety_knowledge).toBeNull()
-      expect(row?.ai_risks).toBeNull()
+      await addToGroup(tx, await addGroup(tx), owner, fellow)
+      await addToGroup(tx, await addGroup(tx), other)
+
+      const [shared] = await profileAs(tx, fellow, owner)
+      expect(shared?.ai_safety_knowledge).toBe('basic')
+      expect(shared?.ai_risks).toBe('Synthetic risks')
+      await actAs(tx, 'superuser')
+      const [apart] = await profileAs(tx, other, owner)
+      expect(apart?.ai_safety_knowledge).toBeNull()
+      expect(apart?.ai_risks).toBeNull()
     })
   })
 

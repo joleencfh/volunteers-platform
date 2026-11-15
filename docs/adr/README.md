@@ -21,3 +21,4 @@ One short numbered file per decision that future maintainers need to know about:
 | [0014](0014-profile-visibility-enforcement.md)                 | Profile visibility enforcement                | accepted (P-01) |
 | [0015](0015-onboarding-steps-and-progress.md)                  | Onboarding steps and progress                 | accepted (O-01) |
 | [0016](0016-language-preference-cookie.md)                     | Language preference through a cookie          | accepted (P-03) |
+| [0018](0018-working-group-data-model-and-access.md)            | Working group data model and access rules     | accepted (W-01) |

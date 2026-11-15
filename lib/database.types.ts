@@ -207,6 +207,184 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"wg_join_requests": {
+                  Row: {
+                    "created_at": string,"decided_at": string | null,"decided_by": string | null,"group_id": string,"id": string,"status": Database["public"]['Enums']["join_request_status"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"decided_at"?: string | null,"decided_by"?: string | null,"group_id": string,"id"?: string,"status"?: Database["public"]['Enums']["join_request_status"],"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"decided_at"?: string | null,"decided_by"?: string | null,"group_id"?: string,"id"?: string,"status"?: Database["public"]['Enums']["join_request_status"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wg_join_requests_decided_by_fkey"
+      columns: ["decided_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_join_requests_decided_by_fkey"
+      columns: ["decided_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_join_requests_group_id_fkey"
+      columns: ["group_id"]
+isOneToOne: false
+      referencedRelation: "working_groups"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_join_requests_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_join_requests_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"wg_leads": {
+                  Row: {
+                    "assigned_at": string,"assigned_by": string | null,"group_id": string,"id": string,"user_id": string,"week_start": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "assigned_at"?: string,"assigned_by"?: string | null,"group_id": string,"id"?: string,"user_id": string,"week_start": string
+                  }
+                  Update: {
+                    "assigned_at"?: string,"assigned_by"?: string | null,"group_id"?: string,"id"?: string,"user_id"?: string,"week_start"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wg_leads_assigned_by_fkey"
+      columns: ["assigned_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_leads_assigned_by_fkey"
+      columns: ["assigned_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_leads_group_id_fkey"
+      columns: ["group_id"]
+isOneToOne: false
+      referencedRelation: "working_groups"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_leads_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_leads_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"wg_meetings": {
+                  Row: {
+                    "agenda_url": string | null,"created_at": string,"created_by": string | null,"group_id": string,"id": string,"meeting_url": string,"starts_at": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "agenda_url"?: string | null,"created_at"?: string,"created_by"?: string | null,"group_id": string,"id"?: string,"meeting_url": string,"starts_at": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "agenda_url"?: string | null,"created_at"?: string,"created_by"?: string | null,"group_id"?: string,"id"?: string,"meeting_url"?: string,"starts_at"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wg_meetings_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_meetings_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_meetings_group_id_fkey"
+      columns: ["group_id"]
+isOneToOne: false
+      referencedRelation: "working_groups"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"wg_members": {
+                  Row: {
+                    "added_by": string | null,"group_id": string,"joined_at": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "added_by"?: string | null,"group_id": string,"joined_at"?: string,"user_id": string
+                  }
+                  Update: {
+                    "added_by"?: string | null,"group_id"?: string,"joined_at"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wg_members_added_by_fkey"
+      columns: ["added_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_members_added_by_fkey"
+      columns: ["added_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_members_group_id_fkey"
+      columns: ["group_id"]
+isOneToOne: false
+      referencedRelation: "working_groups"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_members_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "wg_members_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"working_groups": {
+                  Row: {
+                    "archived_at": string | null,"created_at": string,"description": string,"docs_url": string | null,"id": string,"name": string,"signal_url": string | null,"slug": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"created_at"?: string,"description": string,"docs_url"?: string | null,"id"?: string,"name": string,"signal_url"?: string | null,"slug": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"created_at"?: string,"description"?: string,"docs_url"?: string | null,"id"?: string,"name"?: string,"signal_url"?: string | null,"slug"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 }
           }
           Views: {
@@ -227,7 +405,19 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "can_view_profile_field":
+            "can_approve_join":
+{ Args: { "p_group": string }; Returns: boolean
+                           },
+"can_assign_lead":
+{ Args: { "p_group": string }; Returns: boolean
+                           },
+"can_edit_group_content":
+{ Args: { "p_group": string }; Returns: boolean
+                           },
+"can_request_join":
+{ Args: { "p_group": string }; Returns: boolean
+                           },
+"can_view_profile_field":
 { Args: { "field": string,"owner": string,"viewer": string }; Returns: boolean
                            },
 "get_profile":
@@ -235,11 +425,27 @@ isOneToOne: false
               "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"email": string,"first_active_at": string,"id": string,"joined_at": string,"last_login_at": string,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string,"real_name": string
             }[]
                            },
+"get_working_group":
+{ Args: { "p_slug": string }; Returns: {
+              "archived": boolean,"description": string,"docs_url": string,"id": string,"is_member": boolean,"lead_display_name": string,"lead_user_id": string,"name": string,"signal_url": string,"slug": string
+            }[]
+                           },
 "is_active_member":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"is_active_working_group":
+{ Args: { "p_group": string }; Returns: boolean
+                           },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"is_wg_member":
+{ Args: { "p_group": string,"p_user"?: string }; Returns: boolean
+                           },
+"list_working_groups":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "archived": boolean,"description": string,"id": string,"is_member": boolean,"lead_display_name": string,"lead_user_id": string,"name": string,"slug": string
+            }[]
                            },
 "profile_field_default_tier":
 { Args: { "field": string }; Returns: string
@@ -252,10 +458,13 @@ isOneToOne: false
                            },
 "update_own_profile":
 { Args: { "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"linkedin_url": string }; Returns: undefined
+                           },
+"wg_member_level":
+{ Args: { "p_group": string }; Returns: Database["public"]['Enums']["user_level"]
                            }
           }
           Enums: {
-            "application_status": "pending"|"approved"|"rejected","data_request_kind": "export"|"deletion","data_request_status": "open"|"done","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","onboarding_confirmer": "self"|"auto"|"admin","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
+            "application_status": "pending"|"approved"|"rejected","data_request_kind": "export"|"deletion","data_request_status": "open"|"done","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","join_request_status": "pending"|"approved"|"rejected","onboarding_confirmer": "self"|"auto"|"admin","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -371,7 +580,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "application_status": ["pending", "approved", "rejected"],"data_request_kind": ["export", "deletion"],"data_request_status": ["open", "done"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"onboarding_confirmer": ["self", "auto", "admin"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
+            "application_status": ["pending", "approved", "rejected"],"data_request_kind": ["export", "deletion"],"data_request_status": ["open", "done"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"join_request_status": ["pending", "approved", "rejected"],"onboarding_confirmer": ["self", "auto", "admin"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
           }
         }
 } as const

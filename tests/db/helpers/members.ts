@@ -41,14 +41,6 @@ export async function setTier(tx: Tx, id: string, field: string, tier: string): 
     on conflict (user_id, field) do update set tier = excluded.tier`
 }
 
-/** Pretends everyone shares a working group, until W-01 replaces the stub. Rolled back with the test. */
-export async function everyoneSharesAGroup(tx: Tx): Promise<void> {
-  await tx.unsafe(`
-    create or replace function public.shares_working_group(a uuid, b uuid)
-    returns boolean language sql stable security definer set search_path = ''
-    as $$ select true; $$`)
-}
-
 export async function insertApplication(tx: Tx, email = `${newUserId()}@example.test`) {
   await tx`
     insert into public.applications (

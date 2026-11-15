@@ -3,15 +3,11 @@ import Link from 'next/link'
 import { Suspense, type ReactNode } from 'react'
 import { getTranslations } from '@/lib/i18n/server'
 import { AdminLink } from './AdminLink'
-import { HeaderNav, type NavItem } from './HeaderNav'
+import { MainNav, MainNavFallback } from './MainNav'
 
-/** Header, main area and footer around every page. New sections add entries to NAV_ITEMS. */
+/** Header, main area and footer around every page. The navigation is in MainNav. */
 export async function AppShell({ children }: { children: ReactNode }) {
   const t = await getTranslations('shell')
-  const items: NavItem[] = [
-    { href: '/', label: t('home') },
-    { href: '/profile', label: t('profile') },
-  ]
 
   return (
     <>
@@ -37,7 +33,9 @@ export async function AppShell({ children }: { children: ReactNode }) {
             <Suspense fallback={null}>
               <AdminLink />
             </Suspense>
-            <HeaderNav items={items} menuLabel={t('menu')} navLabel={t('mainNavigation')} />
+            <Suspense fallback={<MainNavFallback />}>
+              <MainNav />
+            </Suspense>
           </div>
         </div>
       </header>

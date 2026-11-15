@@ -32,7 +32,7 @@ export function isAuthRoute(pathname: string): boolean {
   return isUnder(pathname, '/auth')
 }
 
-const DEFAULT_NEXT = '/'
+const DEFAULT_NEXT = '/home'
 
 /**
  * The redirect target after sign-in, from an untrusted `next` value. Only a plain same-site

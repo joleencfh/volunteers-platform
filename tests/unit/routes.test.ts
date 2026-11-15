@@ -34,6 +34,8 @@ describe('isPublicRoute', () => {
 
   it.each([
     '/admin',
+    '/home',
+    '/profile',
     '/admin/applications',
     '/applying',
     '/loginx',
@@ -71,8 +73,8 @@ describe('safeNextPath', () => {
     '/ok\nSet-Cookie: x=1',
     '/auth/callback?next=/',
     '/login',
-  ])('falls back to the home page for %j', (value) => {
-    expect(safeNextPath(value)).toBe('/')
+  ])('falls back to the signed-in home for %j', (value) => {
+    expect(safeNextPath(value)).toBe('/home')
   })
 })
 

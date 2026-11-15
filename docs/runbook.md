@@ -57,6 +57,13 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 - The CI `database` job regenerates the types and compares them byte for byte with the committed file. Its runner has no formatter for the generated TypeScript, so the output differs in layout from one generated on a machine that has it, even when the schema is identical. If the drift check fails only on layout, download the `database-types` artifact from that run and commit it as `lib/database.types.ts`.
 - Every new table needs `alter table ... enable row level security;` and policies in the same migration. CI runs the guard and fails otherwise.
 
+## Milestone M2 (profiles and onboarding): what to do by hand
+
+- **Push the migrations in order**, from the linked checkout: `bunx supabase db push --linked`. M2 adds five. Already applied to the hosted project: `20261110120000_profile_visibility`, `20261110130000_onboarding` and `20261110130137_onboarding_admin_insert_scope`. Still pending, to be applied in file order: `20261110164237_set_own_locale` and `20261110164711_data_requests`; the command lists what is pending. Afterwards run `bun run db:types:staging` and commit the regenerated `lib/database.types.ts` over the hand-edited one.
+- **Set the welcome document link before inviting volunteers.** Step 3 of the onboarding checklist shows the link stored in `config` under `onboarding.welcome_document_url` (a JSON string, empty after the first migration). In the Supabase table editor set `value` on that row to the quoted URL, for example `"https://example.org/welcome"`. Only `http:` and `https:` links are shown; while it is empty or invalid, the window says the document is not available yet and members cannot tick the step.
+- **Admin pages:** `/admin` is the admin home. `/admin/onboarding` lists members with open admin-confirmed steps (Signal group, first group call, one-on-one check-in) to tick off; `/admin/data-requests` lists export and deletion requests filed from `/settings`, with a "mark as handled" action. Handling a request is manual until D-03 (export and anonymise tooling); admins also get an email when one arrives.
+- **Language cookie:** the saved language is mirrored into the `pauseai_locale` cookie at sign-in and when a member saves it on `/settings` (ADR-0016). If someone reports the wrong language, they sign out and in again or save it on `/settings`; the legal pages are always Italian.
+
 ## Supabase project (one for now) and Google sign-in
 
 One hosted Supabase project serves development, previews and production until the pilot, so the account stays on the free plan (ADR-0013). It holds synthetic data only until real volunteers are invited; tests never run against it.

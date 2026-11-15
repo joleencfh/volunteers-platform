@@ -188,6 +188,8 @@
     "title": "Admin",
     "applicationsLink": "Applications",
     "applicationsLinkPending": "Applications, {count} pending",
+    "navLink": "Admin",
+    "navLinkPending": "Admin, {count} applications pending",
     "applicationsBlurb": "Review people who applied to volunteer.",
     "onboardingBlurb": "Tick the onboarding steps that an admin confirms.",
     "onboarding": {

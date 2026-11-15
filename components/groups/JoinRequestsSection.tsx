@@ -1,5 +1,6 @@
 import { LevelBadge } from '@/components/profile/LevelBadge'
 import { Card } from '@/components/ui/display'
+import { readMemberProfiles } from '@/lib/groups/member-profiles'
 import { getFormatter, getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 import { JoinRequestActions } from './JoinRequestActions'
@@ -23,15 +24,18 @@ export async function JoinRequestsSection({
   const supabase = await createClient()
   const { data } = await supabase
     .from('wg_join_requests')
-    .select('id, created_at, members(display_name, level)')
+    .select('id, user_id, created_at')
     .eq('group_id', groupId)
     .eq('status', 'pending')
     .order('created_at')
+  const profiles = await readMemberProfiles(
+    supabase,
+    (data ?? []).map((row) => row.user_id),
+  )
   const requests = (data ?? []).flatMap((row) => {
-    // The members view has no declared key, so the client types the embed as one row or a list.
-    const person = Array.isArray(row.members) ? row.members[0] : row.members
+    const person = profiles.get(row.user_id)
     return person
-      ? [{ id: row.id, createdAt: row.created_at, name: person.display_name, level: person.level }]
+      ? [{ id: row.id, createdAt: row.created_at, name: person.displayName, level: person.level }]
       : []
   })
 

@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { findMember, type Member } from './member'
 
 export type { Member } from './member'
+export { requireWgMember } from './wg'
 
 // These read the session, so a component calling them sits behind <Suspense> (Cache Components).
 // Server actions call them first: a 'use server' function is a public endpoint.

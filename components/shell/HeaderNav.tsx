@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Button, buttonClasses } from '@/components/ui/Button'
 
-export type NavItem = { href: string; label: string }
+/** `badge` is a count shown after the label; the accessible name is the visible text, so it includes it. */
+export type NavItem = { href: string; label: string; badge?: number }
 
 /** Inline links from the md breakpoint up; a menu button below it. */
 export function HeaderNav({
@@ -48,6 +49,11 @@ export function HeaderNav({
               onClick={() => setOpen(false)}
             >
               {item.label}
+              {item.badge !== undefined && item.badge > 0 && (
+                <span className="ml-2 inline-flex min-w-6 items-center justify-center rounded-full bg-brand px-1.5 text-sm font-bold text-ink">
+                  {item.badge}
+                </span>
+              )}
             </Link>
           </li>
         ))}

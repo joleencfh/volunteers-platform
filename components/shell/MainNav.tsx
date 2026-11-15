@@ -12,10 +12,12 @@ export async function MainNav() {
   const supabase = await createClient()
   const { data } = await supabase.auth.getUser()
   const t = await getTranslations('shell')
+  // Join requests the caller may decide (admins: all; others: groups where they are fresh or above).
+  const pending = data.user ? ((await supabase.rpc('pending_join_request_count')).data ?? 0) : 0
   const items: NavItem[] = data.user
     ? [
         { href: '/home', label: t('home') },
-        { href: '/groups', label: t('groups') },
+        { href: '/groups', label: t('groups'), badge: pending },
         { href: '/profile', label: t('profile') },
         { href: '/settings', label: t('settings') },
       ]

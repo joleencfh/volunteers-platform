@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
-import { JoinRequestPlaceholder } from '@/components/groups/JoinRequestPlaceholder'
+import { JoinRequestCard } from '@/components/groups/JoinRequestCard'
+import { JoinRequestsSection } from '@/components/groups/JoinRequestsSection'
 import { Badge } from '@/components/ui/display'
 import { requireUser } from '@/lib/authz'
 import { GROUP_TABS, isValidSlug, parseGroupTab, toGroupView } from '@/lib/domain/groups'
@@ -51,6 +52,10 @@ async function GroupContent({
   if (!row) notFound()
   const group = toGroupView(row)
   const fullView = group.isMember || member.isAdmin
+  // Whether this person may decide join requests: asked of the database, not worked out here.
+  const { data: canApprove } = fullView
+    ? await supabase.rpc('can_approve_join', { p_group: group.id })
+    : { data: false }
 
   return (
     <div className="flex flex-col gap-8">
@@ -86,10 +91,13 @@ async function GroupContent({
               ))}
             </ul>
           </nav>
+          {tab === 'overview' && (
+            <JoinRequestsSection groupId={group.id} canApprove={canApprove === true} />
+          )}
           <GroupSection tab={tab} group={group} />
         </>
       ) : (
-        <JoinRequestPlaceholder />
+        <JoinRequestCard groupId={group.id} userId={member.id} />
       )}
     </div>
   )

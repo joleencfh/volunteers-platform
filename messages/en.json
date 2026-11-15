@@ -27,6 +27,32 @@
     "sectionsLabel": "Sections of {name}",
     "limitedTitle": "Details are for members",
     "limitedBody": "Activities, tasks, members, meetings and links are visible to the members of this group.",
+    "join": {
+      "request": "Request to join",
+      "working": "Sending…",
+      "pendingTitle": "Request pending",
+      "pendingBody": "Your request is waiting for a fresh or experienced member of this group, or an admin.",
+      "requested": "Request sent. A member of this group will review it.",
+      "invalid": "This request could not be read. Reload the page and try again.",
+      "notAllowed": "You cannot request to join this group.",
+      "unavailable": "The request could not be sent. Try again in a moment."
+    },
+    "requests": {
+      "title": "Join requests",
+      "intro": "People who asked to join this group. You can decide because you are a fresh or experienced member of it, or an admin.",
+      "empty": "No pending requests.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "working": "Working…",
+      "approveFor": "Approve {name}",
+      "rejectFor": "Reject {name}",
+      "approved": "Approved. The person is now a member.",
+      "rejected": "Rejected.",
+      "invalid": "This decision could not be read. Reload the page and try again.",
+      "notFound": "This request is no longer available.",
+      "conflict": "Someone else already decided this request.",
+      "unavailable": "The decision could not be saved. Try again in a moment."
+    },
     "tabs": {
       "overview": "Overview",
       "activities": "Activities",

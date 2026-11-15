@@ -56,7 +56,9 @@ test.describe.serial('join requests', () => {
     await loginAs(context, fixtureUser('new'), baseURL ?? BASE)
     await page.goto(`/groups/${slug}`)
     await page.getByRole('button', { name: 'Request to join' }).click()
-    await expect(page.getByText('Request sent.')).toBeVisible()
+    // The action revalidates the page, so the server replaces the button and its short-lived
+    // "Request sent." message with the pending state: assert that final state, not the message.
+    await expect(page.getByText('Request pending', { exact: true })).toBeVisible()
 
     await page.reload()
     await expect(page.getByText('Request pending', { exact: true })).toBeVisible()

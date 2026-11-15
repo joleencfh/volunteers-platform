@@ -9,10 +9,56 @@
     "mainNavigation": "Main navigation",
     "menu": "Menu",
     "home": "Home",
+    "groups": "Groups",
     "profile": "My profile",
     "footerName": "PauseAI Italy",
     "privacy": "Privacy notice",
     "settings": "Settings"
+  },
+  "groups": {
+    "title": "Working groups",
+    "intro": "Working groups are where the volunteer work happens. Open a group to see what it does.",
+    "emptyTitle": "No working groups yet",
+    "emptyBody": "An admin has not created any working group yet.",
+    "memberMarker": "Member",
+    "lead": "Lead this week",
+    "noLead": "No lead this week",
+    "openGroup": "Open {name}",
+    "sectionsLabel": "Sections of {name}",
+    "limitedTitle": "Details are for members",
+    "limitedBody": "Activities, tasks, members, meetings and links are visible to the members of this group.",
+    "tabs": {
+      "overview": "Overview",
+      "activities": "Activities",
+      "tasks": "Tasks",
+      "members": "Members",
+      "meetings": "Meetings"
+    },
+    "overview": {
+      "description": "About this group",
+      "links": "Links",
+      "signal": "Signal group",
+      "docs": "Documents",
+      "noLinks": "No links have been added yet."
+    },
+    "activities": {
+      "emptyTitle": "No activities yet",
+      "emptyBody": "Activities of this group will appear here."
+    },
+    "tasks": {
+      "emptyTitle": "No tasks yet",
+      "emptyBody": "Tasks of this group will appear here."
+    },
+    "members": {
+      "title": "Members of this group",
+      "emptyTitle": "No members yet",
+      "emptyBody": "An admin adds the first members of a group.",
+      "joined": "Joined {date}"
+    },
+    "meetings": {
+      "emptyTitle": "No meetings planned",
+      "emptyBody": "Planned meetings will appear here."
+    }
   },
   "common": {
     "close": "Close",

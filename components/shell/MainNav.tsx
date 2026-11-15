@@ -15,6 +15,7 @@ export async function MainNav() {
   const items: NavItem[] = data.user
     ? [
         { href: '/home', label: t('home') },
+        { href: '/groups', label: t('groups') },
         { href: '/profile', label: t('profile') },
         { href: '/settings', label: t('settings') },
       ]

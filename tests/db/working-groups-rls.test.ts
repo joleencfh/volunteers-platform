@@ -1,5 +1,9 @@
 // W-01: working group tables, policy helpers, triggers and the Lobbying seed.
 // Pattern: tests/db/onboarding-rls.test.ts. Spec sections 3 and 5, ADR-0018.
+// W-06 (admin group management) adds no policy: the rules its actions rely on are proven here, for
+// every role. "working_groups writes" covers create, rename, archive, restore (an update of
+// archived_at) and delete as admin only; "wg_members writes" covers adding and removing members as
+// admin only. tests/unit/admin-group-actions.test.ts covers the actions on top of them.
 import { afterAll, describe, expect, it } from 'vitest'
 import { canApproveJoin, canAssignLead, canEditGroupContent } from '@/lib/domain/groups'
 import { actAs, inRolledBackTransaction, isDenied, sql } from './helpers/db'

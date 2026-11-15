@@ -61,14 +61,20 @@ async function Members({ groupId }: { groupId: string }) {
   // Row-level security shows the member list to members of the group and admins only, and this
   // component is only rendered for them.
   const supabase = await createClient()
-  const { data } = await supabase
+  const { data: memberships } = await supabase
     .from('wg_members')
-    .select('user_id, joined_at, members(display_name, level)')
+    .select('user_id, joined_at')
     .eq('group_id', groupId)
     .order('joined_at')
-  const people = (data ?? []).flatMap((row) => {
-    // The members view has no declared key, so the client types the embed as one row or a list.
-    const person = Array.isArray(row.members) ? row.members[0] : row.members
+  // The members view has no declared relationship to wg_members, so it cannot be embedded in one
+  // query: read the names and levels with a second one and join them here.
+  const ids = (memberships ?? []).map((row) => row.user_id)
+  const { data: profiles } = ids.length
+    ? await supabase.from('members').select('id, display_name, level').in('id', ids)
+    : { data: [] }
+  const byId = new Map((profiles ?? []).map((person) => [person.id, person]))
+  const people = (memberships ?? []).flatMap((row) => {
+    const person = byId.get(row.user_id)
     return person
       ? [
           {

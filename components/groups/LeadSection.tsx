@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/display'
 import { LEAD_CHECKLIST, assignableWeeks, currentWeekStart, historyWeeks } from '@/lib/domain/leads'
+import { readMemberProfiles } from '@/lib/groups/member-profiles'
 import { getFormatter, getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 import { AssignLeadForm } from './AssignLeadForm'
@@ -30,14 +31,17 @@ export async function LeadSection({
   const supabase = await createClient()
   const { data } = await supabase
     .from('wg_leads')
-    .select('week_start, members(display_name)')
+    .select('week_start, user_id')
     .eq('group_id', groupId)
     .gte('week_start', oldest)
     .order('week_start', { ascending: false })
+  const leadProfiles = await readMemberProfiles(
+    supabase,
+    (data ?? []).map((row) => row.user_id),
+  )
   const leads = (data ?? []).flatMap((row) => {
-    // The members view has no declared key, so the client types the embed as one row or a list.
-    const person = Array.isArray(row.members) ? row.members[0] : row.members
-    return person ? [{ weekStart: row.week_start, name: person.display_name }] : []
+    const person = leadProfiles.get(row.user_id)
+    return person ? [{ weekStart: row.week_start, name: person.displayName }] : []
   })
   const upcoming = leads.filter((lead) => lead.weekStart > current).reverse()
   const history = leads.filter((lead) => lead.weekStart <= current)
@@ -46,12 +50,16 @@ export async function LeadSection({
   if (canAssign) {
     const { data: rows } = await supabase
       .from('wg_members')
-      .select('user_id, members(display_name)')
+      .select('user_id')
       .eq('group_id', groupId)
+    const memberProfiles = await readMemberProfiles(
+      supabase,
+      (rows ?? []).map((row) => row.user_id),
+    )
     people = (rows ?? [])
       .flatMap((row) => {
-        const person = Array.isArray(row.members) ? row.members[0] : row.members
-        return person ? [{ id: row.user_id, name: person.display_name }] : []
+        const person = memberProfiles.get(row.user_id)
+        return person ? [{ id: row.user_id, name: person.displayName }] : []
       })
       .sort((a, b) => a.name.localeCompare(b.name))
   }

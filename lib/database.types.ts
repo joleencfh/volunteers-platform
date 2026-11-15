@@ -420,6 +420,9 @@ isOneToOne: false
 "can_view_profile_field":
 { Args: { "field": string,"owner": string,"viewer": string }; Returns: boolean
                            },
+"decide_join_request":
+{ Args: { "p_approve": boolean,"p_request": string }; Returns: Database["public"]['Enums']["join_request_status"]
+                           },
 "get_profile":
 { Args: { "owner": string }; Returns: {
               "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"email": string,"first_active_at": string,"id": string,"joined_at": string,"last_login_at": string,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string,"real_name": string
@@ -446,6 +449,9 @@ isOneToOne: false
 { Args: Record<PropertyKey, never>; Returns: {
               "archived": boolean,"description": string,"id": string,"is_member": boolean,"lead_display_name": string,"lead_user_id": string,"name": string,"slug": string
             }[]
+                           },
+"pending_join_request_count":
+{ Args: Record<PropertyKey, never>; Returns: number
                            },
 "profile_field_default_tier":
 { Args: { "field": string }; Returns: string

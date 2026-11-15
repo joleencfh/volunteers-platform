@@ -51,6 +51,32 @@
       "emptyBody": "Un amministratore aggiunge i primi membri di un gruppo.",
       "joined": "Iscritto il {date}"
     },
+    "join": {
+      "request": "Chiedi di unirti",
+      "working": "Invio…",
+      "pendingTitle": "Richiesta in attesa",
+      "pendingBody": "La tua richiesta attende un membro fresh o experienced di questo gruppo, oppure un amministratore.",
+      "requested": "Richiesta inviata. Un membro di questo gruppo la esaminerà.",
+      "invalid": "Non è stato possibile leggere la richiesta. Ricarica la pagina e riprova.",
+      "notAllowed": "Non puoi chiedere di unirti a questo gruppo.",
+      "unavailable": "Non è stato possibile inviare la richiesta. Riprova tra poco."
+    },
+    "requests": {
+      "title": "Richieste di adesione",
+      "intro": "Persone che hanno chiesto di unirsi a questo gruppo. Puoi decidere perché ne sei un membro fresh o experienced, oppure sei amministratore.",
+      "empty": "Nessuna richiesta in attesa.",
+      "approve": "Approva",
+      "reject": "Rifiuta",
+      "working": "Attendi…",
+      "approveFor": "Approva {name}",
+      "rejectFor": "Rifiuta {name}",
+      "approved": "Approvata. La persona ora è membro.",
+      "rejected": "Rifiutata.",
+      "invalid": "Non è stato possibile leggere la decisione. Ricarica la pagina e riprova.",
+      "notFound": "Questa richiesta non è più disponibile.",
+      "conflict": "Qualcun altro ha già deciso su questa richiesta.",
+      "unavailable": "Non è stato possibile salvare la decisione. Riprova tra poco."
+    },
     "meetings": {
       "emptyTitle": "Nessuna riunione in programma",
       "emptyBody": "Le riunioni in programma compariranno qui."

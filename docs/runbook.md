@@ -64,6 +64,14 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 - **Admin pages:** `/admin` is the admin home. `/admin/onboarding` lists members with open admin-confirmed steps (Signal group, first group call, one-on-one check-in) to tick off; `/admin/data-requests` lists export and deletion requests filed from `/settings`, with a "mark as handled" action. Handling a request is manual until D-03 (export and anonymise tooling); admins also get an email when one arrives.
 - **Language cookie:** the saved language is mirrored into the `pauseai_locale` cookie at sign-in and when a member saves it on `/settings` (ADR-0016). If someone reports the wrong language, they sign out and in again or save it on `/settings`; the legal pages are always Italian.
 
+## Milestone M3a (working groups): what to do by hand
+
+- **Push the migrations in order**, from the linked checkout: `bunx supabase db push --linked` (try `--dry-run` first). M3a adds three: `20261115150206_working_groups` and `20261115151347_working_group_views` (applied at the W-01 gate) and `20261115154508_wg_join_decisions` (applied at the W-03 gate). None should be pending now; `--dry-run` lists any that are. If the CI drift check fails on `lib/database.types.ts` only on layout, take the `database-types` artifact.
+- **Lobbying has no members.** The first migration seeds the group, but nobody is in it. Before the first group is used, an admin opens `/admin/groups`, picks Lobbying and adds the first members. Outreach is created the same way with "New group" (the slug is chosen once and never changes).
+- **Join approvals.** A member opens a group they are not in and presses "Request to join". Fresh and experienced members of that group, and admins, see the request on the group's Overview (a badge on the Groups link counts the ones a person may decide) and approve or reject it. Approval adds the member in the same database call. No email is sent. A rejected person may ask again.
+- **Lead of the week.** Experienced members of a group and admins assign any member of the group as lead for the current or a later week (Monday to Sunday, UTC); past weeks are read-only. Being lead gives no extra permissions. Removing a member deletes their current and later lead rows.
+- **General activity seam (T-01).** `onGroupCreated(groupId)` in `lib/domain/admin-groups.ts` does nothing today and is called by `createGroup`. T-01 creates each group's General activity there and backfills Lobbying.
+
 ## Supabase project (one for now) and Google sign-in
 
 One hosted Supabase project serves development, previews and production until the pilot, so the account stays on the free plan (ADR-0013). It holds synthetic data only until real volunteers are invited; tests never run against it.

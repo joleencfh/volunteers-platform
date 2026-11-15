@@ -113,8 +113,17 @@ export function EditGroupForm({
 /** Archives an active group or restores an archived one. */
 export function ArchiveControl({ groupId, archived }: { groupId: string; archived: boolean }) {
   const t = useTranslations('admin.groups')
-  const [state, action, working] = useActionState(archived ? restoreGroup : archiveGroup, initial)
-  const done = archived
+  // The page re-renders with the new `archived` value as soon as the action finishes, so the
+  // message must follow the action that was submitted, not the current prop.
+  const [restored, setRestored] = useState(archived)
+  const [state, action, working] = useActionState(
+    async (previous: GroupAdminState, formData: FormData) => {
+      setRestored(archived)
+      return archived ? restoreGroup(previous, formData) : archiveGroup(previous, formData)
+    },
+    initial,
+  )
+  const done = restored
     ? state.changed === false
       ? t('restoredAlready')
       : t('restoredDone')

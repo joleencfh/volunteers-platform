@@ -82,7 +82,9 @@ test.describe.serial('join requests', () => {
       .getByRole('listitem')
       .filter({ has: page.getByRole('button', { name: /^Approve/ }) })
     await card.getByRole('button', { name: /^Approve/ }).click()
-    await expect(page.getByText('Approved. The person is now a member.')).toBeVisible()
+    // The action revalidates the page, so the decided request leaves the list together with its
+    // short-lived message: assert the resulting state, not the message.
+    await expect(page.getByText('No pending requests.')).toBeVisible()
 
     const requesterContext = await browser.newContext()
     const requesterPage = await requesterContext.newPage()

@@ -205,7 +205,7 @@ isOneToOne: false
                     "ai_risks"?: string | null,"ai_safety_knowledge"?: string | null,"bio"?: string | null,"city"?: string | null,"created_at"?: string,"display_name"?: string,"email"?: string,"first_active_at"?: string | null,"id"?: string,"is_admin"?: boolean,"joined_at"?: string,"last_login_at"?: string | null,"level"?: Database["public"]['Enums']["user_level"],"linkedin_url"?: string | null,"locale"?: string,"real_name"?: string,"status"?: Database["public"]['Enums']["user_status"],"updated_at"?: string
                   }
                   Relationships: [
-
+                    
                   ]
                 },"wg_join_requests": {
                   Row: {
@@ -383,7 +383,7 @@ isOneToOne: false
                     "archived_at"?: string | null,"created_at"?: string,"description"?: string,"docs_url"?: string | null,"id"?: string,"name"?: string,"signal_url"?: string | null,"slug"?: string,"updated_at"?: string
                   }
                   Relationships: [
-
+                    
                   ]
                 }
           }

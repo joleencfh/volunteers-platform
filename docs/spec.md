@@ -1,6 +1,6 @@
 # PauseAI IT Volunteer Platform: Product Spec
 
-Last updated: 2026-10-11
+Last updated: 2026-11-15
 
 ## 1. Purpose, scope and guiding decisions
 
@@ -229,6 +229,8 @@ Every volunteer has a profile page. Other members see only a display name (which
 | Latest and planned activities and tasks | Same working group, only items in groups the viewer can fully see | System |
 
 - The volunteer edits their own profile; each optional field has a visibility control limited to the tiers above.
+- Field choices: AI safety knowledge level is one of none, basic, intermediate or advanced (the same choices as the application form); AI risks most invested in is free text of at most 500 characters; the short bio is at most 500 characters; the LinkedIn link must start with `https://`. Approval does not copy the knowledge answer from the application into the profile: the volunteer sets it themselves.
+- Until working groups exist (stories W-01 onwards), no two people share a working group, so the "same working group" tier behaves like "admin only".
 - Profiles never show more than the viewer's access to the underlying working group allows.
 - New volunteers are prompted to complete the profile (display name, city, bio) as part of onboarding.
 - Points are not shown on profiles in v1 and, when added, only if the person opts in; there is no leaderboard.
@@ -236,7 +238,7 @@ Every volunteer has a profile page. Other members see only a display name (which
 
 ## 8. Onboarding and level progression
 
-Onboarding is a checklist every new volunteer sees on their home page until it is complete. Each step is confirmed in one of three ways: by the volunteer, automatically by the system, or by an admin.
+Onboarding is a checklist every new volunteer sees on their home page (`/home`, the signed-in home; a signed-in member who opens `/` or `/login` is sent there) until it is complete. Each step is confirmed in one of three ways: by the volunteer, automatically by the system, or by an admin.
 
 | # | Step | Confirmed by |
 | --- | --- | --- |
@@ -250,6 +252,8 @@ Onboarding is a checklist every new volunteer sees on their home page until it i
 | 8 | One-on-one check-in of 15–20 minutes | Admin |
 
 - Steps 3 and 4 are shown as prompts on first login and stay on the checklist until done. The welcome document is a link set in a configuration table.
+- The first-login prompt is step 3's window opening by itself, once per browser session, while step 3 is open; step 4's window opens only from the checklist. "I've read it" completes the step. "Later" closes the window and keeps it from opening by itself again in that browser session; "Close" only closes it. Neither completes the step.
+- If the welcome document link is empty or is not an `http` or `https` address, the window says the document is not available yet and offers only "Close".
 - Admins have an onboarding overview listing people with open admin-confirmed steps, and tick them off there.
 - Completing the profile (section 7) is shown as a prompt beside the checklist, not a step.
 - The checklist definition lives in a table so steps can be reordered or reworded without code.
@@ -265,7 +269,7 @@ Onboarding is a checklist every new volunteer sees on their home page until it i
 
 ### Notifications (v1)
 
-Email only, through Resend: sign-in links, application received (to admins and applicant), application approved or rejected, task assigned. Pending approvals (applications, WG join requests) show as a badge in the app. No digests, calendar feed or reminders in v1.
+Email only, through Resend: sign-in links, application received (to admins and applicant), application approved or rejected, task assigned, data export or deletion request received (to admins). Pending approvals (applications, WG join requests) show as a badge in the app. No digests, calendar feed or reminders in v1.
 
 ### Privacy and GDPR
 
@@ -276,7 +280,7 @@ This is a summary for the build, not legal advice; the maintainer reviews the wo
 - **Special category risk:** membership of an advocacy group can reveal political opinions, so the application asks for explicit, separate consent, stored with a timestamp and the notice version.
 - **Data minimisation:** collect only what the platform uses; LinkedIn is a link, never an uploaded CV.
 - **Access control:** admin-only fields and target contact details are protected by row-level security. Record admin views and edits of contact details in an audit log.
-- **Rights:** admins can export a person's data and delete or anonymise it on request. Deletion keeps activity and task records but replaces the person with "Former volunteer".
+- **Rights:** admins can export a person's data and delete or anonymise it on request. Deletion keeps activity and task records but replaces the person with "Former volunteer". A member asks for either from their account settings, which records a request and emails the admins.
 - **Retention (defaults, to be confirmed):** rejected applications deleted after 6 months; personal fields of people who leave purged after 12 months.
 - **Targets:** professional and public contact details only; notes stay factual.
 - **Processors and region:** Supabase project in an EU region; accept the data processing terms of Supabase, Vercel and Resend. Keep a short record of processing and a breach-response note (notify the Italian authority within 72 hours where required).
@@ -304,8 +308,9 @@ This is a summary for the build, not legal advice; the maintainer reviews the wo
 | `tasks` | Tasks with assignee, status, completion note and link |
 | `targets`, `target_contacts`, `target_interactions` | Targets, admin-only contact details, dated interaction log |
 | `onboarding_steps`, `user_onboarding` | Checklist definition and per-user progress |
+| `data_requests` | Members' requests for a data export or deletion, one open request per person and kind, handled by admins |
 | `config` | Level thresholds and other settings, including the welcome document link |
-| `audit_log` | Admin actions on levels, applications and target contacts |
+| `audit_log` | Admin actions on levels, applications, onboarding steps, data requests and target contacts |
 
 Every table has row-level security. Schema changes are numbered SQL migrations in the repository. Activity and target type definitions and their `details` schemas live in code.
 

@@ -1,11 +1,12 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { localeForPath } from '@/lib/domain/locale'
+import { LOCALE_COOKIE, parseLocaleCookie } from '@/lib/domain/locale-preference'
 import { hasLocalePrefix, isAuthRoute, isPublicRoute } from '@/lib/domain/routes'
 import { refreshSession } from '@/lib/supabase/session'
 
 // Runs on every page request. It refreshes the session cookies, sends logged-out visitors from
 // protected routes to /login, and picks the locale. Every page lives under app/[lang]; the locale
-// comes from the path (legal routes are Italian, the rest English), so the URL is rewritten, not
+// comes from the path (legal routes are Italian, the rest the saved preference, English by default), so the URL is rewritten, not
 // redirected: visitors never see /en or /it. /auth/* are route handlers outside that tree.
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -13,7 +14,9 @@ export async function proxy(request: NextRequest) {
   const respond = () => {
     if (isAuthRoute(pathname)) return NextResponse.next({ request })
     const url = request.nextUrl.clone()
-    url.pathname = `/${localeForPath(pathname)}${pathname}`
+    // The saved language preference (cookie, ADR-0016); legal routes ignore it.
+    const preferred = parseLocaleCookie(request.cookies.get(LOCALE_COOKIE)?.value)
+    url.pathname = `/${localeForPath(pathname, preferred)}${pathname}`
     return NextResponse.rewrite(url, { request })
   }
 

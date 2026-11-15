@@ -11,11 +11,54 @@
     "home": "Home",
     "profile": "My profile",
     "footerName": "PauseAI Italy",
-    "privacy": "Privacy notice"
+    "privacy": "Privacy notice",
+    "settings": "Settings"
   },
   "common": {
     "close": "Close",
     "dismiss": "Dismiss notification"
+  },
+  "settings": {
+    "title": "Settings",
+    "languageHeading": "Language",
+    "languageIntro": "Choose the language of the platform. It is saved to your account and used the next time you sign in.",
+    "languageLabel": "Interface language",
+    "currentLanguage": "Current language: {language}",
+    "languages": {
+      "en": "English",
+      "it": "Italiano"
+    },
+    "legalNote": "The application form, the privacy notice and the other legal pages are always in Italian.",
+    "save": "Save language",
+    "saving": "Saving…",
+    "saved": "Language saved.",
+    "failed": "We could not save your language. Try again later.",
+    "accountHeading": "Account",
+    "signOutIntro": "Sign out of the platform on this device.",
+    "signOut": "Sign out",
+    "dataRequest": {
+      "heading": "Your data",
+      "intro": "You can ask for a copy of the data we hold about you, or ask us to delete it. An admin will contact you by email.",
+      "deletionNote": "If you ask for deletion, your activity and task records stay, but your name is replaced with “Former volunteer”.",
+      "kindLabel": "What do you need?",
+      "kinds": {
+        "export": "Export of my data",
+        "deletion": "Deletion of my data"
+      },
+      "submit": "Send request",
+      "sending": "Sending…",
+      "recorded": "Your request was recorded. An admin will contact you by email.",
+      "errors": {
+        "invalid": "Choose what you need and try again.",
+        "limited": "Too many requests. Try again later.",
+        "unavailable": "We could not record your request. Try again later."
+      },
+      "yourRequests": "Your requests",
+      "status": {
+        "open": "Open",
+        "done": "Handled"
+      }
+    }
   },
   "home": {
     "title": "PauseAI IT",
@@ -216,6 +259,30 @@
         "notFound": "This application no longer exists. Reload the page.",
         "conflict": "This application was already decided the other way. Reload the page.",
         "unavailable": "The decision could not be saved. Try again."
+      }
+    },
+    "dataRequestsBlurb": "See who asked to export or delete their data.",
+    "dataRequests": {
+      "title": "Data requests",
+      "intro": "Requests from volunteers to export or delete their data. Contact the person by email, do what they asked, then mark the request as handled.",
+      "empty": "There are no data requests.",
+      "name": "Name",
+      "requestedOn": "Requested on",
+      "handledOn": "Handled on",
+      "kinds": {
+        "export": "Export",
+        "deletion": "Deletion"
+      },
+      "status": {
+        "open": "Open",
+        "done": "Handled"
+      },
+      "markHandled": "Mark as handled",
+      "handled": "Marked as handled.",
+      "errors": {
+        "invalid": "This request is not valid. Reload the page.",
+        "notFound": "This request no longer exists. Reload the page.",
+        "unavailable": "The change could not be saved. Try again."
       }
     }
   },

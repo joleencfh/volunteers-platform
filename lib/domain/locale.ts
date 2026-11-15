@@ -15,9 +15,9 @@ function isUnder(pathname: string, route: string): boolean {
 }
 
 /**
- * The locale a URL path is rendered in: the legal routes are Italian, everything else English.
- * `preferred` is the seam for the signed-in user's language preference (no column yet); it only
- * applies outside the legal routes.
+ * The locale a URL path is rendered in: the legal routes are Italian, everything else the preferred language, English by default.
+ * `preferred` is the signed-in user's saved language (the cookie mirrored from users.locale); it
+ * only applies outside the legal routes.
  */
 export function localeForPath(pathname: string, preferred?: string | null): Locale {
   if (ITALIAN_ROUTES.some((route) => isUnder(pathname, route))) return 'it'

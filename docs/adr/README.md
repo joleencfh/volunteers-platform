@@ -20,3 +20,4 @@ One short numbered file per decision that future maintainers need to know about:
 | [0013](0013-one-supabase-project-and-vercel-hobby.md)          | One Supabase project and Vercel Hobby         | accepted (F-09) |
 | [0014](0014-profile-visibility-enforcement.md)                 | Profile visibility enforcement                | accepted (P-01) |
 | [0015](0015-onboarding-steps-and-progress.md)                  | Onboarding steps and progress                 | accepted (O-01) |
+| [0016](0016-language-preference-cookie.md)                     | Language preference through a cookie          | accepted (P-03) |

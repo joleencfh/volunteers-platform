@@ -1,5 +1,6 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js'
 import type { Database } from '@/lib/database.types'
+import { isLocale, type Locale } from '@/lib/domain/locale'
 import { isEmailVerified, mayEnter } from '@/lib/domain/membership'
 
 export type Member = {
@@ -8,6 +9,7 @@ export type Member = {
   displayName: string
   level: Database['public']['Enums']['user_level']
   isAdmin: boolean
+  locale: Locale
 }
 
 /**
@@ -22,7 +24,7 @@ export async function findMember(
 ): Promise<Member | null> {
   const { data, error } = await supabase
     .from('users')
-    .select('id, email, display_name, level, is_admin, status')
+    .select('id, email, display_name, level, is_admin, status, locale')
     .eq('id', user.id)
     .maybeSingle()
   if (error || !data) return null
@@ -33,5 +35,6 @@ export async function findMember(
     displayName: data.display_name,
     level: data.level,
     isAdmin: data.is_admin,
+    locale: isLocale(data.locale) ? data.locale : 'en',
   }
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { findMember } from '@/lib/authz/member'
+import { LOCALE_COOKIE, localeCookieOptions } from '@/lib/domain/locale-preference'
 import { safeNextPath } from '@/lib/domain/routes'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
@@ -36,5 +37,12 @@ export async function GET(request: Request) {
     .update({ last_login_at: new Date().toISOString() })
     .eq('id', member.id)
 
-  return NextResponse.redirect(new URL(safeNextPath(parsed.data.next), origin))
+  // Mirror the stored language into the cookie the proxy reads (ADR-0016).
+  const response = NextResponse.redirect(new URL(safeNextPath(parsed.data.next), origin))
+  response.cookies.set(
+    LOCALE_COOKIE,
+    member.locale,
+    localeCookieOptions(process.env.NODE_ENV === 'production'),
+  )
+  return response
 }

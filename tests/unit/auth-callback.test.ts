@@ -23,7 +23,7 @@ const location = (response: Response) => response.headers.get('location')
 beforeEach(() => {
   vi.clearAllMocks()
   exchangeCodeForSession.mockResolvedValue({ data: { user: { id: 'u1' } }, error: null })
-  findMember.mockResolvedValue({ id: 'u1' })
+  findMember.mockResolvedValue({ id: 'u1', locale: 'en' })
   eq.mockResolvedValue({ error: null })
 })
 
@@ -34,6 +34,14 @@ describe('GET /auth/callback', () => {
     expect(update).toHaveBeenCalledWith({ last_login_at: expect.any(String) })
     expect(eq).toHaveBeenCalledWith('id', 'u1')
     expect(signOut).not.toHaveBeenCalled()
+  })
+
+  it('mirrors the stored language into the preference cookie', async () => {
+    findMember.mockResolvedValue({ id: 'u1', locale: 'it' })
+    const response = await call('?code=abc')
+    const cookie = response.headers.get('set-cookie') ?? ''
+    expect(cookie).toContain('pauseai_locale=it')
+    expect(cookie.toLowerCase()).toContain('httponly')
   })
 
   it('follows a safe next path and ignores an unsafe one', async () => {

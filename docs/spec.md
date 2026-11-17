@@ -1,6 +1,6 @@
 # PauseAI IT Volunteer Platform: Product Spec
 
-Last updated: 2026-11-15
+Last updated: 2026-11-17
 
 ## 1. Purpose, scope and guiding decisions
 
@@ -126,8 +126,12 @@ Sign-in is password-less (emailed magic link or Google), and only admin-approved
 | Planned meetings | Date, time, link, agenda link |
 
 - Only admins create working groups. Seed Lobbying first; Outreach is added the same way.
-- **Limited view for non-members:** name, description, lead and activity titles with status. Tasks, docs, members and targets are hidden. Admins see everything.
+- **Limited view for non-members:** name, description, lead and activity titles with status. Tasks, docs, members and targets are hidden. Admins see everything. Until activities exist (stories T-01 onwards) the limited view is name, description and the current lead; meetings, links and the member list are visible to members of the group and admins only.
 - **Lead of the week:** a responsibility, not extra permissions. The WG page shows the current lead and this checklist: moderate the call and check who is joining; prepare the agenda and take notes; organise the next call if decided a week or more ahead; check whether people are doing their tasks and need help. Experienced volunteers and admins assign the lead.
+- **Assigning the lead:** one lead per group and week (the week starts on Monday, UTC). The lead is any member of that group, assigned for the current week or a later one; past weeks are read-only history. Assigning a week that already has a lead replaces it. Experienced members of that group and admins assign. Removing a person from a group removes them as lead for the current and later weeks.
+- **Joining:** an active member who is not an admin and not yet in the group can ask to join an active group, once at a time per group; a person who was rejected may ask again. Fresh and experienced members of that group and admins approve or reject, and approving adds the person to the group at once. No email is sent: people who may decide see a badge next to Groups in the navigation. There is no self-leave in v1: an admin removes members.
+- **Links and meetings:** each group has one Signal group link and one docs link, both `https` addresses. Fresh and experienced members of the group and admins set the links and add, edit and delete planned meetings (date and time are entered in the app's time zone; the meeting and agenda links are `https` addresses). New volunteers see them and cannot edit.
+- **Managing groups (admins):** an admin creates a group (name, a URL name called the slug, description), edits its text and links, adds and removes members, and archives or restores it. The slug is chosen at creation and never changes. An archived group disappears from every list and from non-admins, keeps all its data and is not counted when deciding whether two people share a working group; admins can still open and restore it. Every admin change is recorded in the audit log.
 
 ### Activities
 
@@ -310,7 +314,7 @@ This is a summary for the build, not legal advice; the maintainer reviews the wo
 | `onboarding_steps`, `user_onboarding` | Checklist definition and per-user progress |
 | `data_requests` | Members' requests for a data export or deletion, one open request per person and kind, handled by admins |
 | `config` | Level thresholds and other settings, including the welcome document link |
-| `audit_log` | Admin actions on levels, applications, onboarding steps, data requests and target contacts |
+| `audit_log` | Admin actions on levels, applications, onboarding steps, data requests, working groups and target contacts |
 
 Every table has row-level security. Schema changes are numbered SQL migrations in the repository. Activity and target type definitions and their `details` schemas live in code.
 

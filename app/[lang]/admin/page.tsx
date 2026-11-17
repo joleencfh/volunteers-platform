@@ -25,6 +25,7 @@ async function AdminContent() {
     { href: '/admin/applications', title: t('applicationsLink'), text: t('applicationsBlurb') },
     { href: '/admin/onboarding', title: t('onboarding.title'), text: t('onboardingBlurb') },
     { href: '/admin/data-requests', title: t('dataRequests.title'), text: t('dataRequestsBlurb') },
+    { href: '/admin/groups', title: t('groups.title'), text: t('groupsBlurb') },
   ]
   return (
     <div className="flex flex-col gap-8">

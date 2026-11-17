@@ -57,6 +57,11 @@ async function GroupContent({
     ? await supabase.rpc('can_approve_join', { p_group: group.id })
     : { data: false }
 
+  // Same for the lead form: experienced members of the group and admins.
+  const { data: canAssign } = fullView
+    ? await supabase.rpc('can_assign_lead', { p_group: group.id })
+    : { data: false }
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-3">
@@ -94,7 +99,7 @@ async function GroupContent({
           {tab === 'overview' && (
             <JoinRequestsSection groupId={group.id} canApprove={canApprove === true} />
           )}
-          <GroupSection tab={tab} group={group} />
+          <GroupSection tab={tab} group={group} canAssignLead={canAssign === true} />
         </>
       ) : (
         <JoinRequestCard groupId={group.id} userId={member.id} />

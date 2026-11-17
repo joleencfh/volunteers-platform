@@ -53,6 +53,36 @@
       "conflict": "Someone else already decided this request.",
       "unavailable": "The decision could not be saved. Try again in a moment."
     },
+    "leadWeek": {
+      "title": "Lead of the week",
+      "current": "Lead this week",
+      "none": "No lead this week",
+      "noExtraPermissions": "The lead of the week is a responsibility, not extra permissions.",
+      "checklistTitle": "What the lead does",
+      "checklist": {
+        "moderate": "Moderate the call and check who is joining.",
+        "agenda": "Prepare the agenda and take notes.",
+        "nextCall": "Organise the next call if it is decided a week or more ahead.",
+        "tasks": "Check whether people are doing their tasks and need help."
+      },
+      "upcomingTitle": "Assigned for coming weeks",
+      "historyTitle": "Recent weeks",
+      "historyEmpty": "No lead was assigned in the last 12 weeks.",
+      "historyRow": "Week of {date}: {name}",
+      "assignTitle": "Assign the lead",
+      "member": "Member",
+      "chooseMember": "Choose a member",
+      "week": "Week",
+      "weekOption": "Week of {date}",
+      "assign": "Assign lead",
+      "working": "Assigning…",
+      "assigned": "Lead assigned.",
+      "invalid": "This assignment could not be read. Reload the page and try again.",
+      "notMember": "Only a member of this group can be lead.",
+      "pastWeek": "A past week cannot be changed.",
+      "notAllowed": "You cannot assign the lead of this group.",
+      "unavailable": "The lead could not be saved. Try again in a moment."
+    },
     "tabs": {
       "overview": "Overview",
       "activities": "Activities",

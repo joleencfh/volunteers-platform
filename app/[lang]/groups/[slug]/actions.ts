@@ -3,6 +3,8 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { requireUser } from '@/lib/authz'
+import { requireWgMember } from '@/lib/authz/wg'
+import { assignLeadSchema, isAssignableWeek } from '@/lib/domain/leads'
 import { createClient } from '@/lib/supabase/server'
 
 export type JoinState = {
@@ -11,6 +13,10 @@ export type JoinState = {
 
 export type DecisionState = {
   status: 'idle' | 'approved' | 'rejected' | 'invalid' | 'notFound' | 'conflict' | 'unavailable'
+}
+
+export type AssignLeadState = {
+  status: 'idle' | 'assigned' | 'invalid' | 'notMember' | 'pastWeek' | 'notAllowed' | 'unavailable'
 }
 
 const PG_UNIQUE_VIOLATION = '23505'
@@ -78,4 +84,57 @@ export async function decideJoinRequest(
 
   revalidatePath('/groups/[slug]', 'page')
   return { status: data }
+}
+
+/**
+ * Assigns the lead of one week: an experienced member of the group or an admin, to any member of
+ * the group, for the current or a later week. Reassigning a week replaces that week's row. No audit
+ * entry: this is not an admin action, and the row keeps `assigned_by` and `assigned_at`. Being lead
+ * gives no extra permission.
+ */
+export async function assignLead(
+  _previous: AssignLeadState,
+  formData: FormData,
+): Promise<AssignLeadState> {
+  await requireUser()
+
+  const parsed = assignLeadSchema.safeParse({
+    groupId: formData.get('groupId'),
+    userId: formData.get('userId'),
+    weekStart: formData.get('weekStart'),
+  })
+  if (!parsed.success) return { status: 'invalid' }
+  const { groupId, userId, weekStart } = parsed.data
+
+  // A 404 for anyone who is not an experienced member of the group or an admin.
+  const { member } = await requireWgMember(groupId, 'experienced')
+
+  if (!isAssignableWeek(weekStart, new Date())) return { status: 'pastWeek' }
+
+  const supabase = await createClient()
+  // The caller sees this group's members (RLS), so a person from elsewhere is simply not found.
+  const { data: target, error: lookupError } = await supabase
+    .from('wg_members')
+    .select('user_id')
+    .eq('group_id', groupId)
+    .eq('user_id', userId)
+    .maybeSingle()
+  if (lookupError) return { status: 'unavailable' }
+  if (!target) return { status: 'notMember' }
+
+  const { error } = await supabase.from('wg_leads').upsert(
+    {
+      group_id: groupId,
+      week_start: weekStart,
+      user_id: userId,
+      assigned_by: member.id,
+      assigned_at: new Date().toISOString(),
+    },
+    { onConflict: 'group_id,week_start' },
+  )
+  if (error?.code === PG_INSUFFICIENT_PRIVILEGE) return { status: 'notAllowed' }
+  if (error) return { status: 'unavailable' }
+
+  revalidatePath('/groups/[slug]', 'page')
+  return { status: 'assigned' }
 }

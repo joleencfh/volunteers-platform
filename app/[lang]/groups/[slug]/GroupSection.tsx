@@ -1,3 +1,4 @@
+import { LeadSection } from '@/components/groups/LeadSection'
 import { LevelBadge } from '@/components/profile/LevelBadge'
 import { Card, EmptyState } from '@/components/ui/display'
 import type { GroupTab, GroupView } from '@/lib/domain/groups'
@@ -5,12 +6,20 @@ import { getFormatter, getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 
 /** The body of one section of a group page. Only rendered for members and admins. */
-export async function GroupSection({ tab, group }: { tab: GroupTab; group: GroupView }) {
+export async function GroupSection({
+  tab,
+  group,
+  canAssignLead,
+}: {
+  tab: GroupTab
+  group: GroupView
+  canAssignLead: boolean
+}) {
   const t = await getTranslations('groups')
 
   switch (tab) {
     case 'overview':
-      return <Overview group={group} />
+      return <Overview group={group} canAssignLead={canAssignLead} />
     case 'members':
       return <Members groupId={group.id} />
     case 'activities':
@@ -21,7 +30,7 @@ export async function GroupSection({ tab, group }: { tab: GroupTab; group: Group
   }
 }
 
-async function Overview({ group }: { group: GroupView }) {
+async function Overview({ group, canAssignLead }: { group: GroupView; canAssignLead: boolean }) {
   const t = await getTranslations('groups')
   const links = [
     { label: t('overview.signal'), href: group.signalUrl },
@@ -50,6 +59,7 @@ async function Overview({ group }: { group: GroupView }) {
           </ul>
         )}
       </Card>
+      <LeadSection groupId={group.id} canAssign={canAssignLead} currentLead={group.lead} />
     </div>
   )
 }

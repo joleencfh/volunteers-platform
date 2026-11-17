@@ -65,7 +65,20 @@
       "links": "Link",
       "signal": "Gruppo Signal",
       "docs": "Documenti",
-      "noLinks": "Non è stato aggiunto ancora nessun link."
+      "noLinks": "Non è stato aggiunto ancora nessun link.",
+      "linksForm": {
+        "title": "Modifica i link",
+        "signalUrl": "Link del gruppo Signal",
+        "docsUrl": "Link ai documenti",
+        "hint": "Deve iniziare con https://. Lascia vuoto per rimuovere un link.",
+        "save": "Salva i link",
+        "working": "Salvataggio…",
+        "saved": "Link salvati.",
+        "invalid": "I link devono iniziare con https://.",
+        "notFound": "Questo gruppo non esiste più.",
+        "notAllowed": "Non puoi modificare i link di questo gruppo.",
+        "unavailable": "Non è stato possibile salvare i link. Riprova tra poco."
+      }
     },
     "activities": {
       "emptyTitle": "Ancora nessuna attività",
@@ -109,7 +122,32 @@
     },
     "meetings": {
       "emptyTitle": "Nessuna riunione in programma",
-      "emptyBody": "Le riunioni in programma compariranno qui."
+      "emptyBody": "Le riunioni in programma compariranno qui.",
+      "upcomingTitle": "Prossime riunioni",
+      "pastTitle": "Riunioni passate",
+      "noUpcoming": "Nessuna riunione in programma.",
+      "overviewTitle": "Prossime riunioni",
+      "seeAll": "Tutte le riunioni",
+      "meetingLink": "Link della riunione",
+      "agendaLink": "Ordine del giorno",
+      "addTitle": "Aggiungi una riunione",
+      "startsAt": "Data e ora (ora italiana)",
+      "meetingUrl": "Link della riunione",
+      "agendaUrl": "Link all'ordine del giorno (facoltativo)",
+      "urlHint": "Deve iniziare con https://",
+      "add": "Aggiungi riunione",
+      "edit": "Modifica",
+      "editTitle": "Modifica questa riunione",
+      "save": "Salva le modifiche",
+      "delete": "Elimina",
+      "working": "Salvataggio…",
+      "added": "Riunione aggiunta.",
+      "updated": "Riunione salvata.",
+      "deleted": "Riunione eliminata.",
+      "invalid": "Controlla data e ora, e che i link inizino con https://.",
+      "notFound": "Questa riunione non esiste più.",
+      "notAllowed": "Non puoi modificare le riunioni di questo gruppo.",
+      "unavailable": "Non è stato possibile salvare la riunione. Riprova tra poco."
     }
   },
   "common": {

@@ -95,7 +95,20 @@
       "links": "Links",
       "signal": "Signal group",
       "docs": "Documents",
-      "noLinks": "No links have been added yet."
+      "noLinks": "No links have been added yet.",
+      "linksForm": {
+        "title": "Change the links",
+        "signalUrl": "Signal group link",
+        "docsUrl": "Documents link",
+        "hint": "Must start with https://. Leave empty to remove a link.",
+        "save": "Save links",
+        "working": "Saving…",
+        "saved": "Links saved.",
+        "invalid": "Links must start with https://.",
+        "notFound": "This group no longer exists.",
+        "notAllowed": "You cannot change the links of this group.",
+        "unavailable": "The links could not be saved. Try again in a moment."
+      }
     },
     "activities": {
       "emptyTitle": "No activities yet",
@@ -113,7 +126,32 @@
     },
     "meetings": {
       "emptyTitle": "No meetings planned",
-      "emptyBody": "Planned meetings will appear here."
+      "emptyBody": "Planned meetings will appear here.",
+      "upcomingTitle": "Upcoming meetings",
+      "pastTitle": "Past meetings",
+      "noUpcoming": "No upcoming meetings.",
+      "overviewTitle": "Next meetings",
+      "seeAll": "All meetings",
+      "meetingLink": "Meeting link",
+      "agendaLink": "Agenda",
+      "addTitle": "Add a meeting",
+      "startsAt": "Date and time (Italian time)",
+      "meetingUrl": "Meeting link",
+      "agendaUrl": "Agenda link (optional)",
+      "urlHint": "Must start with https://",
+      "add": "Add meeting",
+      "edit": "Edit",
+      "editTitle": "Edit this meeting",
+      "save": "Save changes",
+      "delete": "Delete",
+      "working": "Saving…",
+      "added": "Meeting added.",
+      "updated": "Meeting saved.",
+      "deleted": "Meeting deleted.",
+      "invalid": "Check the date and time, and that the links start with https://.",
+      "notFound": "This meeting no longer exists.",
+      "notAllowed": "You cannot change meetings of this group.",
+      "unavailable": "The meeting could not be saved. Try again in a moment."
     }
   },
   "common": {

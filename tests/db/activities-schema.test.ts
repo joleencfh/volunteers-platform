@@ -385,18 +385,20 @@ describe('activity columns', () => {
   it('allow at most 20 links, as an array', () =>
     inRolledBackTransaction(async (tx) => {
       const { activity } = await setup(tx)
+      // tx.json() sends a real JSON array: a JSON string bound to a jsonb parameter is serialised a
+      // second time by the driver and would arrive as a JSON string, not an array.
       const links = (count: number) =>
-        JSON.stringify(Array.from({ length: count }, (_, i) => `https://example.test/${i}`))
+        tx.json(Array.from({ length: count }, (_, i) => `https://example.test/${i}`))
       expect(
         await errorOf(
           tx,
-          () => tx`update public.activities set links = ${links(20)}::jsonb where id = ${activity}`,
+          () => tx`update public.activities set links = ${links(20)} where id = ${activity}`,
         ),
       ).toBeNull()
       expect(
         await errorOf(
           tx,
-          () => tx`update public.activities set links = ${links(21)}::jsonb where id = ${activity}`,
+          () => tx`update public.activities set links = ${links(21)} where id = ${activity}`,
         ),
       ).toMatch(/activities_links_check/)
       expect(

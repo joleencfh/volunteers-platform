@@ -81,7 +81,7 @@ test.describe('activities: list, create and detail', () => {
     await expect(page.getByLabel('Targets contacted')).toBeVisible()
     await expectNoSeriousA11yViolations(page)
 
-    await page.getByLabel('Title', { exact: true }).fill(createdTitle)
+    await page.getByLabel(/^Title/).fill(createdTitle)
     await page.getByLabel('Message content or link').fill(message)
     await page.getByRole('button', { name: 'Create activity' }).click()
 
@@ -118,7 +118,8 @@ test.describe('activities: list, create and detail', () => {
 
     await page.goto(`/groups/${slug}`)
     await expect(page.getByText(seededTitle)).toBeVisible()
-    await expect(page.getByText('Active', { exact: true })).toBeVisible()
+    // Two activities are active here (the seeded one and the automatic General one): one is enough.
+    await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
     // No message, no links into the activity, no tabs.
     await expect(page.getByText('Seeded message')).toHaveCount(0)
     await expect(page.getByRole('link', { name: seededTitle })).toHaveCount(0)

@@ -25,6 +25,8 @@ Milestone M2 (profiles and onboarding) adds migrations and one config value to s
 
 Milestone M3a (working groups) adds three migrations and needs an admin to add the first members of Lobbying; see [the runbook](docs/runbook.md#milestone-m3a-working-groups-what-to-do-by-hand).
 
+Milestone M3b (activities and tasks) adds four migrations that are pushed together at the final gate; see [the runbook](docs/runbook.md#milestone-m3b-activities-and-tasks-what-to-do-by-hand).
+
 Keep staging to synthetic data. Database and end-to-end tests run in CI against a local Supabase; do not run suites that create or delete users against staging or production. With Docker you can run the same local stack as CI: see [the runbook](docs/runbook.md#local-database-supabase-optional).
 
 ## Environment variables

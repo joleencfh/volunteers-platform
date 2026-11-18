@@ -5,7 +5,83 @@ export type Database = {
   
   "public": {
           Tables: {
-            "applications": {
+            "activities": {
+                  Row: {
+                    "archived_at": string | null,"created_at": string,"created_by": string | null,"description": string | null,"details": NonNullable<Json>,"due_on": string | null,"group_id": string,"id": string,"is_general": boolean,"key_activity": boolean,"lead_id": string | null,"links": NonNullable<Json>,"postmortem_improvements": string | null,"postmortem_learnings": string | null,"postmortem_went_well": string | null,"starts_on": string | null,"status": Database["public"]['Enums']["activity_status"],"title": string,"type": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"details"?: NonNullable<Json>,"due_on"?: string | null,"group_id": string,"id"?: string,"is_general"?: boolean,"key_activity"?: boolean,"lead_id"?: string | null,"links"?: NonNullable<Json>,"postmortem_improvements"?: string | null,"postmortem_learnings"?: string | null,"postmortem_went_well"?: string | null,"starts_on"?: string | null,"status"?: Database["public"]['Enums']["activity_status"],"title": string,"type": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"details"?: NonNullable<Json>,"due_on"?: string | null,"group_id"?: string,"id"?: string,"is_general"?: boolean,"key_activity"?: boolean,"lead_id"?: string | null,"links"?: NonNullable<Json>,"postmortem_improvements"?: string | null,"postmortem_learnings"?: string | null,"postmortem_went_well"?: string | null,"starts_on"?: string | null,"status"?: Database["public"]['Enums']["activity_status"],"title"?: string,"type"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "activities_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "activities_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "activities_group_id_fkey"
+      columns: ["group_id"]
+isOneToOne: false
+      referencedRelation: "working_groups"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "activities_lead_id_fkey"
+      columns: ["lead_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "activities_lead_id_fkey"
+      columns: ["lead_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"activity_participants": {
+                  Row: {
+                    "activity_id": string,"joined_at": string,"role": Database["public"]['Enums']["participant_role"],"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "activity_id": string,"joined_at"?: string,"role"?: Database["public"]['Enums']["participant_role"],"user_id": string
+                  }
+                  Update: {
+                    "activity_id"?: string,"joined_at"?: string,"role"?: Database["public"]['Enums']["participant_role"],"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "activity_participants_activity_id_fkey"
+      columns: ["activity_id"]
+isOneToOne: false
+      referencedRelation: "activities"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "activity_participants_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "activity_participants_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"applications": {
                   Row: {
                     "ai_safety_knowledge": string | null,"city": string,"created_at": string,"decided_at": string | null,"decided_by": string | null,"display_name": string,"email": string,"heard_other": string | null,"heard_via": Database["public"]['Enums']["heard_source"],"id": string,"motivation": string | null,"notice_version": string,"privacy_accepted_at": string,"real_name": string,"special_category_consent_at": string,"status": Database["public"]['Enums']["application_status"],"updated_at": string
                   }
@@ -146,6 +222,56 @@ isOneToOne: false
       columns: ["user_id"]
 isOneToOne: false
       referencedRelation: "users"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"tasks": {
+                  Row: {
+                    "activity_id": string,"assignee_id": string | null,"completed_at": string | null,"completion_note": string | null,"completion_url": string | null,"created_at": string,"created_by": string | null,"description": string | null,"due_on": string | null,"group_id": string,"id": string,"status": Database["public"]['Enums']["task_status"],"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "activity_id": string,"assignee_id"?: string | null,"completed_at"?: string | null,"completion_note"?: string | null,"completion_url"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"due_on"?: string | null,"group_id": string,"id"?: string,"status"?: Database["public"]['Enums']["task_status"],"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "activity_id"?: string,"assignee_id"?: string | null,"completed_at"?: string | null,"completion_note"?: string | null,"completion_url"?: string | null,"created_at"?: string,"created_by"?: string | null,"description"?: string | null,"due_on"?: string | null,"group_id"?: string,"id"?: string,"status"?: Database["public"]['Enums']["task_status"],"title"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "tasks_activity_id_fkey"
+      columns: ["activity_id"]
+isOneToOne: false
+      referencedRelation: "activities"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tasks_assignee_id_fkey"
+      columns: ["assignee_id"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tasks_assignee_id_fkey"
+      columns: ["assignee_id"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tasks_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "members"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tasks_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "tasks_group_id_fkey"
+      columns: ["group_id"]
+isOneToOne: false
+      referencedRelation: "working_groups"
       referencedColumns: ["id"]
     }
                   ]
@@ -405,11 +531,23 @@ isOneToOne: false
                 }
           }
           Functions: {
-            "can_approve_join":
+            "activity_group":
+{ Args: { "p_activity": string }; Returns: string
+                           },
+"can_approve_join":
 { Args: { "p_group": string }; Returns: boolean
+                           },
+"can_archive_activity":
+{ Args: { "p_activity": string }; Returns: boolean
                            },
 "can_assign_lead":
 { Args: { "p_group": string }; Returns: boolean
+                           },
+"can_create_in_group":
+{ Args: { "p_group": string }; Returns: boolean
+                           },
+"can_edit_activity":
+{ Args: { "p_activity": string }; Returns: boolean
                            },
 "can_edit_group_content":
 { Args: { "p_group": string }; Returns: boolean
@@ -445,6 +583,17 @@ isOneToOne: false
 "is_wg_member":
 { Args: { "p_group": string,"p_user"?: string }; Returns: boolean
                            },
+"join_activity":
+{ Args: { "p_activity": string,"p_role": Database["public"]['Enums']["participant_role"] }; Returns: undefined
+                           },
+"leave_activity":
+{ Args: { "p_activity": string }; Returns: boolean
+                           },
+"list_group_activities":
+{ Args: { "p_group": string }; Returns: {
+              "archived": boolean,"id": string,"is_general": boolean,"key_activity": boolean,"status": Database["public"]['Enums']["activity_status"],"title": string,"type": string
+            }[]
+                           },
 "list_working_groups":
 { Args: Record<PropertyKey, never>; Returns: {
               "archived": boolean,"description": string,"id": string,"is_member": boolean,"lead_display_name": string,"lead_user_id": string,"name": string,"slug": string
@@ -455,6 +604,9 @@ isOneToOne: false
                            },
 "profile_field_default_tier":
 { Args: { "field": string }; Returns: string
+                           },
+"set_activity_lead":
+{ Args: { "p_activity": string,"p_user": string }; Returns: undefined
                            },
 "set_own_locale":
 { Args: { "new_locale": string }; Returns: undefined
@@ -470,7 +622,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "application_status": "pending"|"approved"|"rejected","data_request_kind": "export"|"deletion","data_request_status": "open"|"done","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","join_request_status": "pending"|"approved"|"rejected","onboarding_confirmer": "self"|"auto"|"admin","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
+            "activity_status": "planned"|"active"|"done"|"cancelled","application_status": "pending"|"approved"|"rejected","data_request_kind": "export"|"deletion","data_request_status": "open"|"done","heard_source": "global_website"|"italian_website"|"word_of_mouth"|"other","join_request_status": "pending"|"approved"|"rejected","onboarding_confirmer": "self"|"auto"|"admin","participant_role": "participant"|"observer","task_status": "open"|"in_progress"|"done","user_level": "new"|"fresh"|"experienced","user_status": "active"|"deactivated"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -586,7 +738,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "application_status": ["pending", "approved", "rejected"],"data_request_kind": ["export", "deletion"],"data_request_status": ["open", "done"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"join_request_status": ["pending", "approved", "rejected"],"onboarding_confirmer": ["self", "auto", "admin"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
+            "activity_status": ["planned", "active", "done", "cancelled"],"application_status": ["pending", "approved", "rejected"],"data_request_kind": ["export", "deletion"],"data_request_status": ["open", "done"],"heard_source": ["global_website", "italian_website", "word_of_mouth", "other"],"join_request_status": ["pending", "approved", "rejected"],"onboarding_confirmer": ["self", "auto", "admin"],"participant_role": ["participant", "observer"],"task_status": ["open", "in_progress", "done"],"user_level": ["new", "fresh", "experienced"],"user_status": ["active", "deactivated"]
           }
         }
 } as const

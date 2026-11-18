@@ -625,6 +625,26 @@
       "tasksSoon": "Tasks for activities arrive in an upcoming update.",
       "participation": "Your participation"
     },
+    "postmortem": {
+      "title": "Postmortem",
+      "prompt": "This activity is done. What went well and what would you change?",
+      "promptQuiet": "This activity is done and has no postmortem yet. Participants and experienced members can add one.",
+      "empty": "Nothing written yet.",
+      "readOnly": "Only participants, experienced members and admins can edit the postmortem.",
+      "wentWell": "What went well",
+      "improvements": "Points for improvement",
+      "learnings": "General learning points (to add to the guidelines document)",
+      "save": "Save postmortem",
+      "saving": "Saving…",
+      "saved": "Postmortem saved.",
+      "states": {
+        "invalid": "Some texts are too long (4000 characters at most). Shorten them and try again.",
+        "notAllowed": "You are not allowed to edit this postmortem.",
+        "notFound": "This activity no longer exists.",
+        "conflict": "The activity is archived. Restore it first.",
+        "unavailable": "That did not work. Try again in a moment."
+      }
+    },
     "manage": {
       "leadTitle": "Lead",
       "lead": "Lead",

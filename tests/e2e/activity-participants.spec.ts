@@ -146,14 +146,14 @@ test.describe('activities: join, edit, lead and archive', () => {
     await expectNoSeriousA11yViolations(page)
 
     const edited = `Edited ${suffix}`
-    await page.getByLabel('Title', { exact: true }).fill(edited)
+    await page.getByLabel(/^Title/).fill(edited)
     await page.getByLabel('Status', { exact: true }).selectOption('active')
     await page.getByRole('button', { name: 'Save changes' }).click()
     await expect(page.getByRole('heading', { name: edited, level: 1 })).toBeVisible()
     await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
 
     // Put the title back, so the other tests still find the activity by its title.
-    await page.getByLabel('Title', { exact: true }).fill(titles.byFresh)
+    await page.getByLabel(/^Title/).fill(titles.byFresh)
     await page.getByRole('button', { name: 'Save changes' }).click()
     await expect(page.getByRole('heading', { name: titles.byFresh, level: 1 })).toBeVisible()
 
@@ -171,10 +171,10 @@ test.describe('activities: join, edit, lead and archive', () => {
     await loginAs(context, fixtureUser('experienced'), baseURL ?? BASE)
     await open(page, 'lead')
 
-    const options = page.getByLabel('Lead', { exact: true }).locator('option')
+    const options = page.getByRole('combobox', { name: 'Lead' }).locator('option')
     await expect(options).toHaveText(['No lead', freshName])
 
-    await page.getByLabel('Lead', { exact: true }).selectOption({ label: freshName })
+    await page.getByRole('combobox', { name: 'Lead' }).selectOption({ label: freshName })
     await page.getByRole('button', { name: 'Set lead' }).click()
     // The summary line above shows the new lead.
     await expect(page.locator('dl').getByText(freshName)).toBeVisible()

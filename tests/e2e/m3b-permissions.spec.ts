@@ -352,8 +352,14 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
     await page.waitForURL(/\/activities\/[0-9a-f-]{36}$/)
     await expect(page.getByRole('heading', { name: 'Edit this activity' })).toBeVisible()
     await page.getByLabel('Status', { exact: true }).selectOption('active')
+    // Wait for the server action's response, then reload: the persisted value is what counts.
+    const saved = page.waitForResponse(
+      (response) =>
+        response.request().method() === 'POST' && response.url().includes('/activities/'),
+    )
     await page.getByRole('button', { name: 'Save changes' }).click()
-    await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
+    await saved
+    await page.reload()
     await expect(page.getByLabel('Status', { exact: true })).toHaveValue('active')
     // Still no reopen for them.
     await page.goto(`/groups/${slug}/activities/${activityId}`)

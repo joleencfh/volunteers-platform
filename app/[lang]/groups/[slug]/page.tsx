@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/display'
 import { requireUser } from '@/lib/authz'
 import { parseActivityFilters } from '@/lib/domain/activity-input'
 import { GROUP_TABS, isValidSlug, parseGroupTab, toGroupView } from '@/lib/domain/groups'
+import { parseTaskFilters } from '@/lib/domain/tasks'
 import { getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 import { GroupSection } from './GroupSection'
@@ -18,6 +19,7 @@ type SearchParams = Promise<{
   tab?: string | string[]
   status?: string | string[]
   type?: string | string[]
+  assignee?: string | string[]
 }>
 
 export default function GroupPage({
@@ -49,6 +51,7 @@ async function GroupContent({
   const { tab: tabParam, ...filterParams } = await searchParams
   const tab = parseGroupTab(tabParam)
   const filters = parseActivityFilters(filterParams)
+  const taskFilters = parseTaskFilters(filterParams)
   const t = await getTranslations('groups')
 
   // get_working_group returns no row for a missing or archived group (for non-admins), and the
@@ -123,6 +126,8 @@ async function GroupContent({
             canEditContent={canEdit === true}
             canCreate={canCreate === true}
             filters={filters}
+            taskFilters={taskFilters}
+            viewer={{ id: member.id, level: member.level, isAdmin: member.isAdmin }}
           />
         </>
       ) : (

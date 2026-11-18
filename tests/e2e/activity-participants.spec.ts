@@ -145,15 +145,19 @@ test.describe('activities: join, edit, lead and archive', () => {
     await expect(page.getByRole('heading', { name: 'Edit this activity' })).toBeVisible()
     await expectNoSeriousA11yViolations(page)
 
+    // The activity page also holds the task form, whose Title label looks the same: scope to the edit form.
+    const editForm = page
+      .locator('form')
+      .filter({ has: page.getByRole('button', { name: 'Save changes' }) })
     const edited = `Edited ${suffix}`
-    await page.getByLabel(/^Title/).fill(edited)
-    await page.getByLabel('Status', { exact: true }).selectOption('active')
+    await editForm.getByLabel(/^Title/).fill(edited)
+    await editForm.getByLabel('Status', { exact: true }).selectOption('active')
     await page.getByRole('button', { name: 'Save changes' }).click()
     await expect(page.getByRole('heading', { name: edited, level: 1 })).toBeVisible()
     await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
 
     // Put the title back, so the other tests still find the activity by its title.
-    await page.getByLabel(/^Title/).fill(titles.byFresh)
+    await editForm.getByLabel(/^Title/).fill(titles.byFresh)
     await page.getByRole('button', { name: 'Save changes' }).click()
     await expect(page.getByRole('heading', { name: titles.byFresh, level: 1 })).toBeVisible()
 

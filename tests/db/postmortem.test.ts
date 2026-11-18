@@ -76,7 +76,7 @@ describe('save_postmortem: details', () => {
       expect(await errorCodeOf(tx, () => save(tx, w.activity))).toBeNull()
     }))
 
-  it('refuses an archived activity and an archived group with 55000', () =>
+  it('refuses an archived activity with 55000 and hides an archived group from a member with P0002', () =>
     inRolledBackTransaction(async (tx) => {
       const w = await activityWorld(tx)
       const experienced = w.ids['experienced member'] as string
@@ -85,7 +85,9 @@ describe('save_postmortem: details', () => {
       await actAs(tx, 'superuser')
       await tx`update public.working_groups set archived_at = now() where id = ${w.group}`
       await as(tx, experienced)
-      expect(await errorCodeOf(tx, () => save(tx, w.activity))).toBe('55000')
+      // A non-admin member of an archived group no longer counts as a member, so the function answers
+      // "not found" (P0002), the same as for any outsider.
+      expect(await errorCodeOf(tx, () => save(tx, w.activity))).toBe('P0002')
     }))
 
   it('refuses a text over 4000 characters with 23514 and accepts exactly 4000', () =>

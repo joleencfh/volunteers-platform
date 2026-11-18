@@ -131,7 +131,7 @@ test.describe('tasks', () => {
     const form = page
       .locator('form')
       .filter({ has: page.getByRole('button', { name: 'Create task' }) })
-    await form.getByLabel('Title', { exact: true }).fill(titles.created)
+    await form.getByLabel(/^Title/).fill(titles.created)
     await form.getByLabel('Assignee', { exact: true }).selectOption({ label: experiencedName })
     await form.getByRole('button', { name: 'Create task' }).click()
 

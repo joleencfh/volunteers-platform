@@ -55,9 +55,9 @@ export function changedGroupFields(
 }
 
 /**
- * The seam for the General activity. Called once after an admin creates a group. Today it does
- * nothing: story T-01 (M3b) creates the group's General activity here and backfills Lobbying,
- * which the W-01 migration seeded before activities existed.
+ * Called once after an admin creates a group. It does nothing: the database creates the group's
+ * General activity with a trigger (T-01, ADR-0019), which also backfilled Lobbying. Kept as the
+ * place for any later application-side work on a new group.
  */
 export async function onGroupCreated(groupId: string): Promise<void> {
   void groupId

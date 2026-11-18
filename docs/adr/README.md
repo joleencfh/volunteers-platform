@@ -22,3 +22,4 @@ One short numbered file per decision that future maintainers need to know about:
 | [0015](0015-onboarding-steps-and-progress.md)                  | Onboarding steps and progress                 | accepted (O-01) |
 | [0016](0016-language-preference-cookie.md)                     | Language preference through a cookie          | accepted (P-03) |
 | [0018](0018-working-group-data-model-and-access.md)            | Working group data model and access rules     | accepted (W-01) |
+| [0019](0019-activities-and-tasks-data-model.md)                | Activities and tasks data model               | accepted (T-01) |

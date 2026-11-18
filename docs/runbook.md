@@ -72,6 +72,15 @@ Windows 11 Home has no Hyper-V, so Docker Desktop uses WSL 2:
 - **Lead of the week.** Experienced members of a group and admins assign any member of the group as lead for the current or a later week (Monday to Sunday, UTC); past weeks are read-only. Being lead gives no extra permissions. Removing a member deletes their current and later lead rows.
 - **General activity seam (T-01).** `onGroupCreated(groupId)` in `lib/domain/admin-groups.ts` does nothing today and is called by `createGroup`. T-01 creates each group's General activity there and backfills Lobbying.
 
+## Milestone M3b (activities and tasks): what to do by hand
+
+- **Four migrations belong to M3b, all still pending.** None is applied to the hosted project yet. The maintainer pushes them in file order at the final gate (`bunx supabase db push --linked`, `--dry-run` first): `20261117151043_activities_and_tasks` and `20261117152524_activities_policies` (T-01), then `20261118090512_activity_postmortem` and `20261118091723_profile_work_feed`. Push all four before the first activity is created. Afterwards run `bun run db:types:staging` and commit the regenerated `lib/database.types.ts` over the hand-edited one; if the CI drift check fails only on layout, take the `database-types` artifact.
+- **Every group has a General activity.** A database trigger creates it when a group is created, and the first migration backfills the existing groups (Lobbying). It cannot be deleted, archived or cancelled and its title is fixed. `onGroupCreated` in `lib/domain/admin-groups.ts` stays a no-op because of this.
+- **Assignment email.** Assigning a task to someone other than yourself emails the new assignee in their saved language. It needs `RESEND_API_KEY` and `EMAIL_FROM` (see `.env.schema`); without them the email is skipped quietly (only a fixed label is logged) and the assignment still works.
+- **Task permissions.** Fresh and experienced members and admins create tasks; new volunteers cannot. Any member of the group takes an unassigned task. The creator, the assignee, experienced members and admins edit or reassign a task; the assignee (and admins) complete it with a note or an https link; only admins reopen a done task. The full table is in ADR-0019.
+- **Profile feed.** "Latest and planned work" on `/profile` and `/people/[id]` comes from the `get_profile_work` function. It lists the owner's items only in groups the viewer is a member of (admins: any non-archived group), never General or archived activities, and nothing for a deactivated owner. It is not read with the service-role client.
+- **Not built:** comments on tasks and activities, and links to targets (free text until M4). The level engine and onboarding steps 5 and 7 arrive in M3c through the `onTaskCompleted` hook.
+
 ## Supabase project (one for now) and Google sign-in
 
 One hosted Supabase project serves development, previews and production until the pilot, so the account stays on the free plan (ADR-0013). It holds synthetic data only until real volunteers are invited; tests never run against it.

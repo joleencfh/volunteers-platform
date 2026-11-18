@@ -11,7 +11,8 @@ Name files `YYYY-MM-DD-<milestone>.md`. Each one covers:
 - **Decisions:** the ADRs in force (see [`../adr/`](../adr/README.md)).
 - **Known gaps:** what is not built or not yet verified.
 
-| Snapshot                                       | Milestone          |
-| ---------------------------------------------- | ------------------ |
-| [2026-11-10](2026-11-10-m2-onboarding-live.md) | M2 onboarding live |
-| [2026-11-15](2026-11-15-m3a-working-groups.md) | M3a working groups |
+| Snapshot                                             | Milestone                |
+| ---------------------------------------------------- | ------------------------ |
+| [2026-11-10](2026-11-10-m2-onboarding-live.md)       | M2 onboarding live       |
+| [2026-11-15](2026-11-15-m3a-working-groups.md)       | M3a working groups       |
+| [2026-11-18](2026-11-18-m3b-activities-and-tasks.md) | M3b activities and tasks |

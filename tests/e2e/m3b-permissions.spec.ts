@@ -181,6 +181,7 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
         activity_id: activityId,
         group_id: groupId,
         title: tasks.forNewcomer,
+        status: 'open',
         created_by: experienced.id,
       },
       {
@@ -196,12 +197,14 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
         activity_id: otherActivityId,
         group_id: otherId,
         title: tasks.other,
+        status: 'open',
         created_by: fresh.id,
       },
       {
         activity_id: byTitle(titles.feed),
         group_id: feedId,
         title: tasks.feed,
+        status: 'open',
         assignee_id: ownerId,
         created_by: ownerId,
       },

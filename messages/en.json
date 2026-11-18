@@ -553,6 +553,52 @@
     "stub": "The privacy notice is available in Italian only for now. The Italian text below is the one that applies.",
     "version": "Version: {version}"
   },
+  "activityTypes": {
+    "general": {
+      "label": "General",
+      "description": "The standing activity of the group, for everything that does not need its own activity."
+    },
+    "campaign": {
+      "label": "Campaign",
+      "description": "A message sent to several targets, such as an email or letter campaign.",
+      "message": "Message content or link",
+      "sendDate": "Send date",
+      "targetsContacted": "Targets contacted",
+      "responded": "Who responded"
+    },
+    "callWithTarget": {
+      "label": "Call with target",
+      "description": "A call or meeting with one or more targets.",
+      "targets": "Target or targets",
+      "calledAt": "Date and time",
+      "materials": "Materials shown",
+      "notes": "Notes",
+      "asks": "Asks made",
+      "outcome": "Outcome"
+    },
+    "meeting": {
+      "label": "Meeting or co-working",
+      "description": "A meeting or co-working session of the group.",
+      "startsAt": "Date and time",
+      "meetingUrl": "Meeting link",
+      "agendaUrl": "Agenda link",
+      "notesUrl": "Notes link"
+    },
+    "contentCreation": {
+      "label": "Content creation",
+      "description": "A presentation, social post or information material.",
+      "outputType": "Output type",
+      "resultUrl": "Link to the result"
+    },
+    "options": {
+      "presentation": "Presentation",
+      "social_post": "Social post",
+      "info_material": "Information material",
+      "report": "Report",
+      "website": "Website",
+      "other": "Other"
+    }
+  },
   "devStyle": {
     "title": "Style guide",
     "intro": "Every shared primitive in one place. Development only.",

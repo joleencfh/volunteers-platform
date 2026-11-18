@@ -352,6 +352,52 @@
     "stub": "L'informativa è disponibile solo in italiano. Il testo italiano qui sotto è quello che vale.",
     "version": "Versione: {version}"
   },
+  "activityTypes": {
+    "general": {
+      "label": "Generale",
+      "description": "L'attività permanente del gruppo, per tutto ciò che non ha bisogno di un'attività propria."
+    },
+    "campaign": {
+      "label": "Campagna",
+      "description": "Un messaggio inviato a più destinatari, come una campagna di email o lettere.",
+      "message": "Testo del messaggio o link",
+      "sendDate": "Data di invio",
+      "targetsContacted": "Destinatari contattati",
+      "responded": "Chi ha risposto"
+    },
+    "callWithTarget": {
+      "label": "Chiamata con un destinatario",
+      "description": "Una chiamata o un incontro con uno o più destinatari.",
+      "targets": "Destinatario o destinatari",
+      "calledAt": "Data e ora",
+      "materials": "Materiali mostrati",
+      "notes": "Note",
+      "asks": "Richieste fatte",
+      "outcome": "Esito"
+    },
+    "meeting": {
+      "label": "Riunione o co-working",
+      "description": "Una riunione o una sessione di co-working del gruppo.",
+      "startsAt": "Data e ora",
+      "meetingUrl": "Link della riunione",
+      "agendaUrl": "Link dell'agenda",
+      "notesUrl": "Link delle note"
+    },
+    "contentCreation": {
+      "label": "Creazione di contenuti",
+      "description": "Una presentazione, un post social o un materiale informativo.",
+      "outputType": "Tipo di prodotto",
+      "resultUrl": "Link al risultato"
+    },
+    "options": {
+      "presentation": "Presentazione",
+      "social_post": "Post social",
+      "info_material": "Materiale informativo",
+      "report": "Rapporto",
+      "website": "Sito web",
+      "other": "Altro"
+    }
+  },
   "home": {
     "welcome": "Benvenuto, {name}",
     "profilePrompt": {

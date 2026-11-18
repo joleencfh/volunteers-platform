@@ -1,8 +1,8 @@
 import { notFound, redirect } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
-import { ActivityFeedPlaceholder } from '@/components/profile/ActivityFeedPlaceholder'
 import { LevelBadge } from '@/components/profile/LevelBadge'
+import { ProfileWorkFeed } from '@/components/profile/ProfileWorkFeed'
 import { Card } from '@/components/ui/display'
 import { requireUser } from '@/lib/authz'
 import { KNOWLEDGE_LEVELS } from '@/lib/domain/application'
@@ -76,7 +76,7 @@ async function PersonContent({ params }: { params: Promise<{ id: string }> }) {
         )}
       </Card>
 
-      <ActivityFeedPlaceholder />
+      <ProfileWorkFeed ownerId={person.id} own={false} />
     </div>
   )
 }

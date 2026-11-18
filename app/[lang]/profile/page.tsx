@@ -1,6 +1,7 @@
 import { connection } from 'next/server'
 import { Suspense } from 'react'
 import { LevelBadge } from '@/components/profile/LevelBadge'
+import { ProfileWorkFeed } from '@/components/profile/ProfileWorkFeed'
 import { Card } from '@/components/ui/display'
 import { requireUser } from '@/lib/authz'
 import {
@@ -84,6 +85,8 @@ async function ProfileContent() {
           </dl>
         </Card>
       </section>
+
+      <ProfileWorkFeed ownerId={member.id} own />
     </div>
   )
 }

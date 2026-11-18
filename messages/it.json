@@ -281,8 +281,15 @@
       "experienced": "Esperto"
     },
     "noDetails": "Questo volontario non ha condiviso altri dettagli con te.",
-    "activityHeading": "Ultime attività e attività in programma",
-    "activityPlaceholder": "Le attività compariranno qui quando i gruppi di lavoro saranno attivi.",
+    "work": {
+      "title": "Ultime attività e attività in programma",
+      "empty": "Niente da mostrare nei gruppi di lavoro che puoi vedere.",
+      "emptyOwn": "Ancora nessuna attività o compito in corso o recente.",
+      "kindActivity": "Attività",
+      "kindTask": "Compito",
+      "taskIn": "{activity} in {group}",
+      "due": "Scadenza {date}"
+    },
     "errors": {
       "required": "Questo campo è obbligatorio.",
       "tooLong": "Il testo è troppo lungo.",
@@ -538,6 +545,16 @@
       },
       "separator": ", ",
       "action": "Vai al mio profilo"
+    },
+    "work": {
+      "title": "Il mio lavoro",
+      "tasksTitle": "I miei compiti aperti",
+      "tasksEmpty": "Non hai compiti aperti.",
+      "allTasks": "Tutti i miei compiti",
+      "due": "Scadenza {date}",
+      "activitiesTitle": "Le mie attività",
+      "activitiesEmpty": "Non partecipi ancora ad alcuna attività in corso.",
+      "allGroups": "Esplora i gruppi di lavoro"
     }
   },
   "tasks": {

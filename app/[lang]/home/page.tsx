@@ -8,7 +8,9 @@ import { autoOpenStepKey, buildChecklist } from '@/lib/domain/onboarding'
 import { profileCompletion } from '@/lib/domain/profile-completion'
 import { parseWelcomeLink, WELCOME_DOCUMENT_CONFIG_KEY } from '@/lib/domain/welcome-document'
 import { getTranslations } from '@/lib/i18n/server'
+import { readCurrentActivities } from '@/lib/groups/current-activities'
 import { createClient } from '@/lib/supabase/server'
+import { MyWork } from './MyWork'
 import { OnboardingChecklist, type ChecklistRow } from './OnboardingChecklist'
 
 export default function HomePage() {
@@ -29,7 +31,7 @@ async function HomeContent() {
   // Everything is read with the member's own session: row-level security shows them the step
   // definitions and only their own progress, and get_profile returns their own profile.
   const supabase = await createClient()
-  const [{ data: steps }, { data: completed }, { data: profile }, { data: welcome }] =
+  const [{ data: steps }, { data: completed }, { data: profile }, { data: welcome }, activities] =
     await Promise.all([
       supabase
         .from('onboarding_steps')
@@ -38,6 +40,7 @@ async function HomeContent() {
       supabase.rpc('get_profile', { owner: member.id }),
       // The config table is readable by active members; the link is checked before it is shown.
       supabase.from('config').select('value').eq('key', WELCOME_DOCUMENT_CONFIG_KEY).maybeSingle(),
+      readCurrentActivities(supabase, member.id),
     ])
 
   const checklist = buildChecklist(
@@ -86,9 +89,12 @@ async function HomeContent() {
         complete={checklist.complete}
         autoOpenKey={autoOpenStepKey(checklist.items)}
         welcomeUrl={parseWelcomeLink(welcome?.value)}
-        // Activities arrive with M3 (T-06); until then the window shows its empty state.
-        activities={[]}
+        activities={activities}
       />
+
+      <Suspense fallback={null}>
+        <MyWork userId={member.id} />
+      </Suspense>
     </div>
   )
 }

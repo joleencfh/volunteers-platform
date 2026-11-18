@@ -213,6 +213,16 @@
       },
       "separator": ", ",
       "action": "Go to my profile"
+    },
+    "work": {
+      "title": "My work",
+      "tasksTitle": "My open tasks",
+      "tasksEmpty": "You have no open tasks.",
+      "allTasks": "All my tasks",
+      "due": "Due {date}",
+      "activitiesTitle": "My activities",
+      "activitiesEmpty": "You are not taking part in any current activity yet.",
+      "allGroups": "Browse working groups"
     }
   },
   "onboarding": {
@@ -299,8 +309,15 @@
       "experienced": "Experienced"
     },
     "noDetails": "This volunteer has not shared any more details with you.",
-    "activityHeading": "Latest and planned work",
-    "activityPlaceholder": "Activities will appear here once working groups are live.",
+    "work": {
+      "title": "Latest and planned work",
+      "empty": "Nothing to show from the working groups you can see.",
+      "emptyOwn": "No current or recent activities or tasks yet.",
+      "kindActivity": "Activity",
+      "kindTask": "Task",
+      "taskIn": "{activity} in {group}",
+      "due": "Due {date}"
+    },
     "errors": {
       "required": "This field is required.",
       "tooLong": "This text is too long.",

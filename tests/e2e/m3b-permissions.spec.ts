@@ -249,7 +249,8 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
     expect(await outcome(page, '/tasks')).toBe('page')
     expect(await outcome(page, `/groups/${otherSlug}?tab=activities`)).toBe('page')
     await expect(page.getByText(titles.other)).toBeVisible()
-    await expect(page.getByText('Active', { exact: true })).toBeVisible()
+    // Two activities are active here (the seeded one and the automatic General one): one is enough.
+    await expect(page.getByText('Active', { exact: true }).first()).toBeVisible()
     await expect(page.getByText('Seeded other message')).toHaveCount(0)
     await expect(page.getByRole('link', { name: titles.other })).toHaveCount(0)
     await expect(page.getByRole('link', { name: 'New activity', exact: true })).toHaveCount(0)
@@ -310,7 +311,7 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
 
     // Creates an activity through the form.
     await page.goto(`/groups/${slug}/activities/new?type=campaign`)
-    await page.getByLabel('Title', { exact: true }).fill(titles.created)
+    await page.getByLabel(/^Title/).fill(titles.created)
     await page.getByLabel('Message content or link').fill(`Message ${suffix}`)
     await page.getByRole('button', { name: 'Create activity' }).click()
     await page.waitForURL(/\/activities\/[0-9a-f-]{36}$/)
@@ -321,7 +322,7 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
     const form = page
       .locator('form')
       .filter({ has: page.getByRole('button', { name: 'Create task' }) })
-    await form.getByLabel('Title', { exact: true }).fill(tasks.created)
+    await form.getByLabel(/^Title/).fill(tasks.created)
     await form.getByRole('button', { name: 'Create task' }).click()
     await expect(row(page, tasks.created)).toBeVisible()
 

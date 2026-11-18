@@ -9,6 +9,7 @@ import {
   ParticipationControl,
 } from '@/components/activities/ActivityControls'
 import { ActivityDetails } from '@/components/activities/ActivityDetails'
+import { PostmortemForm } from '@/components/activities/PostmortemForm'
 import { LevelBadge } from '@/components/profile/LevelBadge'
 import { GroupTasks } from '@/components/tasks/GroupTasks'
 import { Badge, Card } from '@/components/ui/display'
@@ -24,6 +25,7 @@ import {
 import { toDetailDefaults } from '@/lib/domain/activity-input'
 import { getActivityType, parseDetailsLoosely } from '@/lib/domain/activity-types'
 import { isValidSlug, toGroupView } from '@/lib/domain/groups'
+import { canEditPostmortem, needsPostmortemPrompt } from '@/lib/domain/postmortem'
 import { readMemberProfiles } from '@/lib/groups/member-profiles'
 import { getFormatter, getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
@@ -57,7 +59,7 @@ async function ActivityContent({ params }: { params: Params }) {
   const { data: activity } = await supabase
     .from('activities')
     .select(
-      'id, group_id, type, title, description, status, starts_on, due_on, lead_id, key_activity, links, details, is_general, archived_at, created_by',
+      'id, group_id, type, title, description, status, starts_on, due_on, lead_id, key_activity, links, details, is_general, archived_at, created_by, postmortem_went_well, postmortem_improvements, postmortem_learnings',
     )
     .eq('id', id)
     .eq('group_id', group.id)
@@ -111,6 +113,25 @@ async function ActivityContent({ params }: { params: Params }) {
   const mayArchive = !activity.is_general && canArchiveActivity(actor)
   const target = { groupId: group.id, slug: group.slug, activityId: activity.id }
   const mine = participants.find((person) => person.user_id === member.id)
+  const postmortem = {
+    went_well: activity.postmortem_went_well,
+    improvements: activity.postmortem_improvements,
+    learnings: activity.postmortem_learnings,
+  }
+  const mayEditPostmortem =
+    open &&
+    canEditPostmortem({
+      level: member.level,
+      isAdmin: member.isAdmin,
+      isMember: group.isMember,
+      isParticipant: mine !== undefined,
+    })
+  const prompt = needsPostmortemPrompt({ status, ...postmortem })
+  const postmortemTexts = [
+    { key: 'wentWell', value: postmortem.went_well },
+    { key: 'improvements', value: postmortem.improvements },
+    { key: 'learnings', value: postmortem.learnings },
+  ] as const
   const leadCandidates = participants.flatMap((person) => {
     const profile = profiles.get(person.user_id)
     return person.role === 'participant' && profile
@@ -259,6 +280,47 @@ async function ActivityContent({ params }: { params: Params }) {
           <ArchiveControl target={target} archived={!open} />
         </section>
       )}
+
+      <section aria-labelledby="activity-postmortem" className="flex flex-col gap-3">
+        <h2 id="activity-postmortem" className="text-xl font-bold">
+          {t('postmortem.title')}
+        </h2>
+        {prompt && (
+          <p className="max-w-prose">
+            {mayEditPostmortem ? t('postmortem.prompt') : t('postmortem.promptQuiet')}
+          </p>
+        )}
+        {mayEditPostmortem ? (
+          <Card>
+            <PostmortemForm
+              target={target}
+              defaults={{
+                wentWell: postmortem.went_well ?? '',
+                improvements: postmortem.improvements ?? '',
+                learnings: postmortem.learnings ?? '',
+              }}
+            />
+          </Card>
+        ) : (
+          <>
+            {!prompt && postmortemTexts.every((item) => !item.value) && (
+              <p>{t('postmortem.empty')}</p>
+            )}
+            <dl className="flex flex-col gap-3">
+              {postmortemTexts.map(
+                (item) =>
+                  item.value && (
+                    <div key={item.key} className="flex flex-col gap-1">
+                      <dt className="font-semibold">{t(`postmortem.${item.key}`)}</dt>
+                      <dd className="max-w-prose whitespace-pre-line break-words">{item.value}</dd>
+                    </div>
+                  ),
+              )}
+            </dl>
+            <p className="text-sm text-muted">{t('postmortem.readOnly')}</p>
+          </>
+        )}
+      </section>
 
       <section aria-labelledby="activity-tasks" className="flex flex-col gap-2">
         <h2 id="activity-tasks" className="text-xl font-bold">

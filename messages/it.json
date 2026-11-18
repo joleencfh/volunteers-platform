@@ -424,6 +424,26 @@
       "tasksSoon": "I compiti delle attività arriveranno in un prossimo aggiornamento.",
       "participation": "La tua partecipazione"
     },
+    "postmortem": {
+      "title": "Postmortem",
+      "prompt": "Questa attività è conclusa. Cosa è andato bene e cosa cambieresti?",
+      "promptQuiet": "Questa attività è conclusa e non ha ancora un postmortem. Partecipanti e membri esperti possono aggiungerlo.",
+      "empty": "Ancora nulla.",
+      "readOnly": "Solo partecipanti, membri esperti e amministratori possono modificare il postmortem.",
+      "wentWell": "Cosa è andato bene",
+      "improvements": "Punti da migliorare",
+      "learnings": "Insegnamenti generali (da aggiungere al documento delle linee guida)",
+      "save": "Salva il postmortem",
+      "saving": "Salvataggio…",
+      "saved": "Postmortem salvato.",
+      "states": {
+        "invalid": "Alcuni testi sono troppo lunghi (massimo 4000 caratteri). Accorciali e riprova.",
+        "notAllowed": "Non puoi modificare questo postmortem.",
+        "notFound": "Questa attività non esiste più.",
+        "conflict": "L'attività è archiviata. Ripristinala prima.",
+        "unavailable": "Non ha funzionato. Riprova tra un momento."
+      }
+    },
     "manage": {
       "leadTitle": "Responsabile",
       "lead": "Responsabile",

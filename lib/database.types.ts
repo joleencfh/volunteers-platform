@@ -605,6 +605,9 @@ isOneToOne: false
 "profile_field_default_tier":
 { Args: { "field": string }; Returns: string
                            },
+"save_postmortem":
+{ Args: { "p_activity": string,"p_improvements": string,"p_learnings": string,"p_went_well": string }; Returns: undefined
+                           },
 "set_activity_lead":
 { Args: { "p_activity": string,"p_user": string }; Returns: undefined
                            },

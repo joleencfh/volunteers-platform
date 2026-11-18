@@ -2,17 +2,23 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { connection } from 'next/server'
 import { Suspense } from 'react'
+import { LimitedActivities } from '@/components/activities/ActivitiesSection'
 import { JoinRequestCard } from '@/components/groups/JoinRequestCard'
 import { JoinRequestsSection } from '@/components/groups/JoinRequestsSection'
 import { Badge } from '@/components/ui/display'
 import { requireUser } from '@/lib/authz'
+import { parseActivityFilters } from '@/lib/domain/activity-input'
 import { GROUP_TABS, isValidSlug, parseGroupTab, toGroupView } from '@/lib/domain/groups'
 import { getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 import { GroupSection } from './GroupSection'
 
 type Params = Promise<{ slug: string }>
-type SearchParams = Promise<{ tab?: string | string[] }>
+type SearchParams = Promise<{
+  tab?: string | string[]
+  status?: string | string[]
+  type?: string | string[]
+}>
 
 export default function GroupPage({
   params,
@@ -40,8 +46,9 @@ async function GroupContent({
   const member = await requireUser()
   const { slug } = await params
   if (!isValidSlug(slug)) notFound()
-  const { tab: tabParam } = await searchParams
+  const { tab: tabParam, ...filterParams } = await searchParams
   const tab = parseGroupTab(tabParam)
+  const filters = parseActivityFilters(filterParams)
   const t = await getTranslations('groups')
 
   // get_working_group returns no row for a missing or archived group (for non-admins), and the
@@ -65,6 +72,11 @@ async function GroupContent({
   // Meetings and links: fresh and experienced members of the group, and admins.
   const { data: canEdit } = fullView
     ? await supabase.rpc('can_edit_group_content', { p_group: group.id })
+    : { data: false }
+
+  // Activities and tasks: fresh and experienced members of the group, and admins.
+  const { data: canCreate } = fullView
+    ? await supabase.rpc('can_create_in_group', { p_group: group.id })
     : { data: false }
 
   return (
@@ -109,10 +121,15 @@ async function GroupContent({
             group={group}
             canAssignLead={canAssign === true}
             canEditContent={canEdit === true}
+            canCreate={canCreate === true}
+            filters={filters}
           />
         </>
       ) : (
-        <JoinRequestCard groupId={group.id} userId={member.id} />
+        <>
+          <JoinRequestCard groupId={group.id} userId={member.id} />
+          <LimitedActivities groupId={group.id} />
+        </>
       )}
     </div>
   )

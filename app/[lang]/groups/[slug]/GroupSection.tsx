@@ -1,8 +1,10 @@
+import { ActivitiesSection } from '@/components/activities/ActivitiesSection'
 import { GroupLinksForm } from '@/components/groups/GroupLinksForm'
 import { LeadSection } from '@/components/groups/LeadSection'
 import { MeetingsSection, NextMeetings } from '@/components/groups/MeetingsSection'
 import { LevelBadge } from '@/components/profile/LevelBadge'
 import { Card, EmptyState } from '@/components/ui/display'
+import type { ActivityFilters } from '@/lib/domain/activity-input'
 import type { GroupTab, GroupView } from '@/lib/domain/groups'
 import { getFormatter, getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
@@ -13,11 +15,15 @@ export async function GroupSection({
   group,
   canAssignLead,
   canEditContent,
+  canCreate,
+  filters,
 }: {
   tab: GroupTab
   group: GroupView
   canAssignLead: boolean
   canEditContent: boolean
+  canCreate: boolean
+  filters: ActivityFilters
 }) {
   const t = await getTranslations('groups')
 
@@ -31,9 +37,17 @@ export async function GroupSection({
     case 'meetings':
       return <MeetingsSection groupId={group.id} canEdit={canEditContent} />
     case 'activities':
+      return (
+        <ActivitiesSection
+          groupId={group.id}
+          slug={group.slug}
+          filters={filters}
+          canCreate={canCreate}
+        />
+      )
     case 'tasks':
-      // Empty until T-01.
-      return <EmptyState title={t(`${tab}.emptyTitle`)} description={t(`${tab}.emptyBody`)} />
+      // Empty until T-04.
+      return <EmptyState title={t('tasks.emptyTitle')} description={t('tasks.emptyBody')} />
   }
 }
 

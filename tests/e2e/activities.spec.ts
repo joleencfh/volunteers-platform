@@ -87,7 +87,7 @@ test.describe('activities: list, create and detail', () => {
 
     await page.waitForURL(/\/activities\/[0-9a-f-]{36}$/)
     await expect(page.getByRole('heading', { name: createdTitle, level: 1 })).toBeVisible()
-    await expect(page.getByText(message)).toBeVisible()
+    await expect(page.getByText(message).first()).toBeVisible()
     // The creator is a participant.
     await expect(page.getByRole('heading', { name: 'Participants' })).toBeVisible()
     await expect(page.getByText('Participant', { exact: true })).toBeVisible()

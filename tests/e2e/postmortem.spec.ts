@@ -110,7 +110,13 @@ test.describe('activity postmortem', () => {
     await page.getByLabel('What went well', { exact: true }).fill('Good turnout')
     await page.getByLabel('Points for improvement', { exact: true }).fill('Announce earlier')
     await page.getByLabel(/^General learning points/).fill('Ask for help sooner')
+    // Reloading right after the click would cancel the save: wait for the server action's response.
+    const saved = page.waitForResponse(
+      (response) =>
+        response.request().method() === 'POST' && response.url().includes('/activities/'),
+    )
     await page.getByRole('button', { name: 'Save postmortem', exact: true }).click()
+    await saved
 
     await page.reload()
     await expect(page.getByLabel('What went well', { exact: true })).toHaveValue('Good turnout')

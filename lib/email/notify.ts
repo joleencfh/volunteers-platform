@@ -1,4 +1,5 @@
 import 'server-only'
+import { isLocale } from '@/lib/domain/locale'
 import { allowedOrigins } from '@/lib/domain/routes'
 import { createAdminClient } from '@/lib/supabase/admin'
 import {
@@ -6,6 +7,7 @@ import {
   applicationRejectedEmail,
   dataRequestEmail,
   newApplicationEmail,
+  taskAssignedEmail,
 } from './templates'
 import { EmailNotConfiguredError, sendEmail } from './transport'
 
@@ -89,4 +91,51 @@ export function sendDataRequestEmail(
   return notifyAdmins((origin) =>
     dataRequestEmail(kind, displayName, `${origin}/admin/data-requests`),
   )
+}
+
+export type TaskAssignedInput = {
+  assigneeId: string
+  groupId: string
+  slug: string
+  activityId: string
+  title: string
+  dueOn: string | null
+  /** Display name of the person who assigned the task. */
+  assignerName: string
+}
+
+/**
+ * Tells the new assignee (in their saved language) that a task was assigned to them. The address
+ * is read here with the service role, as it is admin-only data: it is used to send and never
+ * returned or logged. Returns whether the email went out; never throws, so a failure cannot undo
+ * the assignment that has already been saved.
+ */
+export async function sendTaskAssignedEmail(input: TaskAssignedInput): Promise<boolean> {
+  try {
+    const db = createAdminClient()
+    const [assignee, group] = await Promise.all([
+      db
+        .from('users')
+        .select('email, locale')
+        .eq('id', input.assigneeId)
+        .eq('status', 'active')
+        .maybeSingle(),
+      db.from('working_groups').select('name').eq('id', input.groupId).maybeSingle(),
+    ])
+    if (assignee.error || !assignee.data || group.error || !group.data) return false
+    const locale = isLocale(assignee.data.locale) ? assignee.data.locale : 'en'
+    const groupName = group.data.name
+    return await deliver(assignee.data.email, (origin) =>
+      taskAssignedEmail(locale, {
+        title: input.title,
+        groupName,
+        dueOn: input.dueOn,
+        assignerName: input.assignerName,
+        activityUrl: `${origin}/groups/${input.slug}/activities/${input.activityId}`,
+      }),
+    )
+  } catch {
+    console.error('Task assignment email failed')
+    return false
+  }
 }

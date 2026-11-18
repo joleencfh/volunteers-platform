@@ -80,3 +80,51 @@ export function dataRequestEmail(
     ].join('\n'),
   }
 }
+
+export type TaskAssignedDetails = {
+  title: string
+  groupName: string
+  /** ISO date (YYYY-MM-DD), when the task has one. */
+  dueOn: string | null
+  /** The display name of the person who assigned it; never their address or real name. */
+  assignerName: string
+  activityUrl: string
+}
+
+/**
+ * Sent to a volunteer when a task is assigned to them by someone else, in their saved language.
+ * It names the task, the group, the due date and the person who assigned it by display name, and
+ * links to the activity page (sign-in required).
+ */
+export function taskAssignedEmail(locale: 'en' | 'it', details: TaskAssignedDetails): Template {
+  const { title, groupName, dueOn, assignerName, activityUrl } = details
+  if (locale === 'it') {
+    return {
+      subject: `Ti è stato assegnato un compito: ${title}`,
+      text: [
+        'Ciao,',
+        '',
+        `${assignerName} ti ha assegnato un compito nel gruppo di lavoro ${groupName}: ${title}`,
+        ...(dueOn ? [`Scadenza: ${dueOn}`] : []),
+        '',
+        `Aprilo qui (serve l'accesso): ${activityUrl}`,
+        '',
+        'Grazie,',
+        'PauseAI Italia',
+      ].join('\n'),
+    }
+  }
+  return {
+    subject: `A task was assigned to you: ${title}`,
+    text: [
+      'Hello,',
+      '',
+      `${assignerName} assigned you a task in the ${groupName} working group: ${title}`,
+      ...(dueOn ? [`Due: ${dueOn}`] : []),
+      '',
+      `Open it here (sign-in required): ${activityUrl}`,
+      '',
+      'PauseAI IT platform',
+    ].join('\n'),
+  }
+}

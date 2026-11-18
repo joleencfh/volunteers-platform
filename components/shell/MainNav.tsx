@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { HeaderNav, type NavItem } from './HeaderNav'
 
 /**
- * The header navigation. Signed-in members get Home (/home), their profile and settings; a visitor gets a
+ * The header navigation. Signed-in members get Home (/home), Groups, My tasks (/tasks), their profile and settings; a visitor gets a
  * single link to the public landing page. Reads the session, so it sits behind <Suspense>.
  */
 export async function MainNav() {
@@ -18,6 +18,7 @@ export async function MainNav() {
     ? [
         { href: '/home', label: t('home') },
         { href: '/groups', label: t('groups'), badge: pending },
+        { href: '/tasks', label: t('tasks') },
         { href: '/profile', label: t('profile') },
         { href: '/settings', label: t('settings') },
       ]

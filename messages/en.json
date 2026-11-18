@@ -13,7 +13,8 @@
     "profile": "My profile",
     "footerName": "PauseAI Italy",
     "privacy": "Privacy notice",
-    "settings": "Settings"
+    "settings": "Settings",
+    "tasks": "My tasks"
   },
   "groups": {
     "title": "Working groups",
@@ -743,5 +744,73 @@
     "emptyTitle": "Nothing here yet",
     "emptyBody": "When there is something to show it will appear here.",
     "emptyAction": "Add the first one"
+  },
+  "tasks": {
+    "myTitle": "My tasks",
+    "myIntro": "Your open and in-progress tasks in all your working groups, soonest due first.",
+    "myEmptyTitle": "No open tasks",
+    "myEmptyBody": "Tasks assigned to you appear here. Take one from the Tasks tab of a working group.",
+    "emptyTitle": "No tasks yet",
+    "emptyBody": "Tasks appear here once someone adds them to an activity.",
+    "noMatchesTitle": "No tasks match",
+    "noMatchesBody": "Try other filters.",
+    "due": "Due {date}",
+    "assignedTo": "Assigned to {name}",
+    "unassignedLabel": "Not assigned yet",
+    "formerMember": "a former member",
+    "inActivity": "In {title}",
+    "completionNote": "Completion note: {note}",
+    "completionLink": "Completion link",
+    "status": {
+      "open": "Open",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "filters": {
+      "label": "Filter tasks",
+      "status": "Status",
+      "assignee": "Assignee",
+      "all": "All",
+      "me": "Me",
+      "unassigned": "Unassigned",
+      "apply": "Apply filters"
+    },
+    "create": {
+      "heading": "Add a task",
+      "title": "Title",
+      "description": "Description",
+      "dueOn": "Due date",
+      "assignee": "Assignee",
+      "unassigned": "Unassigned",
+      "submit": "Create task",
+      "working": "Creating…"
+    },
+    "controls": {
+      "take": "Take this task",
+      "taking": "Taking…",
+      "start": "Start work",
+      "backToOpen": "Back to open",
+      "reopen": "Reopen task",
+      "assignee": "Assignee",
+      "unassigned": "Unassigned",
+      "assign": "Assign",
+      "assigning": "Assigning…",
+      "completeSummary": "Complete this task",
+      "note": "Completion note",
+      "link": "Completion link",
+      "evidenceHint": "Add a note, a link, or both.",
+      "linkHint": "Optional. Must start with https://.",
+      "complete": "Mark as done",
+      "completing": "Saving…",
+      "states": {
+        "doneEmailFailed": "Saved, but the email to the assignee could not be sent. Tell them yourself.",
+        "invalid": "Some fields are not valid. Check them and try again.",
+        "needsEvidence": "Add a note or a link before completing the task.",
+        "notAllowed": "You are not allowed to do this.",
+        "notFound": "This task or activity no longer exists.",
+        "conflict": "The task changed in the meantime, or its activity is archived. Reload the page and try again.",
+        "unavailable": "That did not work. Try again in a moment."
+      }
+    }
   }
 }

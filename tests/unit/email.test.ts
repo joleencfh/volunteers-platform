@@ -1,9 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { notifyAdminsOfApplication, sendDataRequestEmail } from '@/lib/email/notify'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  notifyAdminsOfApplication,
+  sendDataRequestEmail,
+  sendTaskAssignedEmail,
+} from '@/lib/email/notify'
 import {
   applicationApprovedEmail,
   applicationRejectedEmail,
   newApplicationEmail,
+  taskAssignedEmail,
 } from '@/lib/email/templates'
 import { createResendTransport, setEmailTransport, type EmailMessage } from '@/lib/email/transport'
 import { parseApproval, parseRejection } from '@/lib/domain/review'
@@ -11,10 +16,19 @@ import { parseApproval, parseRejection } from '@/lib/domain/review'
 vi.mock('server-only', () => ({}))
 
 let adminEmails: { email: string }[] = []
+let adminTables: Record<string, () => { data: unknown; error: null }> = {}
 vi.mock('@/lib/supabase/admin', () => ({
   createAdminClient: () => ({
-    from: () => ({
-      select: () => ({ eq: () => ({ eq: async () => ({ data: adminEmails, error: null }) }) }),
+    from: (table: string) => ({
+      select: () => {
+        // The admin list awaits the chain after two eq(); the task email ends in maybeSingle().
+        const chain = {
+          eq: () => chain,
+          maybeSingle: async () => adminTables[table](),
+          then: (resolve: (value: unknown) => void) => resolve({ data: adminEmails, error: null }),
+        }
+        return chain
+      },
     }),
   }),
 }))
@@ -98,6 +112,115 @@ describe('sendDataRequestEmail', () => {
       throw new Error('down')
     })
     await expect(sendDataRequestEmail('deletion', 'Ada')).resolves.toBeUndefined()
+  })
+})
+
+describe('taskAssignedEmail', () => {
+  const details = {
+    title: 'Write the letter',
+    groupName: 'Lobbying',
+    dueOn: '2026-12-01',
+    assignerName: 'Mia',
+    activityUrl: 'https://x.test/groups/lobbying/activities/abc',
+  }
+  const facts = ['Write the letter', 'Lobbying', '2026-12-01', 'Mia', details.activityUrl]
+
+  it('writes in English with the task, group, due date, assigner and link', () => {
+    const { subject, text } = taskAssignedEmail('en', details)
+    expect(subject).toContain('Write the letter')
+    for (const part of facts) expect(text).toContain(part)
+    expect(text).toContain('Due:')
+    expect(text).not.toContain('@')
+  })
+
+  it('writes in Italian with the same facts', () => {
+    const { subject, text } = taskAssignedEmail('it', details)
+    expect(subject).toMatch(/assegnato/)
+    for (const part of facts) expect(text).toContain(part)
+    expect(text).toContain('Scadenza:')
+    expect(text).not.toContain('@')
+  })
+
+  it('leaves out the due line when there is no due date, in both languages', () => {
+    expect(taskAssignedEmail('en', { ...details, dueOn: null }).text).not.toContain('Due')
+    expect(taskAssignedEmail('it', { ...details, dueOn: null }).text).not.toContain('Scadenza')
+  })
+})
+
+describe('sendTaskAssignedEmail', () => {
+  const sent: EmailMessage[] = []
+  let assignee: { email: string; locale: string } | null
+  let group: { name: string } | null
+  const input = {
+    assigneeId: 'user-1',
+    groupId: 'group-1',
+    slug: 'lobbying',
+    activityId: 'activity-1',
+    title: 'Write the letter',
+    dueOn: null,
+    assignerName: 'Mia',
+  }
+
+  beforeEach(() => {
+    sent.length = 0
+    assignee = { email: 'ada@example.test', locale: 'it' }
+    group = { name: 'Lobbying' }
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://site.example.test')
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    setEmailTransport(async (message) => void sent.push(message))
+    adminTables = {
+      users: () => ({ data: assignee, error: null }),
+      working_groups: () => ({ data: group, error: null }),
+    }
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+    vi.restoreAllMocks()
+  })
+
+  it('sends one email in the assignee language to their address and logs nothing', async () => {
+    expect(await sendTaskAssignedEmail(input)).toBe(true)
+    expect(sent).toHaveLength(1)
+    expect(sent[0].to).toBe('ada@example.test')
+    expect(sent[0].subject).toMatch(/assegnato/)
+    expect(sent[0].text).toContain('/groups/lobbying/activities/activity-1')
+    expect(sent[0].text).not.toContain('ada@example.test')
+    expect(console.error).not.toHaveBeenCalled()
+  })
+
+  it('falls back to English for an unknown locale', async () => {
+    assignee = { email: 'ada@example.test', locale: 'xx' }
+    await sendTaskAssignedEmail(input)
+    expect(sent[0].subject).toMatch(/assigned to you/)
+  })
+
+  it('returns false and sends nothing when the assignee or the group cannot be read', async () => {
+    assignee = null
+    expect(await sendTaskAssignedEmail(input)).toBe(false)
+    assignee = { email: 'ada@example.test', locale: 'en' }
+    group = null
+    expect(await sendTaskAssignedEmail(input)).toBe(false)
+    expect(sent).toHaveLength(0)
+  })
+
+  it('returns false when email is not configured, logging only a fixed label', async () => {
+    setEmailTransport(null)
+    vi.stubEnv('RESEND_API_KEY', '')
+    vi.stubEnv('EMAIL_FROM', '')
+    expect(await sendTaskAssignedEmail(input)).toBe(false)
+    expect(console.error).toHaveBeenCalledWith(
+      'Email not sent: RESEND_API_KEY or EMAIL_FROM is not set',
+    )
+  })
+
+  it('returns false on a delivery failure without logging the address or the provider message', async () => {
+    setEmailTransport(async () => {
+      throw new Error('refused ada@example.test')
+    })
+    expect(await sendTaskAssignedEmail(input)).toBe(false)
+    expect(console.error).toHaveBeenCalledWith('Email delivery failed')
+    expect(JSON.stringify(vi.mocked(console.error).mock.calls)).not.toContain('ada@example.test')
   })
 })
 

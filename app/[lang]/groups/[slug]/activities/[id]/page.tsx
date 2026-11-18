@@ -10,6 +10,7 @@ import {
 } from '@/components/activities/ActivityControls'
 import { ActivityDetails } from '@/components/activities/ActivityDetails'
 import { LevelBadge } from '@/components/profile/LevelBadge'
+import { GroupTasks } from '@/components/tasks/GroupTasks'
 import { Badge, Card } from '@/components/ui/display'
 import { requireUser } from '@/lib/authz'
 import {
@@ -263,7 +264,18 @@ async function ActivityContent({ params }: { params: Params }) {
         <h2 id="activity-tasks" className="text-xl font-bold">
           {t('detail.tasksTitle')}
         </h2>
-        <p>{t('detail.tasksSoon')}</p>
+        <GroupTasks
+          groupId={group.id}
+          slug={group.slug}
+          viewer={{
+            id: member.id,
+            level: member.level,
+            isAdmin: member.isAdmin,
+            isMember: group.isMember,
+          }}
+          activityId={activity.id}
+          activityOpen={open}
+        />
       </section>
     </div>
   )

@@ -3,9 +3,11 @@ import { GroupLinksForm } from '@/components/groups/GroupLinksForm'
 import { LeadSection } from '@/components/groups/LeadSection'
 import { MeetingsSection, NextMeetings } from '@/components/groups/MeetingsSection'
 import { LevelBadge } from '@/components/profile/LevelBadge'
+import { GroupTasks, type TaskViewer } from '@/components/tasks/GroupTasks'
 import { Card, EmptyState } from '@/components/ui/display'
 import type { ActivityFilters } from '@/lib/domain/activity-input'
 import type { GroupTab, GroupView } from '@/lib/domain/groups'
+import type { TaskFilters } from '@/lib/domain/tasks'
 import { getFormatter, getTranslations } from '@/lib/i18n/server'
 import { createClient } from '@/lib/supabase/server'
 
@@ -17,6 +19,8 @@ export async function GroupSection({
   canEditContent,
   canCreate,
   filters,
+  taskFilters,
+  viewer,
 }: {
   tab: GroupTab
   group: GroupView
@@ -24,9 +28,9 @@ export async function GroupSection({
   canEditContent: boolean
   canCreate: boolean
   filters: ActivityFilters
+  taskFilters: TaskFilters
+  viewer: Omit<TaskViewer, 'isMember'>
 }) {
-  const t = await getTranslations('groups')
-
   switch (tab) {
     case 'overview':
       return (
@@ -46,8 +50,14 @@ export async function GroupSection({
         />
       )
     case 'tasks':
-      // Empty until T-04.
-      return <EmptyState title={t('tasks.emptyTitle')} description={t('tasks.emptyBody')} />
+      return (
+        <GroupTasks
+          groupId={group.id}
+          slug={group.slug}
+          viewer={{ ...viewer, isMember: group.isMember }}
+          filters={taskFilters}
+        />
+      )
   }
 }
 

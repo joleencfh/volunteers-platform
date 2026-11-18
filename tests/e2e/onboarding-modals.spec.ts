@@ -174,7 +174,11 @@ test.describe('onboarding windows', () => {
     await openButton(page, ACTIVITIES_TITLE).click()
     const window = dialog(page)
     await expect(window.getByRole('heading', { name: ACTIVITIES_TITLE })).toBeVisible()
-    await expect(window.getByText('There are no current activities yet.')).toBeVisible()
+    // The admin belongs to no group, so the window shows the limited view of every group: a list
+    // when other specs' groups exist, the empty state otherwise.
+    await expect(
+      window.getByRole('list').or(window.getByText('There are no current activities yet.')),
+    ).toBeVisible()
     await expectNoSeriousA11yViolations(page)
 
     await window.getByRole('button', { name: "I've read it" }).click()

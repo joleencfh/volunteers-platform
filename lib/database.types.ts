@@ -566,6 +566,11 @@ isOneToOne: false
               "ai_risks": string,"ai_safety_knowledge": string,"bio": string,"city": string,"display_name": string,"email": string,"first_active_at": string,"id": string,"joined_at": string,"last_login_at": string,"level": Database["public"]['Enums']["user_level"],"linkedin_url": string,"real_name": string
             }[]
                            },
+"get_profile_work":
+{ Args: { "p_owner": string }; Returns: {
+              "activity_id": string,"activity_title": string,"due_on": string,"group_id": string,"group_name": string,"group_slug": string,"id": string,"kind": string,"status": string,"title": string,"updated_at": string
+            }[]
+                           },
 "get_working_group":
 { Args: { "p_slug": string }; Returns: {
               "archived": boolean,"description": string,"docs_url": string,"id": string,"is_member": boolean,"lead_display_name": string,"lead_user_id": string,"name": string,"signal_url": string,"slug": string

@@ -396,7 +396,7 @@ test.describe('activities, tasks and the profile feed: access and visibility', (
       ['Home', '/home'],
       ['Groups', '/groups'],
       ['My tasks', '/tasks'],
-      ['Profile', '/profile'],
+      ['My profile', '/profile'],
       ['Settings', '/settings'],
     ] as const) {
       const link = nav.getByRole('link', { name: new RegExp(`^${name}`) })

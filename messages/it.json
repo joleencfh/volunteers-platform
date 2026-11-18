@@ -624,5 +624,73 @@
         "unavailable": "Non ha funzionato. Riprova tra un momento."
       }
     }
+  },
+  "tasks": {
+    "myTitle": "I miei compiti",
+    "myIntro": "I tuoi compiti aperti e in corso in tutti i tuoi gruppi di lavoro, prima quelli in scadenza.",
+    "myEmptyTitle": "Nessun compito aperto",
+    "myEmptyBody": "I compiti che ti vengono assegnati compaiono qui. Prendine uno dalla scheda Compiti di un gruppo di lavoro.",
+    "emptyTitle": "Ancora nessun compito",
+    "emptyBody": "I compiti compaiono qui quando qualcuno li aggiunge a un’attività.",
+    "noMatchesTitle": "Nessun compito corrisponde",
+    "noMatchesBody": "Prova con altri filtri.",
+    "due": "Scadenza {date}",
+    "assignedTo": "Assegnato a {name}",
+    "unassignedLabel": "Non ancora assegnato",
+    "formerMember": "un ex membro",
+    "inActivity": "In {title}",
+    "completionNote": "Nota di completamento: {note}",
+    "completionLink": "Link di completamento",
+    "status": {
+      "open": "Aperto",
+      "in_progress": "In corso",
+      "done": "Completato"
+    },
+    "filters": {
+      "label": "Filtra i compiti",
+      "status": "Stato",
+      "assignee": "Assegnatario",
+      "all": "Tutti",
+      "me": "Io",
+      "unassigned": "Non assegnati",
+      "apply": "Applica i filtri"
+    },
+    "create": {
+      "heading": "Aggiungi un compito",
+      "title": "Titolo",
+      "description": "Descrizione",
+      "dueOn": "Scadenza",
+      "assignee": "Assegnatario",
+      "unassigned": "Nessuno",
+      "submit": "Crea compito",
+      "working": "Creazione…"
+    },
+    "controls": {
+      "take": "Prendi questo compito",
+      "taking": "Un attimo…",
+      "start": "Inizia a lavorarci",
+      "backToOpen": "Torna ad aperto",
+      "reopen": "Riapri il compito",
+      "assignee": "Assegnatario",
+      "unassigned": "Nessuno",
+      "assign": "Assegna",
+      "assigning": "Assegnazione…",
+      "completeSummary": "Completa questo compito",
+      "note": "Nota di completamento",
+      "link": "Link di completamento",
+      "evidenceHint": "Aggiungi una nota, un link o entrambi.",
+      "linkHint": "Facoltativo. Deve iniziare con https://.",
+      "complete": "Segna come completato",
+      "completing": "Salvataggio…",
+      "states": {
+        "doneEmailFailed": "Salvato, ma non è stato possibile inviare l'email alla persona assegnata. Avvisala tu.",
+        "invalid": "Alcuni campi non sono validi. Controllali e riprova.",
+        "needsEvidence": "Aggiungi una nota o un link prima di completare il compito.",
+        "notAllowed": "Non hai il permesso di farlo.",
+        "notFound": "Questo compito o questa attività non esiste più.",
+        "conflict": "Il compito è cambiato nel frattempo, oppure la sua attività è archiviata. Ricarica la pagina e riprova.",
+        "unavailable": "Non ha funzionato. Riprova tra un momento."
+      }
+    }
   }
 }
